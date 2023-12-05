@@ -1,7 +1,7 @@
 from datetime import datetime
 from typing import Union
 
-from fastapi import FastAPI
+from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel
 from enum import Enum
 
@@ -52,5 +52,17 @@ async def read_root():
     return {"Hello": "World"}
 
 @app.get("/events/")
-def read_item():
+def get_all_events():
     return events
+
+@app.post("/events/")
+def create_event(event: Event):
+    events.append(event)
+    return {"message": "Event created successfully", "event": event.dict()}
+
+@app.get("/get_event/{event_id}")
+async def get_event(event_id: int):
+    for event in events:
+        if event.id == event_id:
+            return event
+    raise HTTPException(status_code=404, detail="Event not found")
