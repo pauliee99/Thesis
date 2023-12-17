@@ -1,15 +1,15 @@
 # main.py
 
 from fastapi import FastAPI
-from app.api import events, users, auth
+# from app.api import events, users, auth
 from app.core import config
 
 app = FastAPI()
 
 # Include routers
-app.include_router(events.router, prefix="/events", tags=["events"])
-app.include_router(users.router, prefix="/users", tags=["users"])
-app.include_router(auth.router, prefix="/auth", tags=["auth"])
+# app.include_router(events.router, prefix="/events", tags=["events"])
+# app.include_router(users.router, prefix="/users", tags=["users"])
+# app.include_router(auth.router, prefix="/auth", tags=["auth"])
 
 # Additional configuration settings
 if __name__ == "__main__":
