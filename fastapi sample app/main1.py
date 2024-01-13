@@ -164,6 +164,33 @@ async def get_event(event_id: int):
     else:
         return event
 
+@app.get("/delete_event_by_id/{event_id}")
+async def delete_event_by_id(event_id: int):
+    mydb = mysql.connector.connect(
+        host="localhost",
+        user="user",
+        password="password",
+        port=3306,
+        database="events"
+    )
+    mycursor = mydb.cursor()
+    try:
+        mycursor.execute("delete from events.events where id="+ str(event_id) +";")
+        if mycursor.rowcount == 1:
+            mydb.commit()
+            msg = {"message": f"Event with ID {event_id} deleted successfully"}
+        elif mycursor.rowcount > 1:
+            mydb.commit()
+            msg = {"message": f"Total rows of " + str(mycursor.rowcount) + " with ID {event_id} deleted successfully"}
+        else:
+            msg = {"message": f"Event with ID {event_id} not found, no rows affected"}
+        mycursor.close()
+        mydb.close()
+        return msg
+    except mysql.connector.Error as err:
+        mycursor.close()
+        mydb.close()
+        return {"error": f"MySQL error: {err}"}
 
 @app.get("/db_info/")
 def test_db():
