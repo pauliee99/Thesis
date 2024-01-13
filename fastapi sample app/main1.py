@@ -3,18 +3,19 @@
 
 from datetime import datetime
 from typing import Union
-
-from fastapi import FastAPI, HTTPException
+from typing import Annotated
+from fastapi import Depends, FastAPI, HTTPException, status
 from pydantic import BaseModel
 from enum import Enum
 import mysql.connector
 from contextlib import asynccontextmanager
-from fastapi.security import OAuth2PasswordBearer
+from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
 
 class Student(BaseModel):
     id: int
-    fname: str
-    lname: str
+    email: str
+    firstname: str
+    lastname: str
     username: str
     password: str
     student_id: int
@@ -23,16 +24,16 @@ class Student(BaseModel):
 
 class Manager(BaseModel):
     id: int
-    fname: str
-    lname: str
+    firstname: str
+    lastname: str
     username: str
     password: str
     profile_picture: str
 
 class Admin(BaseModel):
     id: int
-    fname: str
-    lname: str
+    firstname: str
+    lastname: str
     username: str
     password: str
     profile_picture: str
@@ -80,6 +81,7 @@ async def lifespan(app: FastAPI):
     )""")
     mycursor.execute("""CREATE TABLE IF NOT EXISTS events.users(
         id int NOT NULL PRIMARY KEY AUTO_INCREMENT,
+        email varchar(320),
         username varchar(50),
         password varchar(50),
         firstname varchar(50),
@@ -94,6 +96,52 @@ async def lifespan(app: FastAPI):
     mydb.close()
 
 app = FastAPI(lifespan=lifespan)
+
+def hash_password(password: str):
+    return "fakehashed" + password
+
+class UserInDB(Student):
+    password: str
+
+def decode_token(token):
+    return Student(
+        username=token + "fakedecoded", email="john@example.com", firstname="john"
+    )
+
+async def get_current_user(token: Annotated[str, Depends(oauth2_scheme)]):
+    user = decode_token(token)
+    if not user:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Invalid authentication credentials",
+            headers={"WWW-Authenticate": "Bearer"},
+        )
+    return user
+
+@app.post("/token")
+async def login(form_data: Annotated[OAuth2PasswordRequestForm, Depends()]):
+    mydb = mysql.connector.connect(
+        host="localhost",
+        user="user",
+        password="password",
+        port=3306,
+        database="events"
+    )
+    mycursor = mydb.cursor(dictionary=True)
+    mycursor.execute("select * from events.users;")
+    users_db = mycursor.fetchall()
+    mycursor.close()
+    mydb.close()
+    formatted_users_db = {user["username"]: user for user in users_db}
+    user_dict = formatted_users_db.get(form_data.username) # [user for user in users_db if user.get("username") == form_data.username]
+    if not user_dict:
+        raise HTTPException(status_code=400, detail="Incorrect username or password")
+    user = UserInDB(**user_dict)
+    hashed_password = hash_password(form_data.password)
+    if not hashed_password == user.password:
+        raise HTTPException(status_code=400, detail="Incorrect username or password")
+
+    return {"access_token": user.username, "token_type": "bearer"}
 
 @app.get("/")
 async def read_root():
@@ -191,6 +239,14 @@ async def delete_event_by_id(event_id: int):
         mycursor.close()
         mydb.close()
         return {"error": f"MySQL error: {err}"}
+
+@app.get("/users/")
+async def get_all_users(token: Annotated[str, Depends(oauth2_scheme)]):
+    return {"token": token}
+
+@app.get("/users/me")
+async def read_users_me(current_user: Annotated[Student, Depends(get_current_user)]):
+    return current_user 
 
 @app.get("/db_info/")
 def test_db():
