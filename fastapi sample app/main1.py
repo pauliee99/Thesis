@@ -10,6 +10,7 @@ from enum import Enum
 import mysql.connector
 from contextlib import asynccontextmanager
 from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
+import database
 
 class Student(BaseModel):
     id: int
@@ -59,41 +60,10 @@ oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    mydb = mysql.connector.connect(
-        host="localhost",
-        user="user",
-        password="password",
-        port=3306,
-        database="events"
-    )
-    mycursor = mydb.cursor()
-    mycursor.execute("""CREATE TABLE IF NOT EXISTS events.events(
-        id int NOT NULL PRIMARY KEY AUTO_INCREMENT,
-        displayname varchar(128),
-        location varchar(256),
-        start_time datetime,
-        end_time datetime,
-        price float,
-        picture varchar(256),
-        description varchar(512),
-        createdon datetime,
-        cretedby varchar(128)
-    )""")
-    mycursor.execute("""CREATE TABLE IF NOT EXISTS events.users(
-        id int NOT NULL PRIMARY KEY AUTO_INCREMENT,
-        email varchar(320),
-        username varchar(50),
-        password varchar(50),
-        firstname varchar(50),
-        lastname varchar(50),
-        student_id int,
-        profile_picture varchar(256),
-        createdon datetime
-    )""")
+    database.create_event_table
+    database.create_user_table
     print ("tables created")
     yield
-    mycursor.close()
-    mydb.close()
 
 app = FastAPI(lifespan=lifespan)
 
@@ -149,64 +119,17 @@ async def read_root():
 
 @app.get("/events/")
 def get_all_events():
-    mydb = mysql.connector.connect(
-        host="localhost",
-        user="user",
-        password="password",
-        port=3306,
-        database="events"
-    )
-    mycursor = mydb.cursor()
-    mycursor.execute("select * from events.events;")
-    events = mycursor.fetchall()
-    mycursor.close()
-    mydb.close()
-    return events
+    return database.get_all_events()
 
 @app.post("/events/")
 def create_event(event: Event):
     events.append(event)
-    mydb = mysql.connector.connect(
-        host="localhost",
-        user="user",
-        password="password",
-        port=3306,
-        database="events"
-    )
-    mycursor = mydb.cursor()
-    mycursor.execute(
-        "insert into events.events values(" + 
-        str(event.id) + ", '" +
-        str(event.displayname) + "', '" +
-        str(event.location) + "', '" +
-        str(event.start_time) + "', '" +
-        str(event.end_time) + "', " +
-        str(event.price) + ", '" +
-        str(event.picture)   + "', '" +
-        str(event.description) + "', '" +
-        str(event.createdon) + "', '" +
-        str(event.createdby) + "');"
-    )
-    mydb.commit()
-    # Close the cursor and connection
-    mycursor.close()
-    mydb.close()
+    database.insert_event(event)
     return {"message": "Event created successfully", "event": event.dict()}
 
 @app.get("/get_event/{event_id}")
 async def get_event(event_id: int):
-    mydb = mysql.connector.connect(
-        host="localhost",
-        user="user",
-        password="password",
-        port=3306,
-        database="events"
-    )
-    mycursor = mydb.cursor()
-    mycursor.execute("select * from events.events where id="+ str(event_id) +";")
-    event = mycursor.fetchall()
-    mycursor.close()
-    mydb.close()
+    event = database.get_event_by_id(event_id)
     if len(event) == 0:
         raise HTTPException(status_code=404, detail="Event not found")
     else:
