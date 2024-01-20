@@ -1,6 +1,18 @@
 # database.py
-import mysql.connector
-from contextlib import asynccontextmanager
+import datetime
+from typing import Optional
+from sqlmodel import Field, SQLModel
+
+class User(SQLModel, table=True):
+    id: Optional[int] = Field(default=None, primary_key=True)
+    email: str
+    username: str
+    password: str
+    firstname: str
+    lastname: str
+    student_id: Optional[int] = None
+    profile_picture: str
+    createdon: datetime
 
 mydb = mysql.connector.connect(
     host="localhost",
