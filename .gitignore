@@ -1,1 +1,2 @@
-fastapi sample app/__pycache__
+*/__pycache__
+*/__pycache__/*
