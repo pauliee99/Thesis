@@ -7,13 +7,11 @@ from typing import Annotated
 from fastapi import Depends, FastAPI, HTTPException, status
 from pydantic import BaseModel
 from enum import Enum
+import mysql.connector
 from contextlib import asynccontextmanager
 from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
 import database
-from models.models import Student, Manager, Admin, Event
-from dependencies import get_query_token, get_token_header
-from routers import event_routers, user_routers
-from internal import admin
+from models import Student, Manager, Admin, Event
 
 events = []
 event2 = Event(id=2, displayname="event2", location="nea smirni", start_time=datetime.now(), end_time=datetime.now(), price=1.0, picture="picture here", description="another cool event", createdon = datetime.now(), createdby = "admin")
@@ -30,16 +28,6 @@ async def lifespan(app: FastAPI):
     yield
 
 app = FastAPI(lifespan=lifespan)
-
-app.include_router(user_routers.router)
-app.include_router(event_routers.router)
-app.include_router(
-    admin.router,
-    prefix="/admin",
-    tags=["admin"],
-    dependencies=[Depends(get_token_header)],
-    responses={418: {"description": "I'm a teapot"}},
-)
 
 def hash_password(password: str):
     return "fakehashed" + password
@@ -102,13 +90,13 @@ async def get_event(event_id: int):
 async def delete_event_by_id(event_id: int):
     return database.delete_event_by_id(event_id)
 
-# @app.get("/users/")
-# async def get_all_users(token: Annotated[str, Depends(oauth2_scheme)]):
-#     return {"token": token}
+@app.get("/users/")
+async def get_all_users(token: Annotated[str, Depends(oauth2_scheme)]):
+    return {"token": token}
 
-# @app.get("/users/me")
-# async def read_users_me(current_user: Annotated[Student, Depends(get_current_user)]):
-#     return current_user 
+@app.get("/users/me")
+async def read_users_me(current_user: Annotated[Student, Depends(get_current_user)]):
+    return current_user 
 
 @app.get("/db_info/")
 def test_db():
