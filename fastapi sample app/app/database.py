@@ -64,7 +64,7 @@ def get_all_events():
 
 def get_event_by_id(event_id):
     with Session(engine) as session:
-        statement = select(Events).where(Event.id == event_id)
+        statement = select(Events).where(Events.id == event_id)
         events = session.exec(statement)
         return events.fetchall()
 

@@ -1,6 +1,6 @@
 from fastapi import APIRouter, Depends, HTTPException
 from dependencies import get_token_header
-from database import get_all_events, insert_event
+from database import get_all_events, insert_event, get_event_by_id
 
 router = APIRouter(
     prefix="/items",
@@ -20,9 +20,10 @@ async def read_items():
 
 @router.get("/{item_id}")
 async def read_item(item_id: str):
-    if item_id not in fake_items_db:
+    event = get_event_by_id(item_id)
+    if len(event) == 0:
         raise HTTPException(status_code=404, detail="Item not found")
-    return {"name": fake_items_db[item_id]["name"], "item_id": item_id}
+    return event
 
 @router.put(
     "/{item_id}",
@@ -39,4 +40,4 @@ async def update_item(item_id: str):
 @router.post("/")
 async def create_item(event_data: dict):
     insert_event(event_data)
-    return {"msg": "Item created succesfully"}
+    return {"message": "Event created successfully", "event": event_data.dict()}

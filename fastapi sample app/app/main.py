@@ -78,12 +78,6 @@ async def login(form_data: Annotated[OAuth2PasswordRequestForm, Depends()]):
 async def read_root():
     return {"Hello": "World"}
 
-@app.post("/events/")
-def create_event(event: Event):
-    events.append(event)
-    database.insert_event(event)
-    return {"message": "Event created successfully", "event": event.dict()}
-
 @app.get("/get_event/{event_id}")
 async def get_event(event_id: int):
     event = database.get_event_by_id(event_id)
