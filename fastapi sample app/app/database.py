@@ -1,5 +1,6 @@
 from datetime import datetime
 from typing import Optional
+from sqlalchemy.ext.asyncio import AsyncSession
 from sqlmodel import Field, SQLModel, create_engine, Session, select
 
 class Users(SQLModel, table=True):
@@ -70,11 +71,13 @@ def get_event_by_id(event_id):
 
 def delete_event_by_id(event_id):
     with Session(engine) as session:
-        event = session.get(Events, event_id)
-        session.delete(event)
-        session.commit()
-    msg = {"message": f"Event with ID {event_id} deleted successfully"}
-    return msg
+        event = session.query(Events).get(event_id)
+        if event:
+            session.delete(event)
+            session.commit()
+            return {"message": f"Event with ID {event_id} deleted successfully"}
+        else:
+            return {"message": f"Event with ID {event_id} not found"}
     
 def db_info():
     with Session(engine) as session:

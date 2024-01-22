@@ -78,17 +78,8 @@ async def login(form_data: Annotated[OAuth2PasswordRequestForm, Depends()]):
 async def read_root():
     return {"Hello": "World"}
 
-@app.get("/get_event/{event_id}")
-async def get_event(event_id: int):
-    event = database.get_event_by_id(event_id)
-    if len(event) == 0:
-        raise HTTPException(status_code=404, detail="Event not found")
-    else:
-        return event
 
-@app.get("/delete_event_by_id/{event_id}")
-async def delete_event_by_id(event_id: int):
-    return database.delete_event_by_id(event_id)
+
 
 # @app.get("/users/")
 # async def get_all_users(token: Annotated[str, Depends(oauth2_scheme)]):

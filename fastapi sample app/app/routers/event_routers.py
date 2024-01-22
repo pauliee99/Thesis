@@ -1,6 +1,6 @@
 from fastapi import APIRouter, Depends, HTTPException
 from dependencies import get_token_header
-from database import get_all_events, insert_event, get_event_by_id
+from database import get_all_events, insert_event, get_event_by_id, delete_event_by_id
 
 router = APIRouter(
     prefix="/items",
@@ -41,3 +41,8 @@ async def update_item(item_id: str):
 async def create_item(event_data: dict):
     insert_event(event_data)
     return {"message": "Event created successfully", "event": event_data.dict()}
+
+@router.delete("/{event_id}")
+async def delete_event(event_id: int):
+    response = delete_event_by_id(event_id)
+    return response
