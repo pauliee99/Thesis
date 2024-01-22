@@ -16,7 +16,6 @@ services:
       MYSQL_ROOT_PASSWORD: password
     volumes:
       - mysqldbvol:/var/lib/mysql
-    # command: --init-file=/sql-init/init.sql
 
 volumes:
   mysqldbvol:

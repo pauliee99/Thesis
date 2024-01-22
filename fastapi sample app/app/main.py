@@ -9,11 +9,11 @@ from pydantic import BaseModel
 from enum import Enum
 from contextlib import asynccontextmanager
 from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
-import database
-from models.models import Student, Manager, Admin, Event
-from dependencies import get_query_token, get_token_header
+from models.models import User, Event
 from routers import event_routers, user_routers
+from dependencies import get_token_header, get_query_token
 from internal import admin
+import database
 
 events = []
 event2 = Event(id=2, displayname="event2", location="nea smirni", start_time=datetime.now(), end_time=datetime.now(), price=1.0, picture="picture here", description="another cool event", createdon = datetime.now(), createdby = "admin")
@@ -22,14 +22,12 @@ events.append(event2)
 
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
 
-@asynccontextmanager
-async def lifespan(app: FastAPI):
-    database.create_event_table()
-    database.create_user_table()
-    print ("tables created")
-    yield
+# @asynccontextmanager
+# async def lifespan(app: FastAPI):
+#     yield
 
-app = FastAPI(lifespan=lifespan)
+# app = FastAPI(lifespan=lifespan)
+app = FastAPI()
 
 app.include_router(user_routers.router)
 app.include_router(event_routers.router)
@@ -44,11 +42,11 @@ app.include_router(
 def hash_password(password: str):
     return "fakehashed" + password
 
-class UserInDB(Admin):
+class UserInDB(User):
     password: str
 
 def decode_token(token):
-    return Admin(
+    return User(
         username=token + "fakedecoded", email="john@example.com", firstname="john", lastname="doe"
     )
 
@@ -79,10 +77,6 @@ async def login(form_data: Annotated[OAuth2PasswordRequestForm, Depends()]):
 @app.get("/")
 async def read_root():
     return {"Hello": "World"}
-
-@app.get("/events/")
-def get_all_events():
-    return database.get_all_events()
 
 @app.post("/events/")
 def create_event(event: Event):
