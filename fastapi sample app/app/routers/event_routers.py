@@ -3,15 +3,11 @@ from dependencies import get_token_header
 from database import get_all_events, insert_event, get_event_by_id, delete_event_by_id
 
 router = APIRouter(
-    prefix="/items",
-    tags=["items"],
+    prefix="/events",
+    tags=["events"],
     dependencies=[Depends(get_token_header)],
     responses={404: {"description": "Not found"}},
 )
-
-
-fake_items_db = {"plumbus": {"name": "Plumbus"}, "gun": {"name": "Portal Gun"}}
-
 
 @router.get("/")
 async def read_items():

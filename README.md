@@ -23,3 +23,18 @@ CREATE USER 'user'@'172.17.0.1' IDENTIFIED BY 'password';
 GRANT ALL PRIVILEGES ON *.* TO 'user'@'172.17.0.1' WITH GRANT OPTION;
 ```
 
+JSON format to create a new event:
+```
+{
+"displayname": "event1",
+"end_time": null,
+"id": 1,
+"start_time": "2024-01-28T16:39:49",
+"picture": "path to file",
+"createdon": "2024-01-28T16:39:49",
+"location": "kallithea",
+"price": 12,
+"description": "coolevent",
+"createdby": "user1"
+}
+```

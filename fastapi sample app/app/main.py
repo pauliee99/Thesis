@@ -39,40 +39,40 @@ app.include_router(
     responses={418: {"description": "I'm a teapot"}},
 )
 
-def hash_password(password: str):
-    return "fakehashed" + password
+# def hash_password(password: str):
+#     return "fakehashed" + password
 
-class UserInDB(User):
-    password: str
+# class UserInDB(User):
+#     password: str
 
-def decode_token(token):
-    return User(
-        username=token + "fakedecoded", email="john@example.com", firstname="john", lastname="doe"
-    )
+# def decode_token(token):
+#     return User(
+#         username=token + "fakedecoded", email="john@example.com", firstname="john", lastname="doe"
+#     )
 
-async def get_current_user(token: Annotated[str, Depends(oauth2_scheme)]):
-    user = decode_token(token)
-    if not user:
-        raise HTTPException(
-            status_code=status.HTTP_401_UNAUTHORIZED,
-            detail="Invalid authentication credentials",
-            headers={"WWW-Authenticate": "Bearer"},
-        )
-    return user
+# async def get_current_user(token: Annotated[str, Depends(oauth2_scheme)]):
+#     user = decode_token(token)
+#     if not user:
+#         raise HTTPException(
+#             status_code=status.HTTP_401_UNAUTHORIZED,
+#             detail="Invalid authentication credentials",
+#             headers={"WWW-Authenticate": "Bearer"},
+#         )
+#     return user
 
-@app.post("/token")
-async def login(form_data: Annotated[OAuth2PasswordRequestForm, Depends()]):
-    users_db = database.get_all_users()
-    formatted_users_db = {user["username"]: user for user in users_db}
-    user_dict = formatted_users_db.get(form_data.username)
-    if not user_dict:
-        raise HTTPException(status_code=400, detail="Incorrect username or password")
-    user = UserInDB(**user_dict)
-    hashed_password = hash_password(form_data.password)
-    if not hashed_password == user.password:
-        raise HTTPException(status_code=400, detail="Incorrect username or password")
+# @app.post("/token")
+# async def login(form_data: Annotated[OAuth2PasswordRequestForm, Depends()]):
+#     users_db = database.get_all_users()
+#     formatted_users_db = {user["username"]: user for user in users_db}
+#     user_dict = formatted_users_db.get(form_data.username)
+#     if not user_dict:
+#         raise HTTPException(status_code=400, detail="Incorrect username or password")
+#     user = UserInDB(**user_dict)
+#     hashed_password = hash_password(form_data.password)
+#     if not hashed_password == user.password:
+#         raise HTTPException(status_code=400, detail="Incorrect username or password")
 
-    return {"access_token": user.username, "token_type": "bearer"}
+#     return {"access_token": user.username, "token_type": "bearer"}
 
 @app.get("/")
 async def read_root():

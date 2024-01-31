@@ -1,7 +1,17 @@
 from datetime import datetime
 from typing import Optional
-from sqlalchemy.ext.asyncio import AsyncSession
+from sqlalchemy.ext.asyncio import AsyncSession, create_async_engine
 from sqlmodel import Field, SQLModel, create_engine, Session, select
+from typing import AsyncGenerator
+from fastapi import Depends
+from fastapi_users.db import SQLAlchemyBaseUserTableUUID, SQLAlchemyUserDatabase
+from sqlalchemy.ext.declarative import DeclarativeMeta, declarative_base
+from sqlalchemy.orm import sessionmaker
+
+engine = create_engine("mysql+mysqlconnector://user:password@localhost/events")
+Base: DeclarativeMeta = declarative_base()
+
+async_session_maker = sessionmaker(engine, class_=AsyncSession, expire_on_commit=False)
 
 class Users(SQLModel, table=True):
     id: Optional[int] = Field(default=None, primary_key=True)
@@ -29,6 +39,9 @@ class Events(SQLModel, table=True):
     createdon: datetime
     createdby: str
 
+class User(SQLAlchemyBaseUserTableUUID, Base):
+    pass
+
 # Add dummy data
 user_1 = Users(
     email="user1@mail.com",
@@ -43,8 +56,6 @@ user_1 = Users(
     role=3,
     disabled=False
 )
-
-engine = create_engine("mysql+mysqlconnector://user:password@localhost/events")
 
 SQLModel.metadata.create_all(engine)
 
@@ -98,3 +109,19 @@ def get_all_users():
         statement = select(Users)
         results = session.exec(statement)
         return results.fetchall()
+
+
+# FASTPI USERS CODE HERE
+
+async def create_db_and_tables():
+    async with engine.begin() as conn:
+        await conn.run_sync(Base.metadata.create_all)
+
+
+async def get_async_session() -> AsyncGenerator[AsyncSession, None]:
+    async with async_session_maker() as session:
+        yield session
+
+
+async def get_user_db(session: AsyncSession = Depends(get_async_session)):
+    yield SQLAlchemyUserDatabase(session, User)
