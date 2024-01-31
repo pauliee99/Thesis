@@ -43,25 +43,25 @@ class User(SQLAlchemyBaseUserTableUUID, Base):
     pass
 
 # Add dummy data
-user_1 = Users(
-    email="user1@mail.com",
-    username="user1",
-    password="fakehashedpassword",
-    firstname="john",
-    lastname="wick",
-    birth_Date=datetime.strptime("21/12/1999", "%d/%m/%Y"),
-    student_id=None,
-    profile_picture="path/to/file",
-    createdon=datetime.strptime("21/01/2024", "%d/%m/%Y"),
-    role=3,
-    disabled=False
-)
+# user_1 = Users(
+#     email="user1@mail.com",
+#     username="user1",
+#     password="fakehashedpassword",
+#     firstname="john",
+#     lastname="wick",
+#     birth_Date=datetime.strptime("21/12/1999", "%d/%m/%Y"),
+#     student_id=None,
+#     profile_picture="path/to/file",
+#     createdon=datetime.strptime("21/01/2024", "%d/%m/%Y"),
+#     role=3,
+#     disabled=False
+# )
 
 SQLModel.metadata.create_all(engine)
 
-with Session(engine) as session:
-    session.add(user_1)
-    session.commit()
+# with Session(engine) as session:
+#     session.add(user_1)
+#     session.commit()
 
 def insert_event(event):
     with Session(engine) as session:
@@ -106,9 +106,14 @@ def db_info():
 
 def get_all_users():
     with Session(engine) as session:
-        statement = select(Users)
-        results = session.exec(statement)
-        return results.fetchall()
+        users = session.query(Users).all()
+        return users
+
+def insert_user(user):
+    with Session(engine) as session:
+        user_instance = Users(**user)
+        session.add(user_instance)
+        session.commit()
 
 
 # FASTPI USERS CODE HERE

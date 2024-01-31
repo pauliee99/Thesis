@@ -1,11 +1,12 @@
 from fastapi import APIRouter
+from database import get_all_users
 
 router = APIRouter()
 
 
 @router.get("/users/", tags=["users"])
 async def read_users():
-    return [{"username": "Rick"}, {"username": "Morty"}]
+    return get_all_users()
 
 
 @router.get("/users/me", tags=["users"])
