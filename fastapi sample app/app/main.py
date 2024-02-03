@@ -8,24 +8,16 @@ from fastapi import Depends, FastAPI, HTTPException, status
 from pydantic import BaseModel
 from enum import Enum
 from contextlib import asynccontextmanager
-from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
 from models.models import User, Event
 import models.models
-from routers import event_routers, user_routers, users_auth_routers
-from dependencies import get_token_header, get_query_token
-from internal import admin
+from routers import event_routers, user_routers
 import database
-from database import User, create_db_and_tables
-from internal.schemas import UserCreate, UserRead, UserUpdate
-from internal.users import auth_backend, current_active_user, fastapi_users
 
 events = []
 events.append(Event(id=1, displayname="event1", location="kallithea", start_time=datetime.now(), end_time=datetime.now(), price=0.0, picture="picture here", description="a very cool event", createdon = datetime.now(), createdby = "admin"))
 events.append(Event(id=2, displayname="event2", location="nea smirni", start_time=datetime.now(), end_time=datetime.now(), price=1.0, picture="picture here", description="another cool event", createdon = datetime.now(), createdby = "admin"))
 users = []
 users.append(models.models.User(id=1, email="user1@mail.com", username="user1", password="password", firstname="some name", lastname="surname", birth_date=datetime.now(), student_id=12345, profile_picture="path/to/file", createdon=datetime.now(), role="1", disabled=False))
-
-oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
@@ -40,13 +32,6 @@ app = FastAPI()
 
 app.include_router(user_routers.router)
 app.include_router(event_routers.router)
-app.include_router(
-    admin.router,
-    prefix="/admin",
-    tags=["admin"],
-    dependencies=[Depends(get_token_header)],
-    responses={418: {"description": "I'm a teapot"}},
-)
 
 # def hash_password(password: str):
 #     return "fakehashed" + password
@@ -101,36 +86,6 @@ async def read_root():
 @app.get("/db_info/")
 def test_db():
     return database.db_info()
-
-app.include_router(
-    fastapi_users.get_auth_router(auth_backend), prefix="/auth/jwt", tags=["auth"]
-)
-app.include_router(
-    fastapi_users.get_register_router(UserRead, UserCreate),
-    prefix="/auth",
-    tags=["auth"],
-)
-app.include_router(
-    fastapi_users.get_reset_password_router(),
-    prefix="/auth",
-    tags=["auth"],
-)
-app.include_router(
-    fastapi_users.get_verify_router(UserRead),
-    prefix="/auth",
-    tags=["auth"],
-)
-app.include_router(
-    fastapi_users.get_users_router(UserRead, UserUpdate),
-    prefix="/users",
-    tags=["users"],
-)
-
-
-@app.get("/authenticated-route")
-async def authenticated_route(user: User = Depends(current_active_user)):
-    return {"message": f"Hello {user.email}!"}
-
 
 # @app.on_event("startup")
 # async def on_startup():

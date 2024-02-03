@@ -1,9 +1,9 @@
 from datetime import datetime
-from pydantic import BaseModel
+from pydantic import BaseModel, Field, EmailStr
 
 class User(BaseModel):
     id: int
-    email: str
+    email: EmailStr = Field(...)
     username: str
     password: str
     firstname: str
@@ -14,6 +14,18 @@ class User(BaseModel):
     createdon: datetime
     role: str
     disabled: bool
+
+class UserLoginSchema(BaseModel):
+    email: EmailStr = Field(...)
+    password: str
+
+    class Config:
+        json_schema_extra = {
+            "example": {
+                "email": "joe@xyz.com",
+                "password": "any"
+            }
+        }
 
 class Event(BaseModel):
     id: int
