@@ -34,6 +34,10 @@ class Events(SQLModel, table=True):
     createdon: datetime
     createdby: str
 
+class Roles(SQLModel, table=True):
+    id: Optional[int] = Field(default=None, primary_key=True)
+    role: str
+
 # Add dummy data
 # user_1 = Users(
 #     email="user1@mail.com",
@@ -116,3 +120,15 @@ def insert_user(user):
             disabled=user.disabled) # **user
         session.add(user_instance)
         session.commit()
+
+def get_user_by_email(user_email):
+    with Session(engine) as session:
+        statement = select(Users).where(Users.email == user_email)
+        users = session.exec(statement)
+        return users.first()
+    
+def get_role(user_email):
+    with Session(engine) as session:
+        statement = select(Roles).join(Users, Roles.id == Users.role).where(Users.email == user_email)
+        role = session.exec(statement)
+        return role.first() ## na to allaksa na ferni 1 piso

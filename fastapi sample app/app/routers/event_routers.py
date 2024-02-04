@@ -1,6 +1,7 @@
-from fastapi import APIRouter, Depends, HTTPException
+from fastapi import APIRouter, Depends, HTTPException, status
 from database import get_all_events, insert_event, get_event_by_id, delete_event_by_id
-from internal.auth_bearer import JWTBearer
+from internal.auth_bearer import JWTBearer, get_current_user_role
+from internal.auth_handler import decodeJWT
 
 router = APIRouter(
     prefix="/events",
@@ -34,11 +35,18 @@ async def update_item(item_id: str):
     return {"item_id": item_id, "name": "The great Plumbus"}
 
 @router.post("/", dependencies=[Depends(JWTBearer())], tags=["events"])
-async def create_item(event_data: dict):
+async def create_item(event_data: dict, current_user_role: str = Depends(get_current_user_role)):
+    print("role here: ", current_user_role.role)
+    if current_user_role.role != "Admin":
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="Insufficient privileges. Only admins can create events.",
+        )
     insert_event(event_data)
-    return {"message": "Event created successfully", "event": event_data.dict()}
+    return {"message": "Event created successfully", "event": event_data}
 
 @router.delete("/{event_id}", dependencies=[Depends(JWTBearer())], tags=["events"])
 async def delete_event(event_id: int):
     response = delete_event_by_id(event_id)
     return response
+
