@@ -9,6 +9,7 @@ function checkJWT(token) {
     if (!base64Url) return false;
     const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/'); // Convert base64url to base64
     const payload = JSON.parse(atob(base64)); // Decode base64 and parse JSON
+    console.log(payload);
     const currentTime = Math.floor(Date.now() / 1000); // Get current time in Unix timestamp (seconds)
     return currentTime < payload.expires; // Check if token is expired
 }

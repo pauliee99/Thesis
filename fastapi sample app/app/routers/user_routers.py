@@ -36,7 +36,7 @@ async def read_user(username: str):
 def create_user(user: User = Body(...)):
     print(user)
     insert_user(user) # replace with db call, making sure to hash the password first
-    return signJWT(user.email)
+    return signJWT(user.email, user.role)
 
 # @router.post("/login", tags=["user"])
 # def user_login(user: UserLoginSchema = Body(...)):
@@ -50,7 +50,7 @@ def create_user(user: User = Body(...)):
 def user_login(user: UserLoginSchema = Body(...)):
     try:
         if check_user(user):
-            token = signJWT(user.email)
+            token = signJWT(user.email, user.role)
             return token_response(token)
         else:
             raise HTTPException(status_code=401, detail="Invalid username or password")

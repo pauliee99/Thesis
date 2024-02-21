@@ -23,7 +23,6 @@ const onFormSubmit = () => {
         email: credentials.value.username,
         password: credentials.value.password
     };
-    console.log(JSON.stringify(requestBody));
     fetch('http://localhost:8000/users/login/', {
         method: 'POST',
         headers: {
