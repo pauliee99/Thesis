@@ -37,8 +37,8 @@ JSON format to create a new event:
 "description": "coolevent",
 "createdby": "user1"
 }
-```
-
-
-Run fastapi app: `python -m uvicorn main:app --reload`
-Run vuejs app: `npm run dev`
+```  
+  
+  
+Run fastapi app: `python -m uvicorn main:app --reload`  
+Run vuejs app: `npm run dev`  
