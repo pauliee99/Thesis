@@ -2,7 +2,7 @@
 import { onMounted, ref } from 'vue';
 import { useRemoteData } from '@/composables/useRemoteData.js';
 
-const urlRef = ref('http://localhost:9090/student');
+const urlRef = ref('http://localhost:8000/student');
 const authRef = ref(true);
 const { data, loading, performRequest } = useRemoteData(urlRef, authRef);
 

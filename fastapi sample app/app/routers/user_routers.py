@@ -1,5 +1,5 @@
 from fastapi import APIRouter, Body, Depends, FastAPI, HTTPException
-from database import get_all_users, insert_user
+from database import get_all_users, insert_user, get_role
 from models.models import UserLoginSchema, User
 from internal.auth_bearer import JWTBearer
 from internal.auth_handler import signJWT
@@ -36,7 +36,7 @@ async def read_user(username: str):
 def create_user(user: User = Body(...)):
     print(user)
     insert_user(user) # replace with db call, making sure to hash the password first
-    return signJWT(user.email, user.role)
+    return signJWT(user.email)
 
 # @router.post("/login", tags=["user"])
 # def user_login(user: UserLoginSchema = Body(...)):
@@ -50,7 +50,7 @@ def create_user(user: User = Body(...)):
 def user_login(user: UserLoginSchema = Body(...)):
     try:
         if check_user(user):
-            token = signJWT(user.email, user.role)
+            token = signJWT(user.email, get_role(user.email).role)
             return token_response(token)
         else:
             raise HTTPException(status_code=401, detail="Invalid username or password")

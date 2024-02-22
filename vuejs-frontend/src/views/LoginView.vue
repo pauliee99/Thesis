@@ -6,7 +6,7 @@ import { useRouter } from 'vue-router';
 import { useApplicationStore } from '@/stores/application.js';
 
 const router = useRouter();
-const { setUserData, persistUserData, isAuthenticated, setToken, getToken } = useApplicationStore();
+const { setUserData, persistUserData, isAuthenticated, setToken, getToken, getRole } = useApplicationStore();
 
 const loading = ref(false);
 const credentials = ref({
@@ -42,12 +42,18 @@ const onFormSubmit = () => {
             setUserData(data);
             persistUserData();
             // Handle successful login
-            console.log('Logged in successfully:', data.access_token);
             // Store authentication token in Vuex store or local storage
             // setToken(data.access_token);
             // Redirect to the dashboard or desired route
             console.log("redirecting...");
-            router.push({ name: 'home' });
+            if (getRole(data.access_token.access_token) == "Student"){
+                router.push({ name: 'home' });
+            } else if (getRole(data.access_token.access_token) == "Admin") {
+                console.log("view for admin here");
+            } else {
+                console.log("view for manager here");
+            }
+            
         })
         .catch((err) => {
             console.warn(err);

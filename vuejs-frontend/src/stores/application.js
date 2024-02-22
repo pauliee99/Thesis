@@ -9,9 +9,18 @@ function checkJWT(token) {
     if (!base64Url) return false;
     const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/'); // Convert base64url to base64
     const payload = JSON.parse(atob(base64)); // Decode base64 and parse JSON
-    console.log(payload);
     const currentTime = Math.floor(Date.now() / 1000); // Get current time in Unix timestamp (seconds)
     return currentTime < payload.expires; // Check if token is expired
+}
+function getRole(token) {
+    if (token === null || token === undefined) {
+        return false;
+    }
+    const base64Url = token.split('.')[1];
+    if (!base64Url) return false;
+    const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/'); // Convert base64url to base64
+    const payload = JSON.parse(atob(base64));
+    return payload.role;
 }
 
 export const useApplicationStore = defineStore('application', () => {
@@ -47,5 +56,5 @@ export const useApplicationStore = defineStore('application', () => {
         return checkJWT(userData.value?.access_token.access_token);
     });
 
-    return { userData, setUserData, persistUserData, loadUserData, clearUserData, isAuthenticated, setToken, getToken };
+    return { userData, setUserData, persistUserData, loadUserData, clearUserData, isAuthenticated, setToken, getToken, getRole };
 });
