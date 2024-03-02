@@ -1,7 +1,7 @@
 # python -m uvicorn main:app --reload
 # http://127.0.0.1:8000/docs
 
-from datetime import datetime
+from datetime import datetime, date
 from typing import Union
 from typing import Annotated
 from fastapi import Depends, FastAPI, HTTPException, status
@@ -19,7 +19,7 @@ events = []
 events.append(Event(id=1, displayname="event1", location="kallithea", start_time=datetime.now(), end_time=datetime.now(), price=0.0, picture="picture here", description="a very cool event", createdon = datetime.now(), createdby = "admin"))
 events.append(Event(id=2, displayname="event2", location="nea smirni", start_time=datetime.now(), end_time=datetime.now(), price=1.0, picture="picture here", description="another cool event", createdon = datetime.now(), createdby = "admin"))
 users = []
-users.append(models.models.User(id=1, email="user1@mail.com", username="user1", password="password", firstname="some name", lastname="surname", birth_date=datetime.now(), student_id=12345, profile_picture="path/to/file", createdon=datetime.now(), role="1", disabled=False))
+users.append(models.models.User(id=1, email="user1@mail.com", username="user1", password="password", firstname="some name", lastname="surname", birth_date=date.today(), student_id=12345, profile_picture="path/to/file", createdon=datetime.now(), role="1", disabled=False))
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):

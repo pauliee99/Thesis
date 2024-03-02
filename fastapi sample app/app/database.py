@@ -107,7 +107,8 @@ def get_all_users():
 
 def insert_user(user):
     with Session(engine) as session:
-        user_instance = Users(email=user.email,
+        user_instance = Users(
+            email=user.email,
             username=user.username,
             password=user.password,
             firstname=user.firstname,
@@ -115,9 +116,10 @@ def insert_user(user):
             birth_date=user.birth_date,
             student_id=user.student_id,
             profile_picture=user.profile_picture,
-            createdon=user.createdon,
-            role=user.role,
-            disabled=user.disabled) # **user
+            createdon=datetime.now(),
+            role="Student",
+            disabled=False
+        ) # **user
         session.add(user_instance)
         session.commit()
 

@@ -6,7 +6,7 @@ import { useRouter } from 'vue-router';
 import { useApplicationStore } from '@/stores/application.js';
 
 const router = useRouter();
-const { setUserData, persistUserData, isAuthenticated, setToken, getToken, getRole } = useApplicationStore();
+const { persistUserData, isAuthenticated, setToken, persistToken, setUserData } = useApplicationStore();
 
 const loading = ref(false);
 const credentials = ref({
@@ -31,6 +31,7 @@ const onFormSubmit = () => {
         body: JSON.stringify(requestBody)
     })
         .then(response => {
+            console.log(response);
             if (!response.ok) {
                 throw new Error('Failed to login');
             }
@@ -39,21 +40,37 @@ const onFormSubmit = () => {
             return response.json(); // Parse the response body as JSON
         })
         .then(data => {
-            setUserData(data);
-            persistUserData();
+            setToken(data);
+            persistToken();
             // Handle successful login
             // Store authentication token in Vuex store or local storage
-            // setToken(data.access_token);
-            // Redirect to the dashboard or desired route
-            console.log("redirecting...");
-            if (getRole(data.access_token.access_token) == "Student"){
-                router.push({ name: 'home' });
-            } else if (getRole(data.access_token.access_token) == "Admin") {
-                console.log("view for admin here");
-            } else {
-                console.log("view for manager here");
+            return fetch('http://localhost:8000/users/me', {
+                method: 'GET',
+                headers: {
+                    'Authorization': `Bearer ${data.access_token.access_token}` // Assuming the access token is returned in the login response
+                }
+            });            
+        })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Failed to fetch user role');
             }
-            
+            console.log(response)
+            return response.json(); // Parse the response body as JSON
+        })
+        .then(userData => {
+            // Handle successful role fetch
+            setUserData(userData);
+            persistUserData();
+
+            // Redirect based on user role
+            if (userData.role === "1") {
+                router.push({ name: 'home' });
+            } else if (userData.role === "Admin") {
+                console.log("View for admin here");
+            } else {
+                console.log("View for manager here");
+            }
         })
         .catch((err) => {
             console.warn(err);

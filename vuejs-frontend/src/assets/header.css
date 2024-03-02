@@ -1,0 +1,24 @@
+.profile-circle {
+    width: 40px; /* Adjust as needed */
+    height: 40px; /* Adjust as needed */
+    border-radius: 50%; /* Makes the container circular */
+    overflow: hidden; /* Ensures the image stays within the circular container */
+    margin-right: 10px; /* Adjust spacing between profile picture and Logout link */
+}
+
+.profile-img {
+    width: 100%; /* Ensures the image fills the circular container */
+    height: 100%; /* Ensures the image fills the circular container */
+    object-fit: cover; /* Prevents distortion of the image */
+}
+
+.profile-wrapper {
+    height: 10px;
+    display: flex;
+    align-items: center; /* Center items vertically */
+}
+
+.profile-username {
+    margin-left: 10px; /* Adjust spacing between elements */
+    /* Additional styles for profile username */
+}

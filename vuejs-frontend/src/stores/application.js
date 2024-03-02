@@ -5,6 +5,7 @@ function checkJWT(token) {
     if (token === null || token === undefined) {
         return false;
     }
+    console.log("token 2 : ", token);
     const base64Url = token.split('.')[1];
     if (!base64Url) return false;
     const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/'); // Convert base64url to base64
@@ -12,33 +13,33 @@ function checkJWT(token) {
     const currentTime = Math.floor(Date.now() / 1000); // Get current time in Unix timestamp (seconds)
     return currentTime < payload.expires; // Check if token is expired
 }
-function getRole(token) {
-    if (token === null || token === undefined) {
-        return false;
-    }
-    const base64Url = token.split('.')[1];
-    if (!base64Url) return false;
-    const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/'); // Convert base64url to base64
-    const payload = JSON.parse(atob(base64));
-    return payload.role;
-}
+// function getUsernameFromToken(token) {
+//     if (token === null || token === undefined) {
+//         return false;
+//     }
+//     const base64Url = token.split('.')[1];
+//     if (!base64Url) return false;
+//     const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/'); // Convert base64url to base64
+//     const payload = JSON.parse(atob(base64));
+//     console.log("username data: ", payload);
+//     return payload.user_id;
+// }
 
 export const useApplicationStore = defineStore('application', () => {
     const userData = ref(null);
+    const tokenData = ref(null);
 
     const setUserData = (tempUserData) => {
         userData.value = tempUserData;
-        const accessToken = tempUserData.access_token;
-        setToken(accessToken);
     };
-    const setToken = (token) => {
-        localStorage.setItem('token', token);
-    };
-    const getToken = () => {
-        localStorage.getItem('token');
+    const setToken = (tempToken) => {
+        tokenData.value = tempToken;
     };
     const persistUserData = () => {
-        localStorage.setItem('userData', JSON.stringify(userData.value));
+        localStorage.setItem('userData', JSON.stringify(userData));
+    };
+    const persistToken = () => {
+        localStorage.setItem('tokenData', JSON.stringify(tokenData.value));
     };
     const loadUserData = () => {
         let tempUserData = localStorage.getItem('userData');
@@ -53,8 +54,9 @@ export const useApplicationStore = defineStore('application', () => {
         userData.value = null;
     };
     const isAuthenticated = computed(() => {
-        return checkJWT(userData.value?.access_token.access_token);
+        return checkJWT(tokenData.value?.accessToken);
+        // return checkJWT(userData.value?.access_token.access_token);
     });
 
-    return { userData, setUserData, persistUserData, loadUserData, clearUserData, isAuthenticated, setToken, getToken, getRole };
+    return { userData, setUserData, persistUserData, persistToken, loadUserData, clearUserData, isAuthenticated, setToken, setUserData };
 });

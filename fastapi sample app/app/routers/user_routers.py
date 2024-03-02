@@ -1,8 +1,8 @@
-from fastapi import APIRouter, Body, Depends, FastAPI, HTTPException
-from database import get_all_users, insert_user, get_role
+from fastapi import APIRouter, Body, Depends, FastAPI, HTTPException, status
+from database import get_all_users, insert_user, get_role, get_user_by_email
 from models.models import UserLoginSchema, User
 from internal.auth_bearer import JWTBearer
-from internal.auth_handler import signJWT
+from internal.auth_handler import signJWT, decodeJWT
 from pydantic import ValidationError
 
 router = APIRouter(
@@ -23,9 +23,17 @@ async def read_users():
     return get_all_users()
 
 
-@router.get("/me", tags=["users"])
-async def read_user_me():
-    return {"username": "fakecurrentuser"}
+# @router.get("/me", dependencies=[Depends(JWTBearer())], tags=["users"])
+@router.get("/me", dependencies=[Depends(JWTBearer())], tags=["users"])
+async def read_user_me(token: str = Depends(JWTBearer())):
+    user_data = decodeJWT(token)
+    if not user_data:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Invalid token or expired token",
+        )
+    return get_user_by_email(user_data.get("user_id"))
+# @TODO: na men ferni piso to password, na men ferni disabled users. (en prepi na gini aparetita dame)
 
 
 @router.get("/{username}", tags=["users"])
@@ -36,7 +44,7 @@ async def read_user(username: str):
 def create_user(user: User = Body(...)):
     print(user)
     insert_user(user) # replace with db call, making sure to hash the password first
-    return signJWT(user.email)
+    return signJWT(user.email, user.role)
 
 # @router.post("/login", tags=["user"])
 # def user_login(user: UserLoginSchema = Body(...)):
@@ -50,7 +58,7 @@ def create_user(user: User = Body(...)):
 def user_login(user: UserLoginSchema = Body(...)):
     try:
         if check_user(user):
-            token = signJWT(user.email, get_role(user.email).role)
+            token = signJWT(user.email)
             return token_response(token)
         else:
             raise HTTPException(status_code=401, detail="Invalid username or password")

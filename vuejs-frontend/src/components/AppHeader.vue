@@ -2,6 +2,10 @@
 import { RouterLink } from 'vue-router';
 import { useApplicationStore } from '@/stores/application.js';
 const applicationStore = useApplicationStore();
+
+console.log("username: ", useApplicationStore.getUsername);
+const rr = "qwe"
+
 </script>
 
 <template>
@@ -30,20 +34,29 @@ const applicationStore = useApplicationStore();
                     </li>
                     <li class="nav-item" v-if="applicationStore.isAuthenticated === true">
                         <router-link :to="{ name: 'courses' }" class="nav-link text-white"
-                            >Courses</router-link
+                            >Events</router-link
                         >
                     </li>
                     <li class="nav-item" v-if="applicationStore.isAuthenticated === true">
-                        <router-link :to="{ name: 'profile' }" class="nav-link text-white"
-                            >Profile
-                            <span style="font-size: 10px"
-                                >({{ applicationStore.userData?.username }})</span
-                            ></router-link
-                        >
+                        <div class="profile-wrapper">
+                            <div class="profile-circle">
+                                <img src="/profile-default.png" alt="Profile Picture" class="profile-img">
+                            </div>
+                            <router-link :to="{ name: 'profile' }" class="nav-link text-white">
+                                Profile</router-link>
+                                <span style="font-size: 10px">
+                                    ({{ rr }})
+                                </span>
+                        </div>
                     </li>
                     <li class="nav-item" v-if="applicationStore.isAuthenticated === false">
                         <router-link :to="{ name: 'login' }" class="nav-link text-white"
                             >Login</router-link
+                        >
+                    </li>
+                    <li class="nav-item" v-if="applicationStore.isAuthenticated === false">
+                        <router-link :to="{ name: 'register' }" class="nav-link text-white"
+                            >Register</router-link
                         >
                     </li>
                     <li class="nav-item" v-if="applicationStore.isAuthenticated === true">
@@ -56,3 +69,4 @@ const applicationStore = useApplicationStore();
         </div>
     </header>
 </template>
+<style src="../assets/header.css"></style>

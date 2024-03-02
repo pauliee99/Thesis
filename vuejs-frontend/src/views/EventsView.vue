@@ -1,19 +1,13 @@
 <script setup>
 import { onMounted, ref } from 'vue';
 import { useRemoteData } from '@/composables/useRemoteData.js';
-import { useApplicationStore } from '@/stores/application.js';
 
 const urlRef = ref('http://localhost:8000/events');
 const authRef = ref(true);
 const { data, loading, performRequest } = useRemoteData(urlRef, authRef);
 
 onMounted(() => {
-    performRequest({
-        method: 'GET',
-        headers: {
-            Authorization: `Bearer ${useApplicationStore.getToken}`
-        }
-    });
+    performRequest();
 });
 </script>
 
@@ -23,36 +17,43 @@ onMounted(() => {
             <div class="row py-4 px-3">
                 <div class="col-12">
                     <div class="mb-4">
-                        <h1 class="fs-3">Courses</h1>
+                        <h1 class="fs-3">Events</h1>
                     </div>
                     <div>
                         <table class="table">
                             <thead>
                                 <tr>
-                                    <!-- <th>Course ID</th> -->
-                                    <th>Course Title</th>
+                                    <th>ID</th>
+                                    <th>First Name</th>
+                                    <th>Last Name</th>
+                                    <th>Email</th>
                                     <th>Actions</th>
                                 </tr>
                             </thead>
+                            <tbody v-if="loading">
+                                <tr>
+                                    <td colspan="5">Loading...</td>
+                                </tr>
+                            </tbody>
                             <tbody v-if="data">
-                                <tr v-for="course in data._embedded.courses">
-                                    <td>{{ course.title }}</td>
+                                <tr v-for="student in data._embedded.students">
+                                    <td>{{ student.id }}</td>
+                                    <td>{{ student.firstName }}</td>
+                                    <td>{{ student.lastName }}</td>
+                                    <td>{{ student.email }}</td>
                                     <td>
-                                        <!-- TODO course.id -->
                                         <RouterLink
                                             :to="{
-                                                name: 'course-details',
-                                                params: { id: course.id }
+                                                name: 'student-details',
+                                                params: { id: student.id }
                                             }"
+                                            >Display</RouterLink
                                         >
-                                            Display
-                                        </RouterLink>
                                     </td>
                                 </tr>
                             </tbody>
                         </table>
                     </div>
-                    <pre>{{ data }}</pre>
                 </div>
             </div>
         </div>

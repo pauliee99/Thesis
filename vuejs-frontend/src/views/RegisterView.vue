@@ -11,18 +11,46 @@ const { setUserData, persistUserData, isAuthenticated, setToken, getToken, getRo
 const loading = ref(false);
 const credentials = ref({
     username: '',
-    password: ''
+    password: '',
 });
-const authenticationFailed = ref(false);
+const passwordMismatch = ref(false);
+
+const password = ref(null);
+const repeatPassword = ref(null);
+const fname = ref(null);
+const lname = ref(null);
+const username = ref(null);
+const birthdate = ref(null);
+const studentid = ref(null);
 
 const onFormSubmit = () => {
     loading.value = true;
-    authenticationFailed.value = false;
+    passwordMismatch.value = false;
+
+    console.log('username: ', credentials.value.username, '  password: ', credentials.value.password);
+
+    if (credentials.value.password !== repeatPassword.value) {
+        console.error('Passwords do not match');
+        passwordMismatch.value = true;
+        return;
+    }
+    console.log('Passwords match');
 
     const requestBody = {
+        id: 0,
+        username: username.value,
         email: credentials.value.username,
-        password: credentials.value.password
+        password: credentials.value.password,
+        firstname: fname.value,
+        lastname: lname.value,
+        birth_date: birthdate.value,
+        student_id: studentid.value,
+        profile_picture: '',
+        createdon: '2024-03-01T19:28:09',
+        role: 'Student',
+        disabled: false
     };
+    console.log(requestBody);
     fetch('http://localhost:8000/users/signup/', {
         method: 'POST',
         headers: {
@@ -34,30 +62,18 @@ const onFormSubmit = () => {
             if (!response.ok) {
                 throw new Error('Failed to login');
             }
-            // setUserData(response);
-            // persistUserData();
-            return response.json(); // Parse the response body as JSON
+            return response.json();
         })
         .then(data => {
             setUserData(data);
             persistUserData();
-            // Handle successful login
-            // Store authentication token in Vuex store or local storage
-            // setToken(data.access_token);
-            // Redirect to the dashboard or desired route
             console.log("redirecting...");
-            if (getRole(data.access_token.access_token) == "Student"){
-                router.push({ name: 'home' });
-            } else if (getRole(data.access_token.access_token) == "Admin") {
-                console.log("view for admin here");
-            } else {
-                console.log("view for manager here");
-            }
+            router.push({ name: 'profile' });
             
         })
         .catch((err) => {
             console.warn(err);
-            authenticationFailed.value = true;
+            passwordMismatch.value = true;
         })
         .finally(() => {
             loading.value = false;
@@ -82,23 +98,51 @@ onBeforeMount(() => {
                     <div class="spinner-border" role="status" v-if="loading">
                         <span class="visually-hidden">Loading...</span>
                     </div>
-                    <form v-else>
-                        <div class="mb-2" v-if="authenticationFailed">
-                            <!--
-              @EXERCISE: Be more specific.
-              E.g., user does not exist, credentials are not valid, etc.
-              Always consider security, i.e., sometimes you may not want to unveil information.
-              -->
+                    <form v-else @submit.prevent="onFormSubmit">
+                        <div class="mb-2" v-if="passwordMismatch">
                             <div class="alert alert-danger" role="alert">
-                                Authentication failed!
+                                Passwords mismatch!
                             </div>
+                        </div>
+                        <div class="mb-2" style="display: inline-block;">
+                            <label for="fanameFormControl" class="form-label mb-1"
+                                >First Name</label
+                            >
+                            <input
+                                v-model="fname"
+                                type="text"
+                                class="form-control"
+                                id="fnameFormControl"
+                            />
+                        </div>
+                        <div class="mb-2" style="display: inline-block;">
+                            <label for="lanameFormControl" class="form-label mb-1"
+                                >Last Name</label
+                            >
+                            <input
+                                v-model="lname"
+                                type="text"
+                                class="form-control"
+                                id="lnameFormControl"
+                            />
                         </div>
                         <div class="mb-2">
                             <label for="usernameFormControl" class="form-label mb-1"
-                                >Email address or Username</label
+                                >Email address</label
                             >
                             <input
                                 v-model="credentials.username"
+                                type="text"
+                                class="form-control"
+                                id="emailFormControl"
+                            />
+                        </div>
+                        <div class="mb-2" style="display: inline-block;">
+                            <label for="usernameFormControl" class="form-label mb-1"
+                                >Username</label
+                            >
+                            <input
+                                v-model="username"
                                 type="text"
                                 class="form-control"
                                 id="usernameFormControl"
@@ -116,14 +160,36 @@ onBeforeMount(() => {
                             />
                         </div>
                         <div class="mb-2">
-                            <label for="passwordFormControl" class="form-label mb-1"
+                            <label for="repeatPasswordFormControl" class="form-label mb-1"
                                 >Repeat Password</label
                             >
                             <input
-                                v-model="credentials.password"
+                                v-model="repeatPassword"
                                 type="password"
                                 class="form-control"
-                                id="passwordFormControl"
+                                id="repeatPasswordFormControl"
+                            />
+                        </div>
+                        <div class="mb-2">
+                            <label for="birthdateFormControl" class="form-label mb-1"
+                                >Birth Date</label
+                            >
+                            <input
+                                v-model="birthdate"
+                                type="date"
+                                class="form-control"
+                                id="birthdateFormControl"
+                            />
+                        </div>
+                        <div class="mb-2">
+                            <label for="studentidFormControl" class="form-label mb-1"
+                                >Student ID</label
+                            >
+                            <input
+                                v-model="studentid"
+                                type="number"
+                                class="form-control"
+                                id="studentidFormControl"
                             />
                         </div>
                         <button @click="onFormSubmit" type="submit" class="btn btn-primary">
