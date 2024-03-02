@@ -11,7 +11,6 @@ const { setUserData, persistUserData, isAuthenticated, setToken, getToken, getRo
 const loading = ref(false);
 const credentials = ref({
     username: '',
-<<<<<<< HEAD
     password: '',
 });
 const passwordMismatch = ref(false);
@@ -52,20 +51,6 @@ const onFormSubmit = () => {
         disabled: false
     };
     console.log(requestBody);
-=======
-    password: ''
-});
-const authenticationFailed = ref(false);
-
-const onFormSubmit = () => {
-    loading.value = true;
-    authenticationFailed.value = false;
-
-    const requestBody = {
-        email: credentials.value.username,
-        password: credentials.value.password
-    };
->>>>>>> 4fc18c6656d62d98e4d2db52a1e91b97762c81d9
     fetch('http://localhost:8000/users/signup/', {
         method: 'POST',
         headers: {
@@ -77,43 +62,18 @@ const onFormSubmit = () => {
             if (!response.ok) {
                 throw new Error('Failed to login');
             }
-<<<<<<< HEAD
             return response.json();
-=======
-            // setUserData(response);
-            // persistUserData();
-            return response.json(); // Parse the response body as JSON
->>>>>>> 4fc18c6656d62d98e4d2db52a1e91b97762c81d9
         })
         .then(data => {
             setUserData(data);
             persistUserData();
-<<<<<<< HEAD
             console.log("redirecting...");
             router.push({ name: 'profile' });
-=======
-            // Handle successful login
-            // Store authentication token in Vuex store or local storage
-            // setToken(data.access_token);
-            // Redirect to the dashboard or desired route
-            console.log("redirecting...");
-            if (getRole(data.access_token.access_token) == "Student"){
-                router.push({ name: 'home' });
-            } else if (getRole(data.access_token.access_token) == "Admin") {
-                console.log("view for admin here");
-            } else {
-                console.log("view for manager here");
-            }
->>>>>>> 4fc18c6656d62d98e4d2db52a1e91b97762c81d9
             
         })
         .catch((err) => {
             console.warn(err);
-<<<<<<< HEAD
             passwordMismatch.value = true;
-=======
-            authenticationFailed.value = true;
->>>>>>> 4fc18c6656d62d98e4d2db52a1e91b97762c81d9
         })
         .finally(() => {
             loading.value = false;
@@ -138,7 +98,6 @@ onBeforeMount(() => {
                     <div class="spinner-border" role="status" v-if="loading">
                         <span class="visually-hidden">Loading...</span>
                     </div>
-<<<<<<< HEAD
                     <form v-else @submit.prevent="onFormSubmit">
                         <div class="mb-2" v-if="passwordMismatch">
                             <div class="alert alert-danger" role="alert">
@@ -170,28 +129,11 @@ onBeforeMount(() => {
                         <div class="mb-2">
                             <label for="usernameFormControl" class="form-label mb-1"
                                 >Email address</label
-=======
-                    <form v-else>
-                        <div class="mb-2" v-if="authenticationFailed">
-                            <!--
-              @EXERCISE: Be more specific.
-              E.g., user does not exist, credentials are not valid, etc.
-              Always consider security, i.e., sometimes you may not want to unveil information.
-              -->
-                            <div class="alert alert-danger" role="alert">
-                                Authentication failed!
-                            </div>
-                        </div>
-                        <div class="mb-2">
-                            <label for="usernameFormControl" class="form-label mb-1"
-                                >Email address or Username</label
->>>>>>> 4fc18c6656d62d98e4d2db52a1e91b97762c81d9
                             >
                             <input
                                 v-model="credentials.username"
                                 type="text"
                                 class="form-control"
-<<<<<<< HEAD
                                 id="emailFormControl"
                             />
                         </div>
@@ -203,8 +145,6 @@ onBeforeMount(() => {
                                 v-model="username"
                                 type="text"
                                 class="form-control"
-=======
->>>>>>> 4fc18c6656d62d98e4d2db52a1e91b97762c81d9
                                 id="usernameFormControl"
                             />
                         </div>
@@ -220,7 +160,6 @@ onBeforeMount(() => {
                             />
                         </div>
                         <div class="mb-2">
-<<<<<<< HEAD
                             <label for="repeatPasswordFormControl" class="form-label mb-1"
                                 >Repeat Password</label
                             >
@@ -251,16 +190,6 @@ onBeforeMount(() => {
                                 type="number"
                                 class="form-control"
                                 id="studentidFormControl"
-=======
-                            <label for="passwordFormControl" class="form-label mb-1"
-                                >Repeat Password</label
-                            >
-                            <input
-                                v-model="credentials.password"
-                                type="password"
-                                class="form-control"
-                                id="passwordFormControl"
->>>>>>> 4fc18c6656d62d98e4d2db52a1e91b97762c81d9
                             />
                         </div>
                         <button @click="onFormSubmit" type="submit" class="btn btn-primary">
