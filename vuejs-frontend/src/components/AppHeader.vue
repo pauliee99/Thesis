@@ -1,11 +1,11 @@
 <script setup>
 import { RouterLink } from 'vue-router';
 import { useApplicationStore } from '@/stores/application.js';
+const applicationStore = useApplicationStore();
+// const { persistUserData, isAuthenticated, setToken, persistToken, setUserData } = useApplicationStore();
 
-const { persistUserData, isAuthenticated, setToken, persistToken, setUserData } = useApplicationStore();
-
-console.log("username: ", useApplicationStore.getUsername);
-const rr = "getUserData"
+// console.log("username: ", useApplicationStore.getUsername);
+const rr = applicationStore.userData; // @TODO: put here the value of username
 
 </script>
 

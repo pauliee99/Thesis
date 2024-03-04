@@ -65,8 +65,8 @@ export const useApplicationStore = defineStore('application', () => {
         userData.value = null;
     };
     const isAuthenticated = computed(() => {
+        console.log("authendicated: ", tokenData.value?.access_token.access_token);
         return checkJWT(tokenData.value?.access_token.access_token);
-        // return checkJWT(userData.value?.access_token.access_token);
     });
 
     return { userData, setUserData, persistUserData, persistToken, loadUserData, clearUserData, isAuthenticated, setToken, setUserData };
