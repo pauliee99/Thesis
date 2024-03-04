@@ -41,6 +41,17 @@ export const useApplicationStore = defineStore('application', () => {
     const persistToken = () => {
         localStorage.setItem('tokenData', JSON.stringify(tokenData.value));
     };
+    // const getUserData = () => {
+    //     let tempUserData = localStorage.getItem('userData');
+    //     tempUserData = JSON.parse(tempUserData);
+    //     if (tempUserData === null || tempUserData === undefined) {
+    //         return;
+    //     }
+    //     return tempUserData;
+    // };
+    const getToken = (tempToken) => {
+        tokenData.value = tempToken;
+    };
     const loadUserData = () => {
         let tempUserData = localStorage.getItem('userData');
         tempUserData = JSON.parse(tempUserData);
@@ -54,7 +65,7 @@ export const useApplicationStore = defineStore('application', () => {
         userData.value = null;
     };
     const isAuthenticated = computed(() => {
-        return checkJWT(tokenData.value?.accessToken);
+        return checkJWT(tokenData.value?.access_token.access_token);
         // return checkJWT(userData.value?.access_token.access_token);
     });
 

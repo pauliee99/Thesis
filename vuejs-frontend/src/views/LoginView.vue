@@ -48,14 +48,13 @@ const onFormSubmit = () => {
                 method: 'GET',
                 headers: {
                     'Authorization': `Bearer ${data.access_token.access_token}` // Assuming the access token is returned in the login response
-                }
-            });            
+                },
+            });          
         })
         .then(response => {
             if (!response.ok) {
                 throw new Error('Failed to fetch user role');
             }
-            console.log(response)
             return response.json(); // Parse the response body as JSON
         })
         .then(userData => {
