@@ -60,6 +60,14 @@ export const useApplicationStore = defineStore('application', () => {
         }
         userData.value = tempUserData;
     };
+    const loadTokenData = () => {
+        let tempTokenData = localStorage.getItem('tokenData');
+        tempTokenData = JSON.parse(tempTokenData);
+        if (tempTokenData === null || tempTokenData === undefined) {
+            return;
+        }
+        userData.value = tempTokenData;
+    };
     const clearUserData = () => {
         localStorage.setItem('userData', JSON.stringify(null));
         userData.value = null;
@@ -69,5 +77,5 @@ export const useApplicationStore = defineStore('application', () => {
         return checkJWT(tokenData.value?.access_token.access_token);
     });
 
-    return { userData, setUserData, persistUserData, persistToken, loadUserData, clearUserData, isAuthenticated, setToken, setUserData };
+    return { userData, setUserData, persistUserData, persistToken, loadUserData, loadTokenData, clearUserData, isAuthenticated, setToken, setUserData };
 });

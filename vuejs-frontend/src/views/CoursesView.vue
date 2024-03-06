@@ -6,6 +6,9 @@ import { useApplicationStore } from '@/stores/application.js';
 const urlRef = ref('http://localhost:8000/events');
 const authRef = ref(true);
 const { data, loading, performRequest } = useRemoteData(urlRef, authRef);
+const applicationStore = useApplicationStore();
+
+console.log(applicationStore.tokenData.value);
 
 onMounted(() => {
     performRequest({

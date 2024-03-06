@@ -4,8 +4,8 @@ import { useApplicationStore } from '@/stores/application.js';
 const applicationStore = useApplicationStore();
 // const { persistUserData, isAuthenticated, setToken, persistToken, setUserData } = useApplicationStore();
 
-// console.log("username: ", useApplicationStore.getUsername);
-const rr = applicationStore.userData; // @TODO: put here the value of username
+// console.log("username blah: ", useApplicationStore.userData.username);
+const rr = applicationStore.userData?.username; // @TODO: put here the value of username
 
 </script>
 
