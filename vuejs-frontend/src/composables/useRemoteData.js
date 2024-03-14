@@ -10,8 +10,9 @@ export function useRemoteData(urlRef, authRef, methodRef = ref('GET'), bodyRef =
 
     const performRequest = (token) => {
         const headers = {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${token}`
+            'Content-Type': 'application/json'
+            // ,
+            // 'Authorization': `Bearer ${token}`
         };
 
         if (authRef.value === true) {
@@ -24,7 +25,7 @@ export function useRemoteData(urlRef, authRef, methodRef = ref('GET'), bodyRef =
 
         if (bodyRef.value !== null) {
             config.body = JSON.stringify(bodyRef.value);
-        }
+        };
 
         fetch(urlRef.value, config)
             .then((response) => {
