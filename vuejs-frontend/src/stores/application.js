@@ -41,16 +41,21 @@ export const useApplicationStore = defineStore('application', () => {
     const persistToken = () => {
         localStorage.setItem('tokenData', JSON.stringify(tokenData.value));
     };
-    // const getUserData = () => {
-    //     let tempUserData = localStorage.getItem('userData');
-    //     tempUserData = JSON.parse(tempUserData);
-    //     if (tempUserData === null || tempUserData === undefined) {
-    //         return;
-    //     }
-    //     return tempUserData;
-    // };
-    const getToken = (tempToken) => {
-        tokenData.value = tempToken;
+    const getUserData = () => {
+        let tempUserData = localStorage.getItem('userData');
+        tempUserData = JSON.parse(tempUserData);
+        if (tempUserData === null || tempUserData === undefined) {
+            return;
+        }
+        return tempUserData;
+    };
+    const getToken = () => {
+        let token = localStorage.getItem('tokenData');
+        token = JSON.parse(token);
+        if (token === null || token === undefined) {
+            return;
+        }
+        return token;
     };
     const loadUserData = () => {
         let tempUserData = localStorage.getItem('userData');
@@ -77,5 +82,5 @@ export const useApplicationStore = defineStore('application', () => {
         return checkJWT(tokenData.value?.access_token.access_token);
     });
 
-    return { userData, setUserData, persistUserData, persistToken, loadUserData, loadTokenData, clearUserData, isAuthenticated, setToken, setUserData };
+    return { userData, setUserData, persistUserData, persistToken, loadUserData, loadTokenData, clearUserData, isAuthenticated, setToken, setUserData, getUserData, getToken };
 });

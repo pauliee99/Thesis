@@ -1,13 +1,18 @@
 <script setup>
 import { onMounted, ref } from 'vue';
 import { useRemoteData } from '@/composables/useRemoteData.js';
+import { useApplicationStore } from '@/stores/application.js';
+
+const { getToken } = useApplicationStore();
 
 const urlRef = ref('http://localhost:8000/events');
 const authRef = ref(true);
 const { data, loading, performRequest } = useRemoteData(urlRef, authRef);
 
+const token = getToken()?.access_token.access_token;
+
 onMounted(() => {
-    performRequest();
+    performRequest({ token });
 });
 </script>
 

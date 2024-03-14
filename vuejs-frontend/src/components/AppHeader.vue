@@ -2,10 +2,11 @@
 import { RouterLink } from 'vue-router';
 import { useApplicationStore } from '@/stores/application.js';
 const applicationStore = useApplicationStore();
+const { getUserData } = useApplicationStore();
 // const { persistUserData, isAuthenticated, setToken, persistToken, setUserData } = useApplicationStore();
-
+const tmp = getUserData();
 // console.log("username blah: ", useApplicationStore.userData.username);
-const rr = applicationStore.userData?.username; // @TODO: put here the value of username
+const rr = tmp._value.username;
 
 </script>
 
@@ -34,7 +35,7 @@ const rr = applicationStore.userData?.username; // @TODO: put here the value of 
                         >
                     </li>
                     <li class="nav-item" v-if="applicationStore.isAuthenticated === true">
-                        <router-link :to="{ name: 'courses' }" class="nav-link text-white"
+                        <router-link :to="{ name: 'events' }" class="nav-link text-white"
                             >Events</router-link
                         >
                     </li>

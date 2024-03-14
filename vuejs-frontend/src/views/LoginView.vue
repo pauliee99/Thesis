@@ -61,7 +61,7 @@ const onFormSubmit = () => {
             // Handle successful role fetch
             setUserData(userData);
             persistUserData();
-
+            console.log("set user data, persist data")
             // Redirect based on user role
             if (userData.role === "1") {
                 router.push({ name: 'home' });
@@ -82,6 +82,7 @@ const onFormSubmit = () => {
 
 onBeforeMount(() => {
     if (isAuthenticated === true) {
+        loadUserData();
         router.push({ name: 'home' });
     }
 });
