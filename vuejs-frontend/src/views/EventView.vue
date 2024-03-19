@@ -4,10 +4,11 @@ import { useRoute } from 'vue-router';
 
 const route = useRoute();
 
-const courseIdRef = ref(null);
+const eventIdRef = ref(null);
 
 onMounted(() => {
-    courseIdRef.value = route.params.id;
+    console.log(eventIdRef.value)
+    eventIdRef.value = route.params.id;
 });
 </script>
 
@@ -17,24 +18,24 @@ onMounted(() => {
             <div class="row py-4 px-3">
                 <div class="col-12">
                     <div class="mb-4">
-                        <RouterLink class="small" :to="{ name: 'course' }"
+                        <RouterLink class="small" :to="{ name: 'event' }"
                             >Back to Courses</RouterLink
                         >
-                        <h1 class="fs-3">Course #{{ courseIdRef }}</h1>
+                        <h1 class="fs-3">Event #{{ eventIdRef }}</h1>
                     </div>
                     <div class="mb-4">
                         <ul class="nav border">
                             <li class="nav-item">
                                 <RouterLink
                                     class="nav-link"
-                                    :to="{ name: 'course-details', params: { id: courseIdRef } }"
+                                    :to="{ name: 'event-details', params: { id: eventIdRef } }"
                                     >Details</RouterLink
                                 >
                             </li>
                             <li class="nav-item">
                                 <RouterLink
                                     class="nav-link"
-                                    :to="{ name: 'course-students', params: { id: courseIdRef } }"
+                                    :to="{ name: 'course-students', params: { id: eventIdRef } }"
                                     >Students</RouterLink
                                 >
                             </li>

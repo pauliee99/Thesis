@@ -16,7 +16,7 @@ export function useRemoteData(urlRef, authRef, methodRef = ref('GET'), bodyRef =
         };
 
         if (authRef.value === true) {
-            headers['Authorization'] = 'Bearer ' + token;
+            headers['Authorization'] = 'Bearer ' + token.token;
         }
         const config = {
             method: methodRef.value,

@@ -51,15 +51,15 @@ const router = createRouter({
             ]
         },
         {
-            path: '/course/:id',
-            name: 'course',
-            component: () => import('../views/CourseView.vue'),
+            path: '/event/:id',
+            name: 'event',
+            component: () => import('../views/EventView.vue'),
             meta: { requiresAuth: true },
             children: [
                 {
                     path: '',
-                    name: 'course-details',
-                    component: () => import('../views/CourseDetailsView.vue'),
+                    name: 'event-details',
+                    component: () => import('../views/EventsDetailsView.vue'),
                     meta: { requiresAuth: true }
                 },
                 {

@@ -3,19 +3,21 @@ import { ref, computed, onMounted } from 'vue';
 import { useRouter, useRoute } from 'vue-router';
 import { useRemoteData } from '@/composables/useRemoteData.js';
 
+const { getToken } = useApplicationStore();
+const token = getToken()?.access_token.access_token;
 const router = useRouter();
 const route = useRoute();
 
-const courseIdRef = ref(null);
+const eventIdRef = ref(null);
 const urlRef = computed(() => {
-    return 'http://localhost:9090/course/' + courseIdRef.value;
+    return 'http://localhost:8000/event/' + eventIdRef.value;
 });
 const authRef = ref(true);
 const { data, loading, performRequest } = useRemoteData(urlRef, authRef);
-
+console.log(token);
 onMounted(() => {
-    courseIdRef.value = route.params.id;
-    performRequest();
+    eventIdRef.value = route.params.id;
+    performRequest({ token });
 });
 </script>
 <template>
@@ -24,7 +26,7 @@ onMounted(() => {
             <tbody v-if="data">
                 <tr>
                     <th>Title</th>
-                    <td>{{ data.title }}</td>
+                    <td>{{ data }}</td>
                 </tr>
             </tbody>
         </table>

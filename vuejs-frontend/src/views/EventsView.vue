@@ -41,16 +41,16 @@ onMounted(() => {
                                 </tr>
                             </tbody>
                             <tbody v-if="data">
-                                <tr v-for="student in data._embedded.students">
-                                    <td>{{ student.id }}</td>
-                                    <td>{{ student.firstName }}</td>
-                                    <td>{{ student.lastName }}</td>
-                                    <td>{{ student.email }}</td>
+                                <tr v-for="event in data">
+                                    <td>{{ event.id }}</td>
+                                    <td>{{ event.displayname }}</td>
+                                    <td>{{ event.location }}</td>
+                                    <td>{{ event.price }}</td>
                                     <td>
                                         <RouterLink
                                             :to="{
                                                 name: 'student-details',
-                                                params: { id: student.id }
+                                                params: { id: event.id }
                                             }"
                                             >Display</RouterLink
                                         >
