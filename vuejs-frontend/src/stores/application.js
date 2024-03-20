@@ -5,7 +5,6 @@ function checkJWT(token) {
     if (token === null || token === undefined) {
         return false;
     }
-    console.log("token 2 : ", token);
     const base64Url = token.split('.')[1];
     if (!base64Url) return false;
     const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/'); // Convert base64url to base64
@@ -78,7 +77,7 @@ export const useApplicationStore = defineStore('application', () => {
         userData.value = null;
     };
     const isAuthenticated = computed(() => {
-        console.log("authendicated: ", tokenData.value?.access_token.access_token);
+        // console.log("authendicated: ", tokenData.value?.access_token.access_token);
         return checkJWT(tokenData.value?.access_token.access_token);
     });
 

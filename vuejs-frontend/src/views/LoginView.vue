@@ -1,7 +1,7 @@
 <script setup>
 // @EXERCISE: If user is authenticated redirect to the requested URL.
 // @EXERCISE: If user is not authenticated, keep the requested URL and after a successful authentication redirect to the requested resource.
-import { onBeforeMount, ref } from 'vue';
+import { onBeforeMount, ref, onMounted } from 'vue';
 import { useRouter } from 'vue-router';
 import { useApplicationStore } from '@/stores/application.js';
 
@@ -31,7 +31,7 @@ const onFormSubmit = () => {
         body: JSON.stringify(requestBody)
     })
         .then(response => {
-            console.log(response);
+            // console.log(response);
             if (!response.ok) {
                 throw new Error('Failed to login');
             }
@@ -61,7 +61,6 @@ const onFormSubmit = () => {
             // Handle successful role fetch
             setUserData(userData);
             persistUserData();
-            console.log("set user data, persist data")
             // Redirect based on user role
             if (userData.role === "1") {
                 router.push({ name: 'home' });

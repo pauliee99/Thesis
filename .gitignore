@@ -2,6 +2,7 @@
 */__pycache__/*
 *.pyc
 myvenv
+backend-venv
 
 # Logs
 logs

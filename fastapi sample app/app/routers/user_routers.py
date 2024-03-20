@@ -4,6 +4,7 @@ from models.models import UserLoginSchema, User
 from internal.auth_bearer import JWTBearer
 from internal.auth_handler import signJWT, decodeJWT
 from pydantic import ValidationError
+import bcrypt
 
 router = APIRouter(
     prefix="/users",
@@ -14,7 +15,7 @@ router = APIRouter(
 def check_user(data: UserLoginSchema):
     users = get_all_users()
     for user in users:
-        if user.email == data.email and user.password == data.password:
+        if user.email == data.email and bcrypt.checkpw(data.password.encode('utf-8'), user.password.encode('utf-8')):
             return True
     return False
 
@@ -42,9 +43,10 @@ async def read_user(username: str):
 
 @router.post("/signup", tags=["user"])
 def create_user(user: User = Body(...)):
-    print(user)
-    insert_user(user) # replace with db call, making sure to hash the password first
-    return signJWT(user.email, user.role)
+    hashed_password = bcrypt.hashpw(user.password.encode('utf-8'), bcrypt.gensalt())
+    user.password = hashed_password.decode('utf-8')
+    insert_user(user)
+    return signJWT(user.email)
 
 # @router.post("/login", tags=["user"])
 # def user_login(user: UserLoginSchema = Body(...)):

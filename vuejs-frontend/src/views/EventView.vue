@@ -7,8 +7,8 @@ const route = useRoute();
 const eventIdRef = ref(null);
 
 onMounted(() => {
-    console.log(eventIdRef.value)
     eventIdRef.value = route.params.id;
+    console.log(eventIdRef.value);
 });
 </script>
 
@@ -18,7 +18,7 @@ onMounted(() => {
             <div class="row py-4 px-3">
                 <div class="col-12">
                     <div class="mb-4">
-                        <RouterLink class="small" :to="{ name: 'event' }"
+                        <RouterLink class="small" :to="{ name: 'events' }"
                             >Back to Courses</RouterLink
                         >
                         <h1 class="fs-3">Event #{{ eventIdRef }}</h1>
@@ -36,7 +36,7 @@ onMounted(() => {
                                 <RouterLink
                                     class="nav-link"
                                     :to="{ name: 'course-students', params: { id: eventIdRef } }"
-                                    >Students</RouterLink
+                                    >Courses test</RouterLink
                                 >
                             </li>
                         </ul>
