@@ -13,6 +13,13 @@ const router = createRouter({
             meta: { requiresAuth: true }
         },
         {
+            path: '/',
+            name: 'home-manager',
+            // component: HomeView,
+            component: () => import('../views/HomeManagerView.vue'),
+            meta: { requiresAuth: true }
+        },
+        {
             path: '/profile',
             name: 'profile',
             component: () => import('../views/ProfileView.vue'),

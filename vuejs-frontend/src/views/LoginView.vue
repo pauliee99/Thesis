@@ -67,7 +67,7 @@ const onFormSubmit = () => {
             } else if (userData.role === "Admin") {
                 console.log("View for admin here");
             } else {
-                console.log("View for manager here");
+                router.push({ name: 'home-manager' });
             }
         })
         .catch((err) => {
