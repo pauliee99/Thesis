@@ -6,7 +6,7 @@ import { useRouter } from 'vue-router';
 import { useApplicationStore } from '@/stores/application.js';
 
 const router = useRouter();
-const { persistUserData, isAuthenticated, setToken, persistToken, setUserData, loadUserData } = useApplicationStore();
+const { persistUserData, isAuthenticated, setToken, persistToken, setUserData } = useApplicationStore();
 
 const loading = ref(false);
 const credentials = ref({
@@ -40,8 +40,7 @@ const onFormSubmit = () => {
             return response.json(); // Parse the response body as JSON
         })
         .then(data => {
-            console.log(data);
-            setToken(data.access_token.access_token);
+            setToken(data);
             persistToken();
             // Handle successful login
             // Store authentication token in Vuex store or local storage
@@ -81,7 +80,6 @@ const onFormSubmit = () => {
 };
 
 onBeforeMount(() => {
-    console.log(isAuthenticated);
     if (isAuthenticated === true) {
         loadUserData();
         router.push({ name: 'home' });

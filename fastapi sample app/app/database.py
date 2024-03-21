@@ -3,15 +3,10 @@ from typing import Optional
 from sqlalchemy.ext.asyncio import AsyncSession, create_async_engine
 from sqlmodel import Field, SQLModel, create_engine, Session, select
 from typing import AsyncGenerator
-from fastapi import Depends
-from fastapi_users.db import SQLAlchemyBaseUserTableUUID, SQLAlchemyUserDatabase
 from sqlalchemy.ext.declarative import DeclarativeMeta, declarative_base
 from sqlalchemy.orm import sessionmaker
 
 engine = create_engine("mysql+mysqlconnector://user:password@localhost/events")
-Base: DeclarativeMeta = declarative_base()
-
-async_session_maker = sessionmaker(engine, class_=AsyncSession, expire_on_commit=False)
 
 class Users(SQLModel, table=True):
     id: Optional[int] = Field(default=None, primary_key=True)
@@ -39,8 +34,9 @@ class Events(SQLModel, table=True):
     createdon: datetime
     createdby: str
 
-class User(SQLAlchemyBaseUserTableUUID, Base):
-    pass
+class Roles(SQLModel, table=True):
+    id: Optional[int] = Field(default=None, primary_key=True)
+    role: str
 
 # Add dummy data
 # user_1 = Users(
@@ -111,22 +107,30 @@ def get_all_users():
 
 def insert_user(user):
     with Session(engine) as session:
-        user_instance = Users(**user)
+        user_instance = Users(
+            email=user.email,
+            username=user.username,
+            password=user.password,
+            firstname=user.firstname,
+            lastname=user.lastname,
+            birth_date=user.birth_date,
+            student_id=user.student_id,
+            profile_picture=user.profile_picture,
+            createdon=datetime.now(),
+            role="Student",
+            disabled=False
+        ) # **user
         session.add(user_instance)
         session.commit()
 
-
-# FASTPI USERS CODE HERE
-
-async def create_db_and_tables():
-    async with engine.begin() as conn:
-        await conn.run_sync(Base.metadata.create_all)
-
-
-async def get_async_session() -> AsyncGenerator[AsyncSession, None]:
-    async with async_session_maker() as session:
-        yield session
-
-
-async def get_user_db(session: AsyncSession = Depends(get_async_session)):
-    yield SQLAlchemyUserDatabase(session, User)
+def get_user_by_email(user_email):
+    with Session(engine) as session:
+        statement = select(Users).where(Users.email == user_email)
+        users = session.exec(statement)
+        return users.first()
+    
+def get_role(user_email):
+    with Session(engine) as session:
+        statement = select(Roles).join(Users, Roles.id == Users.role).where(Users.email == user_email)
+        role = session.exec(statement)
+        return role.first() ## na to allaksa na ferni 1 piso

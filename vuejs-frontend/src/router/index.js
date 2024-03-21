@@ -104,6 +104,7 @@ const router = createRouter({
 router.beforeEach((to, from, next) => {
     const { isAuthenticated } = useApplicationStore();
     const requiresAuth = to.matched.some((record) => record.meta.requiresAuth);
+
     if (requiresAuth && !isAuthenticated) {
         console.log('user not authenticated. redirecting to /login');
         next('/login');

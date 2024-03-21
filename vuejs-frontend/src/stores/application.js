@@ -70,21 +70,16 @@ export const useApplicationStore = defineStore('application', () => {
         if (tempTokenData === null || tempTokenData === undefined) {
             return;
         }
-        tokenData.value = tempTokenData;
+        userData.value = tempTokenData;
     };
     const clearUserData = () => {
         localStorage.setItem('userData', JSON.stringify(null));
         userData.value = null;
     };
-    const clearToken = () => {
-        localStorage.setItem('tokenData', JSON.stringify(null));
-        tokenData.value = null;
-    };
     const isAuthenticated = computed(() => {
         // console.log("authendicated: ", tokenData.value?.access_token.access_token);
-        // return checkJWT(tokenData.value?.access_token.access_token);
-        return checkJWT(getToken()?.access_token?.access_token);
+        return checkJWT(tokenData.value?.access_token.access_token);
     });
 
-    return { userData, tokenData, setUserData, persistUserData, persistToken, loadUserData, loadTokenData, clearUserData, clearToken, isAuthenticated, setToken, setUserData, getUserData, getToken };
+    return { userData, setUserData, persistUserData, persistToken, loadUserData, loadTokenData, clearUserData, isAuthenticated, setToken, setUserData, getUserData, getToken };
 });

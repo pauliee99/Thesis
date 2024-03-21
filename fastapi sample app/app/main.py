@@ -1,31 +1,25 @@
-# python -m uvicorn main1:app --reload
+# python -m uvicorn main:app --reload
 # http://127.0.0.1:8000/docs
 
-from datetime import datetime
+from datetime import datetime, date
 from typing import Union
 from typing import Annotated
 from fastapi import Depends, FastAPI, HTTPException, status
 from pydantic import BaseModel
 from enum import Enum
 from contextlib import asynccontextmanager
-from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
 from models.models import User, Event
 import models.models
-from routers import event_routers, user_routers, users_auth_routers
-from dependencies import get_token_header, get_query_token
-from internal import admin
+from routers import event_routers, user_routers
 import database
-from database import User, create_db_and_tables
-from internal.schemas import UserCreate, UserRead, UserUpdate
-from internal.users import auth_backend, current_active_user, fastapi_users
+from fastapi.middleware.cors import CORSMiddleware
+from fastapi.middleware.httpsredirect import HTTPSRedirectMiddleware
 
 events = []
 events.append(Event(id=1, displayname="event1", location="kallithea", start_time=datetime.now(), end_time=datetime.now(), price=0.0, picture="picture here", description="a very cool event", createdon = datetime.now(), createdby = "admin"))
 events.append(Event(id=2, displayname="event2", location="nea smirni", start_time=datetime.now(), end_time=datetime.now(), price=1.0, picture="picture here", description="another cool event", createdon = datetime.now(), createdby = "admin"))
 users = []
-users.append(models.models.User(id=1, email="user1@mail.com", username="user1", password="password", firstname="some name", lastname="surname", birth_date=datetime.now(), student_id=12345, profile_picture="path/to/file", createdon=datetime.now(), role="1", disabled=False))
-
-oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
+users.append(models.models.User(id=1, email="user1@mail.com", username="user1", password="password", firstname="some name", lastname="surname", birth_date=date.today(), student_id=12345, profile_picture="path/to/file", createdon=datetime.now(), role="1", disabled=False))
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
@@ -37,16 +31,22 @@ async def lifespan(app: FastAPI):
 
 # app = FastAPI(lifespan=lifespan)
 app = FastAPI()
+#app.add_middleware(HTTPSRedirectMiddleware)
+
+origins = [
+    "*"
+]
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=origins,
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 app.include_router(user_routers.router)
 app.include_router(event_routers.router)
-app.include_router(
-    admin.router,
-    prefix="/admin",
-    tags=["admin"],
-    dependencies=[Depends(get_token_header)],
-    responses={418: {"description": "I'm a teapot"}},
-)
 
 # def hash_password(password: str):
 #     return "fakehashed" + password
@@ -101,36 +101,6 @@ async def read_root():
 @app.get("/db_info/")
 def test_db():
     return database.db_info()
-
-app.include_router(
-    fastapi_users.get_auth_router(auth_backend), prefix="/auth/jwt", tags=["auth"]
-)
-app.include_router(
-    fastapi_users.get_register_router(UserRead, UserCreate),
-    prefix="/auth",
-    tags=["auth"],
-)
-app.include_router(
-    fastapi_users.get_reset_password_router(),
-    prefix="/auth",
-    tags=["auth"],
-)
-app.include_router(
-    fastapi_users.get_verify_router(UserRead),
-    prefix="/auth",
-    tags=["auth"],
-)
-app.include_router(
-    fastapi_users.get_users_router(UserRead, UserUpdate),
-    prefix="/users",
-    tags=["users"],
-)
-
-
-@app.get("/authenticated-route")
-async def authenticated_route(user: User = Depends(current_active_user)):
-    return {"message": f"Hello {user.email}!"}
-
 
 # @app.on_event("startup")
 # async def on_startup():

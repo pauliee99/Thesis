@@ -6,8 +6,7 @@ const { getUserData } = useApplicationStore();
 // const { persistUserData, isAuthenticated, setToken, persistToken, setUserData } = useApplicationStore();
 const tmp = getUserData();
 // console.log("username blah: ", useApplicationStore.userData.username);
-console.log(tmp);
-const username = tmp?._value.username;
+const rr = tmp._value.username;
 
 </script>
 
@@ -48,7 +47,7 @@ const username = tmp?._value.username;
                             <router-link :to="{ name: 'profile' }" class="nav-link text-white">
                                 Profile</router-link>
                                 <span style="font-size: 10px">
-                                    ({{ username }})
+                                    ({{ rr }})
                                 </span>
                         </div>
                     </li>
