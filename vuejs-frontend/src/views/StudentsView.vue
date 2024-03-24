@@ -3,13 +3,15 @@ import { onMounted, ref } from 'vue';
 import { useRemoteData } from '@/composables/useRemoteData.js';
 
 const urlRef = ref('http://localhost:8000/users');
-const authRef = ref(false);
+const authRef = ref(false); //@TODO: na to kamo true molis vao je to auth tou backend
 const { data, loading, performRequest } = useRemoteData(urlRef, authRef);
 
 onMounted(() => {
-    performRequest();
+    performRequest(); //@TODO: na valo to token molis saso to authendication tou endpoint
 });
 </script>
+
+<style src="./src/assets/students.css"></style>
 
 <template>
     <div class="bg-body-tertiary">
@@ -45,7 +47,7 @@ onMounted(() => {
                                         <RouterLink
                                             :to="{
                                                 name: 'student-details',
-                                                params: { id: student.id }
+                                                params: { username: student.username }
                                             }"
                                             >Display</RouterLink
                                         >
