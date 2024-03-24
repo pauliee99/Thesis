@@ -8,7 +8,7 @@ export function useRemoteData(urlRef, authRef, methodRef = ref('GET'), bodyRef =
     const error = ref(null);
     const loading = ref(false);
 
-    const performRequest = (token) => {
+    const performRequest = (token = null) => {
         const headers = {
             'Content-Type': 'application/json'
             // ,
