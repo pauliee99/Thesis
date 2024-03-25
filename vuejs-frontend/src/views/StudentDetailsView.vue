@@ -7,9 +7,11 @@ const router = useRouter();
 const route = useRoute();
 
 const studentIdRef = ref(null);
+studentIdRef.value = route.params.username;
 const urlRef = computed(() => {
     return 'http://localhost:8000/users/' + studentIdRef.value;
 });
+console.log(urlRef)
 const authRef = ref(false); //@TODO: na to kamo true molis vao je to auth tou backend
 const { data, loading, performRequest } = useRemoteData(urlRef, authRef);
 

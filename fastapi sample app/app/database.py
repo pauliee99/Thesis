@@ -4,7 +4,7 @@ from sqlalchemy.ext.asyncio import AsyncSession, create_async_engine
 from sqlmodel import Field, SQLModel, create_engine, Session, select
 from typing import AsyncGenerator
 from sqlalchemy.ext.declarative import DeclarativeMeta, declarative_base
-from sqlalchemy.orm import sessionmaker
+from sqlalchemy.orm import sessionmaker, load_only
 
 engine = create_engine("mysql+mysqlconnector://user:password@localhost/events")
 
@@ -128,6 +128,23 @@ def get_user_by_email(user_email):
         statement = select(Users).where(Users.email == user_email)
         users = session.exec(statement)
         return users.first()
+
+def get_user_by_username(username):
+    with Session(engine) as session:
+        statement = select(Users.id, Users.username, Users.email, Users.firstname, Users.lastname, Users.student_id, Users.birth_Date, Users.profile_picture, Users.role).where(Users.username == username)
+        user = session.exec(statement).fetchone()
+        user_dict = {
+            "id": user[0],
+            "username": user[1],
+            "email": user[2],
+            "firstname": user[3],
+            "lastname": user[4],
+            "student_id": user[5],
+            "birth_Date": user[6],
+            "profile_picture": user[7],
+            "role": user[8]
+        }
+        return user_dict
     
 def get_role(user_email):
     with Session(engine) as session:

@@ -1,5 +1,5 @@
 from fastapi import APIRouter, Body, Depends, FastAPI, HTTPException, status
-from database import get_all_users, insert_user, get_role, get_user_by_email
+from database import get_all_users, insert_user, get_role, get_user_by_email, get_user_by_username
 from models.models import UserLoginSchema, User
 from internal.auth_bearer import JWTBearer
 from internal.auth_handler import signJWT, decodeJWT
@@ -39,7 +39,9 @@ async def read_user_me(token: str = Depends(JWTBearer())):
 
 @router.get("/{username}", tags=["users"])
 async def read_user(username: str):
-    return {"username": username}
+    user = get_user_by_username(username)
+    print(user)
+    return user
 
 @router.post("/signup", tags=["user"])
 def create_user(user: User = Body(...)):
