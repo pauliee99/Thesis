@@ -5,6 +5,7 @@ from sqlmodel import Field, SQLModel, create_engine, Session, select
 from typing import AsyncGenerator
 from sqlalchemy.ext.declarative import DeclarativeMeta, declarative_base
 from sqlalchemy.orm import sessionmaker, load_only
+from sqlalchemy import join
 
 engine = create_engine("mysql+mysqlconnector://user:password@localhost/events")
 
@@ -131,7 +132,9 @@ def get_user_by_email(user_email):
 
 def get_user_by_username(username):
     with Session(engine) as session:
-        statement = select(Users.id, Users.username, Users.email, Users.firstname, Users.lastname, Users.student_id, Users.birth_Date, Users.profile_picture, Users.role).where(Users.username == username)
+        statement = select(Users.id, Users.username, Users.email, Users.firstname, Users.lastname, Users.student_id, Users.birth_Date, Users.profile_picture, Roles.role)  \
+        .select_from(join(Users, Roles, Users.role == Roles.id)) \
+        .where(Users.username == username)
         user = session.exec(statement).fetchone()
         user_dict = {
             "id": user[0],
@@ -151,3 +154,15 @@ def get_role(user_email):
         statement = select(Roles).join(Users, Roles.id == Users.role).where(Users.email == user_email)
         role = session.exec(statement)
         return role.first() ## na to allaksa na ferni 1 piso
+    
+def get_roles():
+    with Session(engine) as session:
+        return session.query(Roles).all()
+    
+def insert_role(rolename: str):
+    with Session(engine) as session:
+        session.add(Roles(
+            id = 0,
+            role=rolename
+        ))
+        session.commit()

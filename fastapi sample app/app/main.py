@@ -20,6 +20,7 @@ events.append(Event(id=1, displayname="event1", location="kallithea", start_time
 events.append(Event(id=2, displayname="event2", location="nea smirni", start_time=datetime.now(), end_time=datetime.now(), price=1.0, picture="picture here", description="another cool event", createdon = datetime.now(), createdby = "admin"))
 users = []
 users.append(models.models.User(id=1, email="user1@mail.com", username="user1", password="password", firstname="some name", lastname="surname", birth_date=date.today(), student_id=12345, profile_picture="path/to/file", createdon=datetime.now(), role="1", disabled=False))
+roles = ["Student", "Manager", "Admin"]
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
@@ -27,6 +28,9 @@ async def lifespan(app: FastAPI):
         database.insert_event(event)
     for user in users:
         database.insert_user(user)
+    if len(database.get_roles) == 0:
+        for role in roles:
+            database.insert_role(role)
     yield
 
 # app = FastAPI(lifespan=lifespan)
