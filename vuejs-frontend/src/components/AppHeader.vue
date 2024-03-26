@@ -6,7 +6,9 @@ const { getUserData } = useApplicationStore();
 // const { persistUserData, isAuthenticated, setToken, persistToken, setUserData } = useApplicationStore();
 const tmp = getUserData();
 // console.log("username blah: ", useApplicationStore.userData.username);
-const username = getUserData()._value.username;
+const username = getUserData()?._value.username;
+const role = getUserData()?._value.role;
+print(role);
 
 </script>
 
@@ -29,7 +31,7 @@ const username = getUserData()._value.username;
                             >Home</router-link
                         >
                     </li>
-                    <li class="nav-item" v-if="applicationStore.isAuthenticated === true">
+                    <li class="nav-item" v-if="applicationStore.isAuthenticated === true && role === 'Admin'">
                         <router-link :to="{ name: 'students' }" class="nav-link text-white"
                             >Students</router-link
                         >
