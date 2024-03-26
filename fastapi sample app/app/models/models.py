@@ -13,7 +13,7 @@ class User(BaseModel):
     student_id: int
     profile_picture: str
     createdon: datetime
-    role: str
+    role: int
     disabled: bool
 
 class UserLoginSchema(BaseModel):
