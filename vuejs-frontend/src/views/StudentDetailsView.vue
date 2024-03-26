@@ -38,11 +38,11 @@ onMounted(() => {
             <tbody v-if="data">
                 <tr>
                     <th>First Name</th>
-                    <td>{{ data }}</td>
+                    <td>{{ data.firstname }}</td>
                 </tr>
                 <tr>
                     <th>Last Name</th>
-                    <td>{{ data.lastName }}</td>
+                    <td>{{ data.lastname }}</td>
                 </tr>
                 <tr>
                     <th>Email</th>

@@ -27,6 +27,10 @@ async def lifespan(app: FastAPI):
         database.insert_event(event)
     for user in users:
         database.insert_user(user)
+    if len(database.get_roles) == 0:
+        roles = ["Student", "Manager", "Admin"]
+        for role in roles:
+            database.insert_role(role)
     yield
 
 # app = FastAPI(lifespan=lifespan)
