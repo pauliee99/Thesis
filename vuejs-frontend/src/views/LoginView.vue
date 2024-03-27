@@ -6,7 +6,7 @@ import { useRouter } from 'vue-router';
 import { useApplicationStore } from '@/stores/application.js';
 
 const router = useRouter();
-const { persistUserData, isAuthenticated, setToken, persistToken, setUserData } = useApplicationStore();
+const { persistUserData, isAuthenticated, setToken, persistToken, setUserData, loadUserData } = useApplicationStore();
 
 const loading = ref(false);
 const credentials = ref({

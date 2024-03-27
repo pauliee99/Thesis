@@ -8,7 +8,7 @@ const tmp = getUserData();
 // console.log("username blah: ", useApplicationStore.userData.username);
 const username = getUserData()?._value.username;
 const role = getUserData()?._value.role;
-print(role);
+console.log("role ", role);
 
 </script>
 

@@ -126,15 +126,28 @@ def insert_user(user):
 
 def get_user_by_email(user_email):
     with Session(engine) as session:
-        statement = select(Users).where(Users.email == user_email)
-        users = session.exec(statement)
-        return users.first()
+        statement = select(Users.id, Users.username, Users.email, Users.firstname, Users.lastname, Users.student_id, Users.birth_Date, Users.profile_picture, Roles.role) \
+            .select_from(join(Users, Roles, Users.role == Roles.id)) \
+            .where(Users.email == user_email)
+        user = session.exec(statement).fetchone()
+        user_dict = {
+            "id": user[0],
+            "username": user[1],
+            "email": user[2],
+            "firstname": user[3],
+            "lastname": user[4],
+            "student_id": user[5],
+            "birth_Date": user[6],
+            "profile_picture": user[7],
+            "role": user[8]
+        }
+        return user_dict
 
 def get_user_by_username(username):
     with Session(engine) as session:
         statement = select(Users.id, Users.username, Users.email, Users.firstname, Users.lastname, Users.student_id, Users.birth_Date, Users.profile_picture, Roles.role)  \
-        .select_from(join(Users, Roles, Users.role == Roles.id)) \
-        .where(Users.username == username)
+            .select_from(join(Users, Roles, Users.role == Roles.id)) \
+            .where(Users.username == username)
         user = session.exec(statement).fetchone()
         user_dict = {
             "id": user[0],
