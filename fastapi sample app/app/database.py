@@ -6,6 +6,7 @@ from typing import AsyncGenerator
 from sqlalchemy.ext.declarative import DeclarativeMeta, declarative_base
 from sqlalchemy.orm import sessionmaker, load_only
 from sqlalchemy import join
+import os
 
 engine = create_engine("mysql+mysqlconnector://user:password@localhost/events")
 
@@ -69,7 +70,16 @@ def insert_event(event):
 def get_all_events():
     with Session(engine) as session:
         events = session.query(Events).all()
-        return events
+        for event in events:
+            if os.path.exists(event.picture): 
+                with open(event.picture, "rb") as image_file:
+                    imgData = image_file.read()
+                event.picture = imgData
+            else:
+                event.picture = None
+            
+            # event.picture = image_data
+    return events
 
 def get_event_by_id(event_id):
     with Session(engine) as session:
@@ -103,7 +113,9 @@ def db_info():
 
 def get_all_users():
     with Session(engine) as session:
-        users = session.query(Users).all()
+        users = session.query(Users.id, Users.username, Users.email, Users.password, Users.firstname, Users.lastname, Users.student_id, Users.birth_Date, Users.profile_picture, Roles.role) \
+            .join(Roles, Users.role == Roles.id) \
+            .all()
         return users
 
 def insert_user(user):

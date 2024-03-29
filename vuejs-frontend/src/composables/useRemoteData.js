@@ -10,7 +10,8 @@ export function useRemoteData(urlRef, authRef, methodRef = ref('GET'), bodyRef =
 
     const performRequest = (token = null) => {
         const headers = {
-            'Content-Type': 'application/json'
+            'Content-Type': 'application/json',
+            'Access-Control-Allow-Origin': '*'
             // ,
             // 'Authorization': `Bearer ${token}`
         };

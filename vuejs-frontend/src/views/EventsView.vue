@@ -24,43 +24,41 @@ onMounted(() => {
                     <div class="mb-4">
                         <h1 class="fs-3">Events</h1>
                     </div>
-                    <div>
-                        <table class="table">
-                            <thead>
-                                <tr>
-                                    <th>ID</th>
-                                    <th>First Name</th>
-                                    <th>Last Name</th>
-                                    <th>Email</th>
-                                    <th>Actions</th>
-                                </tr>
-                            </thead>
-                            <tbody v-if="loading">
-                                <tr>
-                                    <td colspan="5">Loading...</td>
-                                </tr>
-                            </tbody>
-                            <tbody v-if="data">
-                                <tr v-for="event in data">
-                                    <td>{{ event.id }}</td>
-                                    <td>{{ event.displayname }}</td>
-                                    <td>{{ event.location }}</td>
-                                    <td>{{ event.price }}</td>
-                                    <td>
-                                        <RouterLink
-                                            :to="{
-                                                name: 'event-details',
-                                                params: { id: event.id }
-                                            }"
-                                            >Display</RouterLink
-                                        >
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
+                    <div class="container">
+                        <div class="gallery" v-for="event in data" :key="event.id">
+                            <a :href="'/event/' + event.id" target="_blank">
+                                <!-- <img :src="event.imageSrc" :alt="event.displayname" width="600" height="400"> -->
+                                <img :src="event.imageSrc ? event.imageSrc : '../../public/default.png'"
+                                             :alt="event.displayname"
+                                             width="600" height="400"
+                                             :style="{ width: '100%', height: 'auto', marginBottom: '10px' }">
+                            </a>
+                            <div class="desc">Title: {{ event.displayname }}</div>
+                            <div v-if="event.price === 0" class="desc">Price: Free</div>
+                            <div v-else class="desc">Price: {{ event.price }}€</div>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
 </template>
+
+<style>
+    .gallery {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 20px;
+        justify-content: space-between;
+    }
+    .event {
+        width: calc(33.33% - 20px);
+        background-color: #ffffff;
+        border-radius: 10px;
+        padding: 20px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+</style>
+
+
+<style src="../assets/events.css"></style>

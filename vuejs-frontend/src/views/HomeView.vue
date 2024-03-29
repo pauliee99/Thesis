@@ -13,7 +13,7 @@ const { userData } = useApplicationStore();
                     </div>
                     <div>
                         <p>
-                            Logged in as: <strong>{{ userData.username }}</strong>
+                            Logged in as: <strong>{{ userData?.username }}</strong>
                         </p>
                         <ul>
                             <li>

@@ -3,6 +3,8 @@
 *.pyc
 myvenv
 backend-venv
+*.png
+*.jpg
 
 # Logs
 logs
