@@ -1,0 +1,119 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "Start Docker Compose",
+            "type": "shell",
+            "command": "docker-compose",
+            "args": [
+                "up",
+                "-d"
+            ],
+            "options": {
+                "cwd": "${workspaceFolder}"
+            },
+            "presentation": {
+                "reveal": "always",
+                "panel": "new"
+            }
+        },
+        {
+            "label": "Start Backend Server",
+            "type": "shell",
+            "command": "${workspaceFolder}\\fastapi sample app\\backend-venv\\Scripts\\python.exe",
+            "args": [
+                "-m",
+                "uvicorn",
+                "main:app",
+                "--reload"
+            ],
+            "options": {
+                "cwd": "${workspaceFolder}\\fastapi sample app\\app"
+            },
+            "group": {
+            "kind": "build",
+            "isDefault": true
+            },
+            "presentation": {
+            "reveal": "always",
+            "panel": "new"
+            }
+        },
+        {
+            "label": "Start Frontend Server",
+            "type": "shell",
+            "command": "npm",
+            "args": [
+                "run",
+                "dev"
+            ],
+            "options": {
+                "cwd": "${workspaceFolder}\\vuejs-frontend"
+            },
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            },
+            "presentation": {
+                "reveal": "always",
+                "panel": "new"
+            }
+        },
+        {
+            "label": "Run All Tasks",
+            "type": "shell",
+            "dependsOrder": "sequence",
+            "dependsOn": [
+                "Start Docker Compose",
+                "Start Backend Server",
+                "Start Frontend Server"
+            ]
+        },
+        {
+            "label": "Stop Docker Compose",
+            "type": "shell",
+            "command": "docker-compose",
+            "args": [
+                "down"
+            ],
+            "presentation": {
+                "reveal": "always",
+                "panel": "shared"
+            }
+        },
+        {
+            "label": "Stop Backend Server",
+            "type": "process",
+            "command": "${command:workbench.action.tasks.terminate}",
+            "args": [
+                "Start Backend Server"
+            ],
+            "presentation": {
+                "reveal": "always",
+                "panel": "shared"
+            }
+        },
+        {
+            "label": "Stop Frontend Server",
+            "type": "process",
+            "command": "${command:workbench.action.tasks.terminate}",
+            "args": [
+                "Start Frontend Server"
+            ],
+            "presentation": {
+                "reveal": "always",
+                "panel": "shared"
+            }
+        },
+        {
+            "label": "Stop All Tasks",
+            "type": "shell",
+            "dependsOrder": "sequence",
+            "dependsOn": [
+                "Stop Docker Compose",
+                "Stop Backend Server",
+                "Stop Frontend Server"
+            ]
+        }
+    ]
+}
