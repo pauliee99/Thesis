@@ -4,7 +4,7 @@ import { useRouter } from 'vue-router';
 import { useApplicationStore } from '@/stores/application.js';
 
 const router = useRouter();
-const { clearUserData } = useApplicationStore();
+const { clearUserData, clearToken } = useApplicationStore();
 
 const loading = ref(false);
 
@@ -16,7 +16,8 @@ const onFormSubmit = () => {
     // A solution is to blacklist the JWT until is expired.
     loading.value = true;
     clearUserData();
-    setTimeout(function () {}, 2000); // Simulate a remote request.
+    clearToken();
+    // setTimeout(function () {}, 2000); // Simulate a remote request.
     router.push({ name: 'login' });
 };
 </script>
