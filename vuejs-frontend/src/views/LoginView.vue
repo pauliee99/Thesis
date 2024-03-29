@@ -98,7 +98,7 @@ onBeforeMount(() => {
                     <div class="spinner-border" role="status" v-if="loading">
                         <span class="visually-hidden">Loading...</span>
                     </div>
-                    <form v-else>
+                    <form @submit.prevent="onFormSubmit" v-else>
                         <div class="mb-2" v-if="authenticationFailed">
                             <!--
               @EXERCISE: Be more specific.
@@ -131,7 +131,7 @@ onBeforeMount(() => {
                                 id="passwordFormControl"
                             />
                         </div>
-                        <button @click="onFormSubmit" type="submit" class="btn btn-primary">
+                        <button type="submit" class="btn btn-primary">
                             Login
                             <span class="fst-italic" v-if="credentials.username"
                                 >as {{ credentials.username }}</span
