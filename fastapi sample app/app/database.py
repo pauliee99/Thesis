@@ -17,11 +17,11 @@ class Users(SQLModel, table=True):
     password: str
     firstname: str
     lastname: str
-    birth_Date: datetime
+    birth_Date: Optional[datetime] = None
     student_id: Optional[int] = None
     profile_picture: str
     createdon: datetime
-    role: int
+    role: str
     disabled: bool
 
 class Events(SQLModel, table=True):
@@ -116,7 +116,22 @@ def get_all_users():
         users = session.query(Users.id, Users.username, Users.email, Users.password, Users.firstname, Users.lastname, Users.student_id, Users.birth_Date, Users.profile_picture, Roles.role) \
             .join(Roles, Users.role == Roles.id) \
             .all()
-        return users
+        user_data = []
+        for user in users:
+            user_dict = {
+                "id": user[0],
+                "username": user[1],
+                "email": user[2],
+                "password": user[3],
+                "firstname": user[4],
+                "lastname": user[5],
+                "student_id": user[6],
+                "birth_Date": user[7],
+                "profile_picture": user[8],
+                "role": user[9]
+            }
+            user_data.append(user_dict)
+        return user_data
 
 def insert_user(user):
     with Session(engine) as session:

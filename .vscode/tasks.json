@@ -31,12 +31,12 @@
                 "cwd": "${workspaceFolder}\\fastapi sample app\\app"
             },
             "group": {
-            "kind": "build",
-            "isDefault": true
+                "kind": "build",
+                "isDefault": true
             },
             "presentation": {
-            "reveal": "always",
-            "panel": "new"
+                "reveal": "always",
+                "panel": "new"
             }
         },
         {
@@ -62,12 +62,13 @@
         {
             "label": "Run All Tasks",
             "type": "shell",
-            "dependsOrder": "sequence",
+            "dependsOrder": "parallel",
             "dependsOn": [
                 "Start Docker Compose",
                 "Start Backend Server",
                 "Start Frontend Server"
-            ]
+            ],
+            "problemMatcher": []
         },
         {
             "label": "Stop Docker Compose",
