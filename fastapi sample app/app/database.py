@@ -113,25 +113,10 @@ def db_info():
 
 def get_all_users():
     with Session(engine) as session:
-        users = session.query(Users.id, Users.username, Users.email, Users.password, Users.firstname, Users.lastname, Users.student_id, Users.birth_Date, Users.profile_picture, Roles.role) \
-            .join(Roles, Users.role == Roles.id) \
-            .all()
-        user_data = []
+        users = session.query(Users).join(Roles, Users.role == Roles.id).all()
         for user in users:
-            user_dict = {
-                "id": user[0],
-                "username": user[1],
-                "email": user[2],
-                "password": user[3],
-                "firstname": user[4],
-                "lastname": user[5],
-                "student_id": user[6],
-                "birth_Date": user[7],
-                "profile_picture": user[8],
-                "role": user[9]
-            }
-            user_data.append(user_dict)
-        return user_data
+            user.role = session.exec(select(Roles.role).where(Roles.id == user.role)).first()
+        return users # at some point i shoule make it return the real role
 
 def insert_user(user):
     with Session(engine) as session:

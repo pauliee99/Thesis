@@ -15,6 +15,7 @@ router = APIRouter(
 def check_user(data: UserLoginSchema):
     users = get_all_users()
     for user in users:
+        print (user)
         if user.email == data.email and bcrypt.checkpw(data.password.encode('utf-8'), user.password.encode('utf-8')):
             return True
     return False
