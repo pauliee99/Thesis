@@ -64,8 +64,8 @@ const onFormSubmit = () => {
             // Redirect based on user role
             if (userData.role === 'Student') {
                 router.push({ name: 'home' });
-            } else if (userData.role === "3") {
-                console.log("View for admin here");
+            } else if (userData.role === "Admin") {
+                router.push({ name: 'home' });
             } else {
                 router.push({ name: 'home-manager' });
             }

@@ -26,7 +26,7 @@ onMounted(() => {
                     </div>
                     <div class="container">
                         <div class="gallery" v-for="event in data" :key="event.id">
-                            <a :href="'/event/' + event.id" target="_blank">
+                            <a id="event-img" :href="'/event/' + event.id" target="_blank">
                                 <!-- <img :src="event.imageSrc" :alt="event.displayname" width="600" height="400"> -->
                                 <img :src="event.imageSrc ? event.imageSrc : '../../public/default.png'"
                                              :alt="event.displayname"
