@@ -114,7 +114,8 @@
                 "Stop Docker Compose",
                 "Stop Backend Server",
                 "Stop Frontend Server"
-            ]
+            ],
+            "problemMatcher": []
         }
     ]
 }

@@ -49,7 +49,7 @@ const onFormSubmit = () => {
                 headers: {
                     'Authorization': `Bearer ${data.access_token.access_token}` // Assuming the access token is returned in the login response
                 },
-            });          
+            });
         })
         .then(response => {
             if (!response.ok) {
@@ -62,9 +62,9 @@ const onFormSubmit = () => {
             setUserData(userData);
             persistUserData();
             // Redirect based on user role
-            if (userData.role === "1") {
+            if (userData.role === 'Student') {
                 router.push({ name: 'home' });
-            } else if (userData.role === "Admin") {
+            } else if (userData.role === "3") {
                 console.log("View for admin here");
             } else {
                 router.push({ name: 'home-manager' });

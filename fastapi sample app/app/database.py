@@ -114,8 +114,11 @@ def db_info():
 def get_all_users():
     with Session(engine) as session:
         users = session.query(Users).join(Roles, Users.role == Roles.id).all()
-        for user in users:
-            user.role = session.exec(select(Roles.role).where(Roles.id == user.role)).first()
+        # for user in users:
+        #     # rolevalue = session.exec(select(Roles.role).where(str(Roles.id) == user.role)).first()
+        #     rolevalue = session.scalar(select(Roles.role).where(Roles.id == user.role))
+        #     print(rolevalue)
+        #     user.role = rolevalue
         return users # at some point i shoule make it return the real role
 
 def insert_user(user):

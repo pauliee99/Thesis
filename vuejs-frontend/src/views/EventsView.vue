@@ -33,9 +33,13 @@ onMounted(() => {
                                              width="600" height="400"
                                              :style="{ width: '100%', height: 'auto', marginBottom: '10px' }">
                             </a>
-                            <div class="desc">Title: {{ event.displayname }}</div>
-                            <div v-if="event.price === 0" class="desc">Price: Free</div>
-                            <div v-else class="desc">Price: {{ event.price }}€</div>
+                            <div class = "desc">
+                                <div class="desc">Title: {{ event.displayname }}</div>
+                                <div id="event-price">
+                                    <p v-if="event.price === 0" class="desc">Price: Free</p>
+                                    <p v-else class="desc">Price: {{ event.price }}€</p>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
