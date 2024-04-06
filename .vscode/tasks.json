@@ -15,7 +15,8 @@
             "presentation": {
                 "reveal": "always",
                 "panel": "new"
-            }
+            },
+            "problemMatcher": []
         },
         {
             "label": "Start Backend Server",

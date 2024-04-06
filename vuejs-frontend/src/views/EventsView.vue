@@ -10,6 +10,7 @@ const authRef = ref(true);
 const { data, loading, performRequest } = useRemoteData(urlRef, authRef);
 
 const token = getToken()?.access_token.access_token;
+const showpopup = false;
 
 onMounted(() => {
     performRequest({ token });
@@ -17,6 +18,7 @@ onMounted(() => {
 </script>
 
 <template>
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <div class="bg-body-tertiary">
         <div class="container">
             <div class="row py-4 px-3">
@@ -46,7 +48,23 @@ onMounted(() => {
             </div>
         </div>
     </div>
+
+<div class="floating-container" @click="showpopup=true">
+  <div class="floating-button">+</div>
+  <div class="element-container">
+  </div>
+</div>
+
+<div class="overlay" id="overlay" v-if="showpopup==true">
+    <!-- Content inside the overlay -->
+    <div class="content">
+      <h2>This is the overlay content</h2>
+      <p>You can put any content you want here.</p>
+    </div>
+  </div>
+
 </template>
+
 
 <style>
     .gallery {

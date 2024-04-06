@@ -2,6 +2,8 @@ import { createRouter, createWebHistory } from 'vue-router';
 // import HomeView from '../views/HomeView.vue';
 import { useApplicationStore } from '@/stores/application.js';
 
+// const { getUserData } = useApplicationStore();
+
 const router = createRouter({
     history: createWebHistory(import.meta.env.BASE_URL),
     routes: [
@@ -29,7 +31,7 @@ const router = createRouter({
             path: '/students',
             name: 'students',
             component: () => import('../views/StudentsView.vue'),
-            meta: { requiresAuth: true }
+            meta: { requiresAuth: true, requiredRole: 'Admin' }
         },
         {
             path: '/students/new',
@@ -109,14 +111,26 @@ const router = createRouter({
 });
 
 router.beforeEach((to, from, next) => {
-    const { isAuthenticated } = useApplicationStore();
+    const { isAuthenticated, getUserData } = useApplicationStore();
     const requiresAuth = to.matched.some((record) => record.meta.requiresAuth);
-
+    console.log(requiresAuth && !isAuthenticated)
     if (requiresAuth && !isAuthenticated) {
         console.log('user not authenticated. redirecting to /login');
         next('/login');
     } else {
-        next();
+        const requiredRole = to.meta.requiredRole;
+        const userRole = getUserData()?._value.role; // Get user role from state or local storage
+        console.log(requiredRole)
+        if (requiresAuth && requiredRole) {
+            if (userRole !== requiredRole){
+                console.log("forbitten");
+                // next('/forbidden'); // Redirect to forbidden page if role does not match
+            } else {
+                next(); 
+            }
+        } else {
+            next(); // Continue navigation
+        }
     }
 });
 
