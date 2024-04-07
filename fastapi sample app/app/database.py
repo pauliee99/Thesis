@@ -133,7 +133,7 @@ def insert_user(user):
             student_id=user.student_id,
             profile_picture=user.profile_picture,
             createdon=datetime.now(),
-            role="Student",
+            role=user.role,
             disabled=False
         ) # **user
         session.add(user_instance)

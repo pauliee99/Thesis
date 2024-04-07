@@ -37,7 +37,7 @@ async def update_item(item_id: str):
 @router.post("/", dependencies=[Depends(JWTBearer())], tags=["events"])
 async def create_item(event_data: dict, current_user_role: str = Depends(get_current_user_role)):
     print("role here: ", current_user_role.role)
-    if current_user_role.role != "Admin":
+    if current_user_role.role != "Admin" and current_user_role.role != "Manager":
         raise HTTPException(
             status_code=status.HTTP_403_FORBIDDEN,
             detail="Insufficient privileges. Only admins can create events.",

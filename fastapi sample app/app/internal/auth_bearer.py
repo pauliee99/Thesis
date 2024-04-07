@@ -40,4 +40,8 @@ def get_current_user_role(token: str = Depends(JWTBearer())):
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail="Invalid user credentials",
         )
-    return get_role(user.email)
+    try:
+        email = user.email
+    except:
+        email = user['email']
+    return get_role(email)
