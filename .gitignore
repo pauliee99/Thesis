@@ -5,6 +5,7 @@ myvenv
 backend-venv
 *.png
 *.jpg
+test
 
 # Logs
 logs
