@@ -19,6 +19,26 @@
             "problemMatcher": []
         },
         {
+            "label": "Run MinIO Server",
+            "type": "shell",
+            "command": "${workspaceFolder}/minio.exe",
+            "args": [
+                "server",
+                "F:/minio",
+                "--console-address",
+                ":9001"
+            ],
+            "windows": {
+                "options": {
+                    "shell": {
+                        "executable": "cmd.exe",
+                        "args": ["/d", "/c"]
+                    }
+                }
+            },
+            "problemMatcher": []
+        },
+        {
             "label": "Start Backend Server",
             "type": "shell",
             "command": "${workspaceFolder}\\fastapi sample app\\backend-venv\\Scripts\\python.exe",
@@ -66,6 +86,7 @@
             "dependsOrder": "parallel",
             "dependsOn": [
                 "Start Docker Compose",
+                "Run MinIO Server",
                 "Start Backend Server",
                 "Start Frontend Server"
             ],
@@ -108,13 +129,28 @@
             }
         },
         {
+            "label": "Stop MinIO Server",
+            "type": "shell",
+            "command": "powershell",
+            "args": [
+                "-ExecutionPolicy",
+                "Bypass",
+                "-File",
+                "stop_minio.ps1"
+            ],
+            "presentation": {
+                "reveal": "silent"
+            }
+        },
+        {
             "label": "Stop All Tasks",
             "type": "shell",
             "dependsOrder": "sequence",
             "dependsOn": [
                 "Stop Docker Compose",
                 "Stop Backend Server",
-                "Stop Frontend Server"
+                "Stop Frontend Server",
+                "Stop MinIO Server"
             ],
             "problemMatcher": []
         }
