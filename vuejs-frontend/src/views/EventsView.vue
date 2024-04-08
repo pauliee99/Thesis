@@ -8,9 +8,9 @@ const { getToken } = useApplicationStore();
 const urlRef = ref('http://localhost:8000/events');
 const authRef = ref(true);
 const { data, loading, performRequest } = useRemoteData(urlRef, authRef);
-
+console.log(data);
 const token = getToken()?.access_token.access_token;
-const showpopup = false;
+const showpopup = ref(false);
 
 onMounted(() => {
     performRequest({ token });
@@ -24,24 +24,29 @@ onMounted(() => {
              <div class="row py-4 px-3">
                 <div class="col-12">
                     <div class="mb-4">
-                        <h1 class="fs-3">Events</h1>
+                        <h1 class="fs-3" @click="showpopup=false">Events {{ showpopup }}</h1>
                     </div>
                     <div class="container">
-                        <div class="gallery" v-for="event in data" :key="event.id">
-                            <a id="event-img" :href="'/event/' + event.id" target="_blank">
-                                <!-- <img :src="event.imageSrc" :alt="event.displayname" width="600" height="400"> -->
-                                <img :src="event.imageSrc ? event.imageSrc : '../../public/default.png'"
-                                             :alt="event.displayname"
-                                             width="600" height="400"
-                                             :style="{ width: '100%', height: 'auto', marginBottom: '10px' }">
-                            </a>
-                            <div class = "desc">
-                                <div class="desc">Title: {{ event.displayname }}</div>
-                                <div id="event-price">
-                                    <p v-if="event.price === 0" class="desc">Price: Free</p>
-                                    <p v-else class="desc">Price: {{ event.price }}€</p>
+                        <div v-if="data">
+                            <div class="gallery" v-for="event in data" :key="event.id">
+                                <a id="event-img" :href="'/event/' + event.id" target="_blank">
+                                    <!-- <img :src="event.imageSrc" :alt="event.displayname" width="600" height="400"> -->
+                                    <img :src="event.imageSrc ? event.imageSrc : '../../public/default.png'"
+                                                :alt="event.displayname"
+                                                width="600" height="400"
+                                                :style="{ width: '100%', height: 'auto', marginBottom: '10px' }">
+                                </a>
+                                <div class = "desc">
+                                    <div class="desc">Title: {{ event.displayname }}</div>
+                                    <div id="event-price">
+                                        <p v-if="event.price === 0" class="desc">Price: Free</p>
+                                        <p v-else class="desc">Price: {{ event.price }}€</p>
+                                    </div>
                                 </div>
                             </div>
+                        </div>
+                        <div v-else>
+                            <p>No events available at the moment</p>
                         </div>
                     </div>
                 </div>
@@ -49,7 +54,7 @@ onMounted(() => {
         </div>
     </div>
 
-<div class="floating-container" @click="showpopup=true">
+<div class="floating-container" @click="showpopup = true">
   <div class="floating-button">+</div>
   <div class="element-container">
   </div>
@@ -58,14 +63,19 @@ onMounted(() => {
 <div class="overlay" id="overlay" v-if="showpopup==true">
     <!-- Content inside the overlay -->
     <div class="content">
-      <h2>This is the overlay content</h2>
-      <p>You can put any content you want here.</p>
+      <a href="#" class="close-button" @click="showpopup = false">&#10006;</a>
+      <h2>Do you really want to create a new Event?</h2>
+      <!-- <p>You can put any content you want here.</p> -->
+      <div class="response-container">
+        <button id="cancel-button" @click="showpopup = false">Cacnel</button>
+        <button id="continue-button">Continue</button>
+      </div>
     </div>
   </div>
 
 </template>
 
-
+<!-- 
 <style>
     .gallery {
         display: flex;
@@ -80,7 +90,7 @@ onMounted(() => {
         padding: 20px;
         box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
     }
-</style>
+</style> -->
 
 
 <style src="../assets/events.css"></style>
