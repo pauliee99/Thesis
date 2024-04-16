@@ -1,0 +1,30 @@
+.profileviewcircle {
+    width: 150px; /* Adjust as needed */
+    height: 150px; /* Adjust as needed */
+    border-radius: 50%; /* Makes the container circular */
+    overflow: hidden; /* Ensures the image stays within the circular container */
+    margin-right: 10px; /* Adjust spacing between profile picture and Logout link */
+
+}
+.profile-img {
+    width: 100%; /* Ensures the image fills the circular container */
+    height: 100%; /* Ensures the image fills the circular container */
+    object-fit: cover; /* Prevents distortion of the image */
+}
+.profileviewcircle:hover:not(#edit-profilepicture) {
+    -webkit-filter: brightness(50%);
+	-moz-filter: brightness(50%);
+	-o-filter: brightness(50%);
+	-ms-filter: brightness(50%);
+	filter: brightness(50%);
+    /* opacity: 1.5; */
+}
+#edit-profilepicture {
+    position: absolute;
+    top: 0;
+    left: 0;
+    display: none;
+}
+.profileviewcircle:hover #edit-profilepicture {
+    display: block;
+}
