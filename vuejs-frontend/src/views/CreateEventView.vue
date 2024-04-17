@@ -17,9 +17,20 @@ const onSubmit = () => {
     performRequest();
 };
 
+// function readURL() {
+// 	var $input = $(this);
+//     if (this.files && this.files[0]) {
+//         var reader = new FileReader();
+//         reader.onload = function(e) {
+//             $input.next('.blah').attr('src', e.target.result).show();
+//         }
+//         reader.readAsDataURL(this.files[0]);
+//     }
+// }
+// $(".imgInp").change(readURL);
 
 </script>
-<style src="../assets/events.css"></style>
+<style src="../assets/createevents.css"></style>
 <template>
     <div class="container mb-4">
         <h1>New Event</h1>
@@ -31,16 +42,16 @@ const onSubmit = () => {
         <div class="mb-2">
             <div class="setup-picture">
             <!-- <h1 class='center light gray mt-15'>Start setting your account Picture</h1> -->
-            <form method="post" onsubmit="return false">
-                <img src='#' id='uploaded'> <!-- Uploaded picture goes here -->
-                <div class="picture">
-                <input type="file" name="admin_picture">
-                <font-awesome-icon icon="camera" />
-                <h3>Choose your picture</h3>
-                <div class='clearfix'></div>
-                </div>
-                <button class='btn btn-dark mt-15'>Upload Picture</button>
-            </form>
+                <form method="post" onsubmit="return false">
+                    <img src='#' id='uploaded'> <!-- Uploaded picture goes here -->
+                    <div class="picture">
+                    <input type="file"  name="event_picture" id="event_picture" @change="previewPicture">
+                    <font-awesome-icon icon="camera" />
+                    <h3>Choose your picture</h3>
+                    <div class='clearfix'></div>
+                    </div>
+                    <button class='btn btn-dark mt-15'>Upload Picture</button>
+                </form>
             </div>
         </div>
         <div class="mb-2">
