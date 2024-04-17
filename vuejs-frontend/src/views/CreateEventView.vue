@@ -19,7 +19,7 @@ const onSubmit = () => {
 
 
 </script>
-
+<style src="../assets/events.css"></style>
 <template>
     <div class="container mb-4">
         <h1>New Event</h1>
