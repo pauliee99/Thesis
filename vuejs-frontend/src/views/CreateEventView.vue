@@ -22,7 +22,7 @@ const onSubmit = () => {
 
 <template>
     <div class="container mb-4">
-        <h1>New Student</h1>
+        <h1>New Event</h1>
     </div>
     <div>
         <pre>{{ data }}</pre>
@@ -30,12 +30,12 @@ const onSubmit = () => {
     <div class="container mb-4">
         <div class="mb-2">
             <div class="setup-picture">
-            <h1 class='center light gray mt-15'>Start setting your account Picture</h1>
+            <!-- <h1 class='center light gray mt-15'>Start setting your account Picture</h1> -->
             <form method="post" onsubmit="return false">
                 <img src='#' id='uploaded'> <!-- Uploaded picture goes here -->
                 <div class="picture">
                 <input type="file" name="admin_picture">
-                <i class='fa fa-camera'></i>
+                <font-awesome-icon icon="camera" />
                 <h3>Choose your picture</h3>
                 <div class='clearfix'></div>
                 </div>
