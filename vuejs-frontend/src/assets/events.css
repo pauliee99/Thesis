@@ -172,7 +172,7 @@ html, body {
 
 /* CSS for the buttons */
 #cancel-button, #continue-button {
-  background-color: rgb(249, 44, 44); /* Blue background color for cancel button */
+  background-color: rgb(241, 90, 90); /* Blue background color for cancel button */
   color: white; /* Text color */
   border: 2px solid rgb(222, 29, 29); /* Dark blue border */
   border-radius: 5px; /* Rounded edges */
@@ -182,11 +182,78 @@ html, body {
 }
 
 #continue-button {
-  background-color: rgb(27, 70, 200); /* Red background color for continue button */
+  background-color: rgb(53, 92, 208); /* Red background color for continue button */
   border-color: rgb(20, 30, 159); /* Dark red border */
 }
 
 /* CSS for button hover state */
 #cancel-button:hover, #continue-button:hover {
   opacity: 0.8; /* Reduce opacity on hover */
+}
+
+
+
+
+/* CREATE EVENT */
+.setup-picture {
+  form {
+    margin-top: 20px !important;
+    width: 40%;
+    margin: auto;
+    img {
+      width: 400px;
+      height: 350px;
+      display: none;
+      margin: auto;
+    }
+    .picture {
+      transition: .3s;
+      position: relative;
+      text-align: center;
+      padding: 10px 30px;
+      border: 3px dashed #ddd;
+      background-color: #f1f1f1;
+      border-radius: 5px;
+      &:hover {
+        background-color: #263238;
+        color: #aaa;
+        border: 3px solid #263238
+      }
+      &:hover i {
+        color: #aaa;
+      }
+      input {
+        width: 100%;
+        height: 100%;
+        opacity: 0;
+        position: absolute;
+        top: 0;
+        left: 0;
+      }
+      h3, i {
+        float: left;
+      }
+      i {
+        font-size: 2.5em;
+        margin-right: 15px;
+        color: #263238;
+      }
+      h3 {
+        margin-top: 10px;
+        font-weight: 100;
+      }
+    }
+    button {
+      font-family: 'PT Sans', sans-serif;
+      border: 2px solid #3498db;
+      padding: 10px 25px;
+      color: #3498db;
+      background-color: transparent;
+      font-weight: bold;
+      border-radius: 50px;
+      &:hover {
+        background-color: rgba(52, 152, 219, .2);
+      }
+    }
+  }
 }

@@ -59,16 +59,17 @@ onMounted(() => {
   <div class="element-container">
   </div>
 </div>
-
+<!-- Popup code here. -->
 <div class="overlay" id="overlay" v-if="showpopup==true">
     <!-- Content inside the overlay -->
     <div class="content">
       <a href="#" class="close-button" @click="showpopup = false">&#10006;</a>
       <h2>Do you really want to create a new Event?</h2>
-      <!-- <p>You can put any content you want here.</p> -->
       <div class="response-container">
         <button id="cancel-button" @click="showpopup = false">Cacnel</button>
-        <button id="continue-button">Continue</button>
+        <router-link :to="{ name: 'event-new' }">
+            <button id="continue-button" :to="{ name: 'event-new' }">Continue</button>
+        </router-link>
       </div>
     </div>
   </div>
