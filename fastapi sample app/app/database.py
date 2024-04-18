@@ -70,13 +70,13 @@ def insert_event(event):
 def get_all_events():
     with Session(engine) as session:
         events = session.query(Events).all()
-        for event in events:
-            if os.path.exists(event.picture): 
-                with open(event.picture, "rb") as image_file:
-                    imgData = image_file.read()
-                event.picture = imgData
-            else:
-                event.picture = None
+        # for event in events:
+        #     if os.path.exists(event.picture): 
+        #         with open(event.picture, "rb") as image_file:
+        #             imgData = image_file.read()
+        #         event.picture = imgData
+        #     else:
+        #         event.picture = None
             
             # event.picture = image_data
     return events
