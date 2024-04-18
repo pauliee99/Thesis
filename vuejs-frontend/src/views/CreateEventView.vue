@@ -1,20 +1,28 @@
 <script setup>
 import { ref } from 'vue';
 import { useRemoteData } from '@/composables/useRemoteData.js';
+import { useApplicationStore } from '@/stores/application.js';
+const applicationStore = useApplicationStore();
+const { getUserData } = useApplicationStore();
+const { getToken } = useApplicationStore();
 
 const formDataRef = ref({
     firstName: '',
     lastName: '',
     email: ''
 });
-const urlRef = ref('http://localhost:9090/student');
+const urlRef = ref('http://localhost:8000/events');
 const authRef = ref(true);
 const methodRef = ref('POST');
 
 const { data, performRequest } = useRemoteData(urlRef, authRef, methodRef, formDataRef);
+const token = getToken()?.access_token.access_token;
 
 const onSubmit = () => {
-    performRequest();
+    formDataRef.value.createdby = getUserData()?._value.username;
+    formDataRef.value.createdon = "2024-02-22T00:00:00";
+    formDataRef.value.picture = null;
+    performRequest({ token });
 };
 
 // function readURL() {
@@ -55,21 +63,33 @@ const onSubmit = () => {
             </div>
         </div>
         <div class="mb-2">
-            <label for="firstName">First Name</label>
+            <label for="eventName">Event Name</label>
             <input
                 class="form-control"
-                id="firstName"
-                v-model="formDataRef.firstName"
+                id="eventtName"
+                v-model="formDataRef.displayname"
                 type="text"
             />
         </div>
         <div class="mb-2">
-            <label for="lastName">Last Name</label>
-            <input class="form-control" id="lastName" v-model="formDataRef.lastName" type="text" />
+            <label for="location">Location</label>
+            <input class="form-control" id="location" v-model="formDataRef.location" type="text" />
         </div>
         <div class="mb-2">
-            <label for="email">Email</label>
-            <input class="form-control" id="email" v-model="formDataRef.email" type="email" />
+            <label for="description">Description</label>
+            <textarea class="form-control" id="description" v-model="formDataRef.description" type="text" ></textarea>
+        </div>
+        <div class="mb-2">
+            <label for="price">Price</label>
+            <input class="form-control" id="price" v-model="formDataRef.price" type="number" min="0" />
+        </div>
+        <div class="mb-2">
+            <label for="start_time">Start Time</label>
+            <input class="form-control" id="start_time" v-model="formDataRef.start_time" type="datetime-local" />
+        </div>
+        <div class="mb-2">
+            <label for="end_time">End Time</label>
+            <input class="form-control" id="end_time" v-model="formDataRef.end_time" type="datetime-local" />
         </div>
         <div class="">
             <button class="btn btn-primary" @click="onSubmit" type="button">
