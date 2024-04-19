@@ -11,8 +11,6 @@ onMounted(() => {
 });
 </script>
 
-<style src="./src/assets/students.css"></style>
-
 <template>
     <div class="bg-body-tertiary">
         <div class="container">
@@ -58,6 +56,9 @@ onMounted(() => {
                     </div>
                 </div>
             </div>
+            <button class="button"></button>
         </div>
     </div>
 </template>
+
+<style src="/src/assets/students.css"></style>
