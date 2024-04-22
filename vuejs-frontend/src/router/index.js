@@ -36,7 +36,7 @@ const router = createRouter({
         {
             path: '/students/new',
             name: 'student-new',
-            component: () => import('../views/CreateStudentView.vue'),
+            component: () => import('../views/CreateUserView.vue'),
             meta: { requiresAuth: true }
         },
         {

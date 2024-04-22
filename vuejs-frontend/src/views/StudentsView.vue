@@ -19,7 +19,7 @@ onMounted(() => {
                     <div class="mb-4">
                         <h1 class="fs-3">Students</h1>
                     </div>
-                    <div style="max-height: 80%; overflow-y: auto;">
+                    <div style="max-height: 75%; overflow-y: auto;">
                         <table class="table" >
                             <thead style="position: sticky; top: 0;">
                                 <tr>
@@ -54,9 +54,16 @@ onMounted(() => {
                             </tbody>
                         </table>
                     </div>
+                    <RouterLink
+                        :to="{
+                            name: 'student-new',
+                            // params: { username: student.username }
+                        }"
+                        ><button class="newuser">Add new User</button>
+                    </RouterLink>
                 </div>
             </div>
-            <button class="button"></button>
+            
         </div>
     </div>
 </template>

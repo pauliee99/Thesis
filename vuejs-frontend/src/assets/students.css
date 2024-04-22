@@ -1,6 +1,19 @@
 body {
     overflow: hidden;
 }
-.button {
-    width: 25px;
+.newuser {
+    width: 100px;
+    height: 25px;
+    position:inherit;
+    margin-left: 85%;
+    margin-top: 15px;
+    border-color: navy;
+    background-color: rgb(70, 70, 219);
+    font-size: 11px;
+    text-align: center;
+    font-weight: 900;
+    color: rgb(255, 255, 255);
+}
+.bg-body-tertiary {
+    overflow-y:auto;
 }
