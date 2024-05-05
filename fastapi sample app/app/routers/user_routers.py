@@ -71,6 +71,14 @@ def user_login(user: UserLoginSchema = Body(...)):
     except ValidationError as e:
         raise HTTPException(status_code=422, detail=str(e))
     
+@router.put("/{item_id}", dependencies=[Depends(JWTBearer())], tags=["events"], responses={403: {"description": "Operation forbidden"}})
+async def update_item(item_id: str):
+    if item_id != "plumbus":
+        raise HTTPException(
+            status_code=403, detail="You can only update the item: plumbus"
+        )
+    return {"item_id": item_id, "name": "The great Plumbus"}
+    
 def token_response(token: str):
     return {"access_token": token}
 

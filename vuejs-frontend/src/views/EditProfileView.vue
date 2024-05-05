@@ -2,7 +2,24 @@
 import { useApplicationStore } from '@/stores/application.js';
 const { userData } = useApplicationStore();
 
+const formDataRef = ref({
+    firstName: '',
+    lastName: '',
+    email: ''
+});
 
+const urlRef = ref('http://localhost:8000/events');
+const authRef = ref(true);
+const methodRef = ref('POST');
+
+const { data, performRequest } = useRemoteData(urlRef, authRef, methodRef, formDataRef);
+
+const onSubmit = () => {
+    formDataRef.value.createdby = getUserData()?._value.username;
+    formDataRef.value.createdon = "2024-02-22T00:00:00";
+    formDataRef.value.picture = null;
+    performRequest({ token });
+};
 </script>
 
 <template>
@@ -26,45 +43,46 @@ const { userData } = useApplicationStore();
                         <div class="mb-parent">
                             <div class="mb-2">
                                 <label for="firstName">First Name</label>
-                                <input class="form-control" id="firstName" v-model="userData.firstname" type="text" :disabled="true"/>
+                                <input class="form-control" id="firstName" v-model="userData.firstname" type="text" />
                             </div>
                             <div class="mb-2">
                                 <label for="lastName">Last Name</label>
-                                <input class="form-control" id="lastName" v-model="userData.lastname" type="text" :disabled="true"/>
+                                <input class="form-control" id="lastName" v-model="userData.lastname" type="text"/>
                             </div>
                         </div>
                         <div class="mb-parent">
                             <div class="mb-2">
                                 <label for="email">Email</label>
-                                <input class="form-control" id="email" v-model="userData.email" type="email" :disabled="true"/>
+                                <input class="form-control" id="email" v-model="userData.email" type="email"/>
                             </div>
                             <div class="mb-2">
                                 <label for="username">Username</label>
-                                <input class="form-control" id="username" v-model="userData.username" type="text" :disabled="true"/>
+                                <input class="form-control" id="username" v-model="userData.username" type="text"/>
                             </div>
                         </div>
                         <div class="mb-parent">
                             <div class="mb-2">
                                 <label for="studentid">Student Id</label>
-                                <input class="form-control" id="student_id" v-model="userData.student_id" type="text" :disabled="true" v-if="userData.role ==='Student'"/>
+                                <input class="form-control" id="student_id" v-model="userData.student_id" type="text" v-if="userData.role ==='Student'"/>
                             </div>
-                            <div class="mb-2" v-if="userData.birth_date">
+                            <div class="mb-2">
                                 <label for="birthday">Birthday</label>
-                                <input class="form-control" id="birth_date" :value="userData.birth_date" type="date" :disabled="true"/>
+                                <input class="form-control" id="birth_date" :value="userData.birth_date" type="date"/>
                             </div>
                             <div class="mb-2">
                                 <label for="role">Select Role:</label>
-                                <select class="form-control" id="role" :disabled="true">
+                                <select class="form-control" id="role">
                                     <option :value="userData.role" selected>{{ userData.role }}</option>
                                 </select>
                             </div>
                         </div>
                         <div class="">
-                            <router-link :to="{ name: 'editprofile' }">
-                                <button class="btn btn-primary" @click="onSubmit" type="button">
-                                    Edit Profile
-                                </button>
-                            </router-link>
+                            <button class="btn btn-primary" @click="onSubmit" type="button">
+                                Cancel Changes
+                            </button>
+                            <button class="btn btn-primary" @click="onSubmit" type="button">
+                                Save Changes
+                            </button>
                         </div>
                     </div>
                 </div>
