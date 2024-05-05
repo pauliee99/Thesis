@@ -43,44 +43,38 @@ const { userData } = useApplicationStore();
                             <div class="mb-2">
                                 <label for="role">Select Role:</label>
                                 <select class="form-control" id="role" :disabled="true">
-                                    <option :value="userData.role" selected>{{ getRoleName(userData.role) }}</option>
+                                    <option :value="userData.role" selected>{{ userData.role }}</option>
                                 </select>
                             </div>
                         </div>
                         <div class="mb-parent">
                             <div class="mb-2">
                                 <label for="firstName">First Name</label>
-                                <input class="form-control" id="firstName" v-model="userData.firstname" type="text" />
+                                <input class="form-control" id="firstName" v-model="userData.firstname" type="text" :disabled="true"/>
                             </div>
                             <div class="mb-2">
                                 <label for="lastName">Last Name</label>
-                                <input class="form-control" id="lastName" v-model="userData.lastname" type="text" />
+                                <input class="form-control" id="lastName" v-model="userData.lastname" type="text" :disabled="true"/>
                             </div>
                         </div>
                         <div class="mb-parent">
                             <div class="mb-2">
                                 <label for="email">Email</label>
-                                <input class="form-control" id="email" v-model="userData.email" type="email" />
+                                <input class="form-control" id="email" v-model="userData.email" type="email" :disabled="true"/>
                             </div>
                             <div class="mb-2">
                                 <label for="username">Username</label>
-                                <input class="form-control" id="username" v-model="userData.username" type="text" />
-                            </div>
-                        </div>
-                        <div class="mb-parent">
-                            <div class="mb-2">
-                                <label for="password">Password</label>
-                                <input class="form-control" id="password" v-model="userData.password" type="password" />
+                                <input class="form-control" id="username" v-model="userData.username" type="text" :disabled="true"/>
                             </div>
                         </div>
                         <div class="mb-parent">
                             <div class="mb-2">
                                 <label for="studentid">Student Id</label>
-                                <input class="form-control" id="student_id" v-model="userData.student_id" type="text" />
+                                <input class="form-control" id="student_id" v-model="userData.student_id" type="text" :disabled="true"/>
                             </div>
-                            <div class="mb-2">
+                            <div class="mb-2" v-if="userData.birth_date">
                                 <label for="birthday">Birthday</label>
-                                <input class="form-control" id="birth_date" v-model="userData.birth_date" type="date" />
+                                <input class="form-control" id="birth_date" :value="userData.birth_date" type="date" :disabled="true"/>
                             </div>
                         </div>
                         <div class="">

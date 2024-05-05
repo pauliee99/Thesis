@@ -28,3 +28,13 @@
 .profileviewcircle:hover #edit-profilepicture {
     display: block;
 }
+
+.mb-parent {
+    display: grid;
+    grid-template-columns: 1fr 1fr; /* Two columns with equal width */
+    grid-column-gap: 10px; /* Adjust the gap between columns as needed */
+}
+
+.mb-2 {
+    margin-bottom: 0; /* You may want to adjust this margin as needed */
+}
