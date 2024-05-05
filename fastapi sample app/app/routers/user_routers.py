@@ -46,6 +46,7 @@ async def read_user(username: str):
 
 @router.post("/signup", tags=["user"])
 def create_user(user: User = Body(...)):
+    print(user)
     hashed_password = bcrypt.hashpw(user.password.encode('utf-8'), bcrypt.gensalt())
     user.password = hashed_password.decode('utf-8')
     insert_user(user)

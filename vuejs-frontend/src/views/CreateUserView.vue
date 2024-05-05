@@ -3,18 +3,28 @@ import { ref } from 'vue';
 import { useRemoteData } from '@/composables/useRemoteData.js';
 
 const formDataRef = ref({
-    firstName: '',
-    lastName: '',
-    email: ''
+    id: 0,
+    firstname: '',
+    lastname: '',
+    email: '',
+    username: '',
+    password: '',
+    birth_Date: '',
+    profile_picture: 'http://192.168.2.29:9001/api/v1/buckets/profile-pictures/objects/download?preview=true&prefix=cHJvZmlsZS1kZWZhdWx0LnBuZw==&version_id=null',
+    student_id: null,
+    role: null,
+    createdon: '2024-05-04T15:58:19.765Z',
+    disabled: false,
 });
-const urlRef = ref('http://localhost:9090/student');
+const urlRef = ref('http://localhost:8000/users/signup');
 const authRef = ref(true);
 const methodRef = ref('POST');
 
 const { data, performRequest } = useRemoteData(urlRef, authRef, methodRef, formDataRef);
 
 const onSubmit = () => {
-    performRequest();
+    console.log(formDataRef?._rawValue);
+    performRequest(formDataRef?._rawValue);
 };
 </script>
 
@@ -23,7 +33,7 @@ const onSubmit = () => {
         <h1>New User</h1>
     </div>
     <div>
-        <pre>{{ data }}</pre>
+         <pre>{{ data }}</pre>
     </div>
     <div class="container mb-4">
         <div class="mb-parent">
@@ -47,9 +57,9 @@ const onSubmit = () => {
                 <label for="role">Select Role:</label>
                 <select class="form-control" id="role" v-model="formDataRef.role">
                     <option value="">Select Role</option>
-                    <option value="admin">Admin</option>
-                    <option value="manager">Manager</option>
-                    <option value="student">Student</option>
+                    <option value="3">Admin</option>
+                    <option value="2">Manager</option>
+                    <option value="1">Student</option>
                 </select>
             </div>
         </div>
@@ -70,7 +80,7 @@ const onSubmit = () => {
             </div>
             <div class="mb-2">
                 <label for="username">Username</label>
-                <input class="form-control" id="email" v-model="formDataRef.username" type="text" />
+                <input class="form-control" id="username" v-model="formDataRef.username" type="text" />
             </div>
         </div>
         <div class="mb-parent">
@@ -87,11 +97,11 @@ const onSubmit = () => {
         <div class="mb-parent">
             <div class="mb-2">
                 <label for="studentid">Student Id</label>
-                <input class="form-control" id="studentid" v-model="formDataRef.studentid" type="text" />
+                <input class="form-control" id="student_id" v-model="formDataRef.student_id" type="text" />
             </div>
             <div class="mb-2">
                 <label for="birthday">Birthday</label>
-                <input class="form-control" id="birthday" v-model="formDataRef.birthday" type="date" />
+                <input class="form-control" id="birth_date" v-model="formDataRef.birth_date" type="date" />
             </div>
         </div>
         <div class="">

@@ -119,14 +119,14 @@ const router = createRouter({
 router.beforeEach((to, from, next) => {
     const { isAuthenticated, getUserData } = useApplicationStore();
     const requiresAuth = to.matched.some((record) => record.meta.requiresAuth);
-    console.log(requiresAuth && !isAuthenticated)
+    // console.log(requiresAuth && !isAuthenticated)
     if (requiresAuth && !isAuthenticated) {
         console.log('user not authenticated. redirecting to /login');
         next('/login');
     } else {
         const requiredRole = to.meta.requiredRole;
         const userRole = getUserData()?._value.role; // Get user role from state or local storage
-        console.log(requiredRole)
+        console.log("user tmp routers index idk ", requiredRole)
         if (requiresAuth && requiredRole) {
             if (userRole !== requiredRole){
                 console.log("forbitten");
