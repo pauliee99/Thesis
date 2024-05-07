@@ -9,7 +9,7 @@ class User(BaseModel):
     password: str
     firstname: str
     lastname: str
-    birth_date: date
+    birth_date: Optional[date] = None
     student_id: int
     profile_picture: str
     createdon: datetime

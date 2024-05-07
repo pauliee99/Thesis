@@ -1,5 +1,5 @@
 from fastapi import APIRouter, Body, Depends, FastAPI, HTTPException, status
-from database import get_all_users, insert_user, get_role, get_user_by_email, get_user_by_username
+from database import get_all_users, insert_user, get_role, get_user_by_email, get_user_by_username, update_user, get_user_by_id
 from models.models import UserLoginSchema, User
 from internal.auth_bearer import JWTBearer
 from internal.auth_handler import signJWT, decodeJWT
@@ -44,6 +44,14 @@ async def read_user(username: str):
     print(user)
     return user
 
+@router.put("/{user_id}", response_model=User, dependencies=[Depends(JWTBearer())], tags=["users"], responses={403: {"description": "Operation forbidden"}})
+async def update_userr(user: User = Body(...)):
+    existing_user = get_user_by_id(user.id)
+    if not existing_user:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f"User with ID {user.id} not found")
+    update_user(user)
+    return user
+
 @router.post("/signup", tags=["user"])
 def create_user(user: User = Body(...)):
     print(user)
@@ -71,13 +79,13 @@ def user_login(user: UserLoginSchema = Body(...)):
     except ValidationError as e:
         raise HTTPException(status_code=422, detail=str(e))
     
-@router.put("/{item_id}", dependencies=[Depends(JWTBearer())], tags=["events"], responses={403: {"description": "Operation forbidden"}})
-async def update_item(item_id: str):
-    if item_id != "plumbus":
-        raise HTTPException(
-            status_code=403, detail="You can only update the item: plumbus"
-        )
-    return {"item_id": item_id, "name": "The great Plumbus"}
+# @router.put("/{item_id}", dependencies=[Depends(JWTBearer())], tags=["events"], responses={403: {"description": "Operation forbidden"}})
+# async def update_item(item_id: str):
+#     if item_id != "plumbus":
+#         raise HTTPException(
+#             status_code=403, detail="You can only update the item: plumbus"
+#         )
+#     return {"item_id": item_id, "name": "The great Plumbus"}
     
 def token_response(token: str):
     return {"access_token": token}

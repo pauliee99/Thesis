@@ -1,7 +1,7 @@
 from datetime import datetime
 from typing import Optional
 from sqlalchemy.ext.asyncio import AsyncSession, create_async_engine
-from sqlmodel import Field, SQLModel, create_engine, Session, select
+from sqlmodel import Field, SQLModel, create_engine, Session, select, update
 from typing import AsyncGenerator
 from sqlalchemy.ext.declarative import DeclarativeMeta, declarative_base
 from sqlalchemy.orm import sessionmaker, load_only
@@ -17,7 +17,7 @@ class Users(SQLModel, table=True):
     password: str
     firstname: str
     lastname: str
-    birth_Date: Optional[datetime] = None
+    birth_date: Optional[datetime] = None
     student_id: Optional[int] = None
     profile_picture: str
     createdon: datetime
@@ -47,7 +47,7 @@ class Roles(SQLModel, table=True):
 #     password="fakehashedpassword",
 #     firstname="john",
 #     lastname="wick",
-#     birth_Date=datetime.strptime("21/12/1999", "%d/%m/%Y"),
+#     birth_date=datetime.strptime("21/12/1999", "%d/%m/%Y"),
 #     student_id=None,
 #     profile_picture="path/to/file",
 #     createdon=datetime.strptime("21/01/2024", "%d/%m/%Y"),
@@ -141,7 +141,7 @@ def insert_user(user):
 
 def get_user_by_email(user_email):
     with Session(engine) as session:
-        statement = select(Users.id, Users.username, Users.email, Users.firstname, Users.lastname, Users.student_id, Users.birth_Date, Users.profile_picture, Roles.role) \
+        statement = select(Users.id, Users.username, Users.email, Users.firstname, Users.lastname, Users.student_id, Users.birth_date, Users.profile_picture, Roles.role) \
             .select_from(join(Users, Roles, Users.role == Roles.id)) \
             .where(Users.email == user_email)
         user = session.exec(statement).fetchone()
@@ -152,7 +152,7 @@ def get_user_by_email(user_email):
             "firstname": user[3],
             "lastname": user[4],
             "student_id": user[5],
-            "birth_Date": user[6],
+            "birth_date": user[6],
             "profile_picture": user[7],
             "role": user[8]
         }
@@ -160,7 +160,7 @@ def get_user_by_email(user_email):
 
 def get_user_by_username(username):
     with Session(engine) as session:
-        statement = select(Users.id, Users.username, Users.email, Users.firstname, Users.lastname, Users.student_id, Users.birth_Date, Users.profile_picture, Roles.role)  \
+        statement = select(Users.id, Users.username, Users.email, Users.firstname, Users.lastname, Users.student_id, Users.birth_date, Users.profile_picture, Roles.role)  \
             .select_from(join(Users, Roles, Users.role == Roles.id)) \
             .where(Users.username == username)
         user = session.exec(statement).fetchone()
@@ -171,11 +171,55 @@ def get_user_by_username(username):
             "firstname": user[3],
             "lastname": user[4],
             "student_id": user[5],
-            "birth_Date": user[6],
+            "birth_date": user[6],
             "profile_picture": user[7],
             "role": user[8]
         }
         return user_dict
+
+def get_user_by_id(id):
+    with Session(engine) as session:
+        statement = select(Users.id, Users.username, Users.email, Users.firstname, Users.lastname, Users.student_id, Users.birth_date, Users.profile_picture, Roles.role)  \
+            .select_from(join(Users, Roles, Users.role == Roles.id)) \
+            .where(Users.id == id)
+        user = session.exec(statement).fetchone()
+        user_dict = {
+            "id": user[0],
+            "username": user[1],
+            "email": user[2],
+            "firstname": user[3],
+            "lastname": user[4],
+            "student_id": user[5],
+            "birth_date": user[6],
+            "profile_picture": user[7],
+            "role": user[8]
+        }
+        return user_dict
+
+def update_user(user):
+    print("update user database.py")
+    with Session(engine) as session:
+        # Create an update statement for the Users table
+        statement = (
+            update(Users)
+            .where(Users.id == user.id)
+            .values(
+                email=user.email,
+                username=user.username,
+                password=user.password,
+                firstname=user.firstname,
+                lastname=user.lastname,
+                birth_date=user.birth_date,
+                student_id=user.student_id,
+                profile_picture=user.profile_picture,
+                role=user.role,
+                disabled=user.disabled
+            )
+        )
+        session.exec(statement)
+        session.commit()
+        return {"message": f"User with ID {user.id} updated successfully"}
+
     
 def get_role(user_email):
     with Session(engine) as session:
@@ -194,3 +238,4 @@ def insert_role(rolename: str):
             role=rolename
         ))
         session.commit()
+

@@ -9,7 +9,7 @@ const formDataRef = ref({
     email: '',
     username: '',
     password: '',
-    birth_Date: '',
+    birth_date: '',
     profile_picture: 'http://192.168.2.29:9001/api/v1/buckets/profile-pictures/objects/download?preview=true&prefix=cHJvZmlsZS1kZWZhdWx0LnBuZw==&version_id=null',
     student_id: null,
     role: null,
