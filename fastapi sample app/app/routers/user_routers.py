@@ -1,6 +1,6 @@
 from fastapi import APIRouter, Body, Depends, FastAPI, HTTPException, status
 from database import get_all_users, insert_user, get_role, get_user_by_email, get_user_by_username, update_user, get_user_by_id
-from models.models import UserLoginSchema, User
+from models.models import UserLoginSchema, User, UserUpdate
 from internal.auth_bearer import JWTBearer
 from internal.auth_handler import signJWT, decodeJWT
 from pydantic import ValidationError
@@ -44,8 +44,8 @@ async def read_user(username: str):
     print(user)
     return user
 
-@router.put("/{user_id}", response_model=User, dependencies=[Depends(JWTBearer())], tags=["users"], responses={403: {"description": "Operation forbidden"}})
-async def update_userr(user: User = Body(...)):
+@router.put("/{user_id}", response_model=UserUpdate, dependencies=[Depends(JWTBearer())], tags=["users"], responses={403: {"description": "Operation forbidden"}})
+async def update_userr(user: UserUpdate = Body(...)):
     existing_user = get_user_by_id(user.id)
     if not existing_user:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f"User with ID {user.id} not found")

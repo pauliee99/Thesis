@@ -58,3 +58,14 @@ class Event(BaseModel):
                 "createdon": "2024-02-04T00:00:00"
             }
         }
+
+class UserUpdate(BaseModel):
+    email: Optional[EmailStr] = None
+    username: Optional[str] = None
+    firstname: Optional[str] = None
+    lastname: Optional[str] = None
+    birth_date: Optional[str] = None
+    profile_picture: Optional[str] = None
+    student_id: Optional[int] = None
+    role: Optional[str] = None
+    disabled: Optional[bool] = None
