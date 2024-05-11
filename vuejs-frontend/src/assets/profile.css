@@ -1,3 +1,6 @@
+.button-container button {
+  margin-right: 10px;
+}
 .profileviewcircle {
     width: 150px; /* Adjust as needed */
     height: 150px; /* Adjust as needed */

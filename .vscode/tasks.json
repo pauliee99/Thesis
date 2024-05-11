@@ -91,7 +91,7 @@
                     "brave",
                     "http://localhost:5173",
                     "http://127.0.0.1:8000/docs",
-                    "http://192.168.2.9:9001/browser",
+                    "http://127.0.0.1/:9001/browser",
                     "https://chat.openai.com/"
                 ]
             },
@@ -101,11 +101,26 @@
             }
         },
         {
+            "label": "Delay Task",
+            "type": "shell",
+            "command": "timeout",
+            "args": [
+                "/t",
+                "5"
+            ],
+            "presentation": {
+                "reveal": "silent",
+                "focus": false,
+                "panel": "shared"
+            }
+        },        
+        {
             "label": "Run All Tasks",
             "type": "shell",
             "dependsOrder": "parallel",
             "dependsOn": [
                 "Start Docker Compose",
+                "Delay Task",
                 "Run MinIO Server",
                 "Start Backend Server",
                 "Start Frontend Server",

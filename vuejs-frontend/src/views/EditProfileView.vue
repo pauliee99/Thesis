@@ -1,5 +1,7 @@
 <script setup>
 import { useApplicationStore } from '@/stores/application.js';
+import { ref } from 'vue';
+import { useRemoteData } from '@/composables/useRemoteData.js';
 const { userData } = useApplicationStore();
 
 const formDataRef = ref({
@@ -15,10 +17,12 @@ const methodRef = ref('POST');
 const { data, performRequest } = useRemoteData(urlRef, authRef, methodRef, formDataRef);
 
 const onSubmit = () => {
-    formDataRef.value.createdby = getUserData()?._value.username;
     formDataRef.value.createdon = "2024-02-22T00:00:00";
     formDataRef.value.picture = null;
     performRequest({ token });
+};
+const goBack = () => {
+        window.history.back();
 };
 </script>
 
@@ -32,9 +36,9 @@ const onSubmit = () => {
                     </div>
                     <div>
                         <div class="profileviewcircle">
-                            <img v-if="userData.picture === undefined" src="http://192.168.2.29:9001/api/v1/buckets/profile-pictures/objects/download?preview=true&prefix=cHJvZmlsZS1kZWZhdWx0LnBuZw==&version_id=null" alt="Profile Picture" class="profile-img">
+                            <img v-if="userData.picture === undefined" src="http://127.0.0.1:9001/api/v1/buckets/profile-pictures/objects/download?preview=true&prefix=cHJvZmlsZS1kZWZhdWx0LnBuZw==&version_id=null" alt="Profile Picture" class="profile-img">
                             <img v-else :src="userData.profile_picture" alt="Profile Picture" class="profile-img">
-                            <img id="edit-profilepicture" class="profile-img" src="http://192.168.2.29:9001/api/v1/buckets/icons/objects/download?preview=true&prefix=ZWRpdC1wcm9maWxlLXBpY3R1cmUuc3Zn&version_id=null"></img>
+                            <img id="edit-profilepicture" class="profile-img" src="http://127.0.0.1:9001/api/v1/buckets/icons/objects/download?preview=true&prefix=ZWRpdC1wcm9maWxlLXBpY3R1cmUuc3Zn&version_id=null"></img>
                         </div>
                         <!-- <pre>{{ userData }}</pre> -->
                     </div>
@@ -76,8 +80,8 @@ const onSubmit = () => {
                                 </select>
                             </div>
                         </div>
-                        <div class="">
-                            <button class="btn btn-primary" @click="onSubmit" type="button">
+                        <div class="" style="display: flex; justify-content: space-between;">
+                            <button class="btn btn-primary" @click="goBack" type="button">
                                 Cancel Changes
                             </button>
                             <button class="btn btn-primary" @click="onSubmit" type="button">

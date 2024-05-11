@@ -15,9 +15,9 @@ const { userData } = useApplicationStore();
                     </div>
                     <div>
                         <div class="profileviewcircle">
-                            <img v-if="userData.picture === undefined" src="http://192.168.2.29:9001/api/v1/buckets/profile-pictures/objects/download?preview=true&prefix=cHJvZmlsZS1kZWZhdWx0LnBuZw==&version_id=null" alt="Profile Picture" class="profile-img">
+                            <img v-if="userData.picture === undefined" src="http://127.0.0.1:9001/api/v1/buckets/profile-pictures/objects/download?preview=true&prefix=cHJvZmlsZS1kZWZhdWx0LnBuZw==&version_id=null" alt="Profile Picture" class="profile-img">
                             <img v-else :src="userData.profile_picture" alt="Profile Picture" class="profile-img">
-                            <img id="edit-profilepicture" class="profile-img" src="http://192.168.2.29:9001/api/v1/buckets/icons/objects/download?preview=true&prefix=ZWRpdC1wcm9maWxlLXBpY3R1cmUuc3Zn&version_id=null"></img>
+                            <img id="edit-profilepicture" class="profile-img" src="http://127.0.0.1:9001/api/v1/buckets/icons/objects/download?preview=true&prefix=ZWRpdC1wcm9maWxlLXBpY3R1cmUuc3Zn&version_id=null"></img>
                         </div>
                         <!-- <pre>{{ userData }}</pre> -->
                     </div>
