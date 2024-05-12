@@ -25,13 +25,15 @@ const router = createRouter({
             path: '/profile',
             name: 'profile',
             component: () => import('../views/ProfileView.vue'),
-            meta: { requiresAuth: true }
-        },
-        {
-            path: '/profile-edit',
-            name: 'editprofile',
-            component: () => import('../views/EditProfileView.vue'),
-            meta: { requiresAuth: true }
+            meta: { requiresAuth: true },
+            children: [
+                {
+                    path: '/edit',
+                    name: 'editprofile',
+                    component: () => import('../views/EditProfileView.vue'),
+                    meta: { requiresAuth: true }
+                },
+            ]
         },
         {
             path: '/students',

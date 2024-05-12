@@ -3,27 +3,39 @@ import { useApplicationStore } from '@/stores/application.js';
 import { ref } from 'vue';
 import { useRemoteData } from '@/composables/useRemoteData.js';
 const { userData } = useApplicationStore();
+const { getToken } = useApplicationStore();
 
 const formDataRef = ref({
-    firstName: '',
-    lastName: '',
-    email: ''
+    firstname: userData.firstname,
+    lastname: userData.lastname,
+    email: userData.email,
+    username: userData.username,
+    birth_date: userData.birth_date,
+    profile_picture: userData.profile_picture,
+    student_id: userData.student_id,
+    disabled: userData.disabled,
 });
 
-const urlRef = ref('http://localhost:8000/events');
+const token = getToken()?.access_token.access_token;
+
+const userIdRef = ref(null);
+const urlRef = computed(() => {
+    return 'http://localhost:8000/users/' + userIdRef.value;
+});
 const authRef = ref(true);
 const methodRef = ref('POST');
 
 const { data, performRequest } = useRemoteData(urlRef, authRef, methodRef, formDataRef);
 
 const onSubmit = () => {
-    formDataRef.value.createdon = "2024-02-22T00:00:00";
-    formDataRef.value.picture = null;
+    // formDataRef.value.createdon = "2024-02-22T00:00:00";
+    // formDataRef.value.picture = null;
     performRequest({ token });
 };
 const goBack = () => {
         window.history.back();
 };
+// @TODO: prepi touto na gini sosta (thkiavazo ta data pou to userData prepi na ferno jenourka)
 </script>
 
 <template>
@@ -73,12 +85,12 @@ const goBack = () => {
                                 <label for="birthday">Birthday</label>
                                 <input class="form-control" id="birth_date" :value="userData.birth_date" type="date"/>
                             </div>
-                            <div class="mb-2">
+                            <!-- <div class="mb-2">
                                 <label for="role">Select Role:</label>
                                 <select class="form-control" id="role">
                                     <option :value="userData.role" selected>{{ userData.role }}</option>
                                 </select>
-                            </div>
+                            </div> -->
                         </div>
                         <div class="" style="display: flex; justify-content: space-between;">
                             <button class="btn btn-primary" @click="goBack" type="button">
