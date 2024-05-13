@@ -33,6 +33,12 @@ const router = createRouter({
                     component: () => import('../views/EditProfileView.vue'),
                     meta: { requiresAuth: true }
                 },
+                {
+                    path: '/new-password',
+                    name: 'changepassword',
+                    component: () => import('../views/ChangePasswordView.vue'),
+                    meta: { requiresAuth: true }
+                }
             ]
         },
         {

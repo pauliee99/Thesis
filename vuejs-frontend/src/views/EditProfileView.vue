@@ -109,9 +109,11 @@ const onDeleteProfile = () => {
                         </div>
                         <br>
                         <div class="" style="display: flex; justify-content: space-between;">
-                            <button class="btn btn-primary" @click="changePassword" type="button">
-                                Change Password
-                            </button>
+                            <router-link :to="{ name: 'changepassword' }">
+                                <button class="btn btn-primary" @click="changePassword" type="button">
+                                    Change Password
+                                </button>
+                            </router-link>
                             <button class="btn btn-primary" @click="showpopup = true" type="button" id="delete-button">
                                 Delete Profile
                             </button>
@@ -130,9 +132,6 @@ const onDeleteProfile = () => {
         <div class="response-container">
             <button id="cancel-button" @click="showpopup = false">Cacnel</button>
             <button id="continue-button" @click="onDeleteProfile">Delete</button>
-            <!-- <router-link :to="{ name: 'event-new' }">
-                <button id="continue-button" :to="{ name: 'event-new' }">Delete</button>
-            </router-link> -->
         </div>
         </div>
     </div>
