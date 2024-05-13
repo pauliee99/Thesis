@@ -13,6 +13,7 @@ const formDataRef = ref({
 const urlRef = ref('http://localhost:8000/events');
 const authRef = ref(true);
 const methodRef = ref('POST');
+const showpopup = ref(false);
 
 const { data, performRequest } = useRemoteData(urlRef, authRef, methodRef, formDataRef);
 
@@ -22,7 +23,13 @@ const onSubmit = () => {
     performRequest({ token });
 };
 const goBack = () => {
-        window.history.back();
+    window.history.back();
+};
+const changePassword = () => {
+    console.log("password screen");
+};
+const onDeleteProfile = () => {
+    console.log("delete profile");
 };
 </script>
 
@@ -88,10 +95,35 @@ const goBack = () => {
                                 Save Changes
                             </button>
                         </div>
+                        <br>
+                        <div class="" style="display: flex; justify-content: space-between;">
+                            <button class="btn btn-primary" @click="changePassword" type="button">
+                                Change Password
+                            </button>
+                            <button class="btn btn-primary" @click="showpopup = true" type="button" id="delete-button">
+                                Delete Profile
+                            </button>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
+    <div class="overlay" id="overlay" v-if="showpopup==true">
+        <!-- Content inside the overlay -->
+        <div class="content">
+        <a href="#" class="close-button" @click="showpopup = false">&#10006;</a>
+        <h2 style="text-align: center;">Delete Profile?</h2>
+        <h3 style="text-align: center;">This Change cannot be undone. Do you really want to delete your profile?</h3>
+        <div class="response-container">
+            <button id="cancel-button" @click="showpopup = false">Cacnel</button>
+            <button id="continue-button" @click="onDeleteProfile">Delete</button>
+            <!-- <router-link :to="{ name: 'event-new' }">
+                <button id="continue-button" :to="{ name: 'event-new' }">Delete</button>
+            </router-link> -->
+        </div>
+        </div>
+    </div>
+
 </template>
 <style src="../assets/profile.css"></style>

@@ -91,7 +91,7 @@
                     "brave",
                     "http://localhost:5173",
                     "http://127.0.0.1:8000/docs",
-                    "http://127.0.0.1/:9001/browser",
+                    "http://127.0.0.1:9001/browser",
                     "https://chat.openai.com/"
                 ]
             },
@@ -106,7 +106,7 @@
             "command": "timeout",
             "args": [
                 "/t",
-                "5"
+                "10"
             ],
             "presentation": {
                 "reveal": "silent",
