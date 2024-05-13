@@ -60,6 +60,7 @@ class Event(BaseModel):
         }
 
 class UserUpdate(BaseModel):
+    id: int
     email: Optional[EmailStr] = None
     username: Optional[str] = None
     firstname: Optional[str] = None
@@ -67,5 +68,5 @@ class UserUpdate(BaseModel):
     birth_date: Optional[str] = None
     profile_picture: Optional[str] = None
     student_id: Optional[int] = None
-    role: Optional[str] = None
     disabled: Optional[bool] = None
+    

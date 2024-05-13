@@ -1,8 +1,23 @@
 <script setup>
+import { ref, computed, onMounted } from 'vue';
 import { useApplicationStore } from '@/stores/application.js';
+import { useRemoteData } from '@/composables/useRemoteData.js';
+import { useRouter, useRoute } from 'vue-router';
 const { userData } = useApplicationStore();
 
+const { getToken } = useApplicationStore();
+const token = getToken()?.access_token.access_token;
+const router = useRouter();
+const route = useRoute();
 
+const eventIdRef = ref(null);
+const urlRef = 'http://localhost:8000/users/me';
+const authRef = ref(true);
+const { data, loading, performRequest } = useRemoteData(urlRef, authRef);
+onMounted(() => {
+    performRequest({ token });
+});
+// @TODO: prepi touto na gini sosta (thkiavazo ta data pou to userData prepi na ferno jenourka)
 </script>
 
 <template>

@@ -199,21 +199,20 @@ def get_user_by_id(id):
 def update_user(user):
     print("update user database.py")
     with Session(engine) as session:
-        # Create an update statement for the Users table
         statement = (
             update(Users)
             .where(Users.id == user.id)
             .values(
                 email=user.email,
                 username=user.username,
-                password=user.password,
                 firstname=user.firstname,
                 lastname=user.lastname,
                 birth_date=user.birth_date,
                 student_id=user.student_id,
                 profile_picture=user.profile_picture,
-                role=user.role,
                 disabled=user.disabled
+                # password=user.password,
+                # role=user.role,
             )
         )
         session.exec(statement)

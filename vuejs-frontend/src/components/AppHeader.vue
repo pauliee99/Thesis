@@ -3,10 +3,11 @@ import { RouterLink } from 'vue-router';
 import { useApplicationStore } from '@/stores/application.js';
 const applicationStore = useApplicationStore();
 const { getUserData } = useApplicationStore();
+const { userData } = useApplicationStore();
 // const { persistUserData, isAuthenticated, setToken, persistToken, setUserData } = useApplicationStore();
 const tmp = getUserData();
 // console.log("username blah: ", useApplicationStore.userData.username);
-const username = getUserData()?._value.username;
+const username = getUserData()?._value.username; //userData.
 const role = getUserData()?._value.role;
 console.log("role ", role);
 
