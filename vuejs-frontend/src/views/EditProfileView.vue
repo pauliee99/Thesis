@@ -23,14 +23,14 @@ const urlRef = computed(() => {
     return 'http://localhost:8000/users/' + userIdRef.value;
 });
 const authRef = ref(true);
-const methodRef = ref('POST');
+const methodRef = ref('PUT');
 const showpopup = ref(false);
 
 const { data, performRequest } = useRemoteData(urlRef, authRef, methodRef, formDataRef);
 
 const onSubmit = () => {
     // formDataRef.value.createdon = "2024-02-22T00:00:00";
-    // formDataRef.value.picture = null;
+    // formDataRef.value.picture = null;    
     performRequest({ token });
 };
 const goBack = () => {
@@ -51,13 +51,13 @@ const onDeleteProfile = () => {
             <div class="row py-4 px-3">
                 <div class="col-12">
                     <div class="mb-4">
-                        <h1 class="fs-3">Profile</h1>
+                        <h1 class="fs-3">Profile eee</h1>
                     </div>
                     <div>
                         <div class="profileviewcircle">
                             <img v-if="userData.picture === undefined" src="http://127.0.0.1:9001/api/v1/buckets/profile-pictures/objects/download?preview=true&prefix=cHJvZmlsZS1kZWZhdWx0LnBuZw==&version_id=null" alt="Profile Picture" class="profile-img">
                             <img v-else :src="userData.profile_picture" alt="Profile Picture" class="profile-img">
-                            <img id="edit-profilepicture" class="profile-img" src="http://127.0.0.1:9001/api/v1/buckets/icons/objects/download?preview=true&prefix=ZWRpdC1wcm9maWxlLXBpY3R1cmUuc3Zn&version_id=null"></img>
+                            <img id="edit-profilepicture" class="profile-img" src="http://127.0.0.1:9001/api/v1/buckets/icons/objects/download?preview=true&prefix=ZWRpdC1wcm9maWxlLXBpY3R1cmUuc3Zn&version_id=null">
                         </div>
                         <!-- <pre>{{ userData }}</pre> -->
                     </div>

@@ -1,4 +1,5 @@
 <script setup>
+import { RouterLink } from 'vue-router';
 import { ref, computed, onMounted } from 'vue';
 import { useApplicationStore } from '@/stores/application.js';
 import { useRemoteData } from '@/composables/useRemoteData.js';
@@ -7,17 +8,17 @@ const { userData } = useApplicationStore();
 
 const { getToken } = useApplicationStore();
 const token = getToken()?.access_token.access_token;
-const router = useRouter();
-const route = useRoute();
+// const router = useRouter();
+// const route = useRoute();
 
-const eventIdRef = ref(null);
-const urlRef = 'http://localhost:8000/users/me';
-const authRef = ref(true);
-const { data, loading, performRequest } = useRemoteData(urlRef, authRef);
-onMounted(() => {
-    performRequest({ token });
-});
-// @TODO: prepi touto na gini sosta (thkiavazo ta data pou to userData prepi na ferno jenourka)
+// const eventIdRef = ref(null);
+// const urlRef = 'http://localhost:8000/users/me';
+// const authRef = ref(true);
+// const { data, loading, performRequest } = useRemoteData(urlRef, authRef);
+// onMounted(() => {
+//     performRequest({ token });
+// });
+// @TODO: this doesnt work i get error on the useremotedata.js 
 </script>
 
 <template>
@@ -75,11 +76,11 @@ onMounted(() => {
                             </div>
                         </div>
                         <div class="">
-                            <router-link :to="{ name: 'editprofile' }">
+                            <RouterLink :to="{ name: 'editprofile' }">
                                 <button class="btn btn-primary" @click="onSubmit" type="button">
                                     Edit Profile
                                 </button>
-                            </router-link>
+                            </RouterLink>
                         </div>
                     </div>
                 </div>
