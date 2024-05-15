@@ -70,3 +70,6 @@ class UserUpdate(BaseModel):
     student_id: Optional[int] = None
     disabled: Optional[bool] = None
     
+class PasswordUpdate(BaseModel):
+    current_password: str
+    new_password: str

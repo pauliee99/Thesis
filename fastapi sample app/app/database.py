@@ -195,9 +195,20 @@ def get_user_by_id(id):
             "role": user[8]
         }
         return user_dict
+    
+def get_credentials(id):
+    with Session(engine) as session:
+        statement = select(Users.id,Users.email, Users.password)  \
+            .where(Users.id == id)
+        user = session.exec(statement).fetchone()
+        user_dict = {
+            "id": user[0],
+            "email": user[1],
+            "password": user[2]
+        }
+        return user_dict
 
 def update_user(user):
-    print("update user database.py")
     with Session(engine) as session:
         statement = (
             update(Users)
@@ -219,6 +230,18 @@ def update_user(user):
         session.commit()
         return {"message": f"User with ID {user.id} updated successfully"}
 
+def update_password(user):
+    with Session(engine) as session:
+        statement = (
+            update(Users)
+            .where(Users.id == user.id)
+            .values(
+                password=user.new_password
+            )
+        )
+        session.exec(statement)
+        session.commit()
+        return {"message": f"User with ID {user.id} updated successfully"}
     
 def get_role(user_email):
     with Session(engine) as session:
