@@ -26,6 +26,7 @@ export function useRemoteData(urlRef, authRef, methodRef = ref('GET'), bodyRef =
 
         if (bodyRef.value !== null) {
             config.body = JSON.stringify(bodyRef.value);
+            console.log(config.body);
         };
 
         fetch(urlRef.value, config)

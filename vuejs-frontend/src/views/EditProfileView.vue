@@ -1,11 +1,12 @@
 <script setup>
 import { useApplicationStore } from '@/stores/application.js';
-import { ref } from 'vue';
+import { ref, computed } from 'vue';
 import { useRemoteData } from '@/composables/useRemoteData.js';
 const { userData } = useApplicationStore();
 const { getToken } = useApplicationStore();
 
 const formDataRef = ref({
+    id: userData.id,
     firstname: userData.firstname,
     lastname: userData.lastname,
     email: userData.email,
@@ -31,6 +32,17 @@ const { data, performRequest } = useRemoteData(urlRef, authRef, methodRef, formD
 const onSubmit = () => {
     // formDataRef.value.createdon = "2024-02-22T00:00:00";
     // formDataRef.value.picture = null;    
+    userIdRef.value = userData.id;
+    console.log(formDataRef);
+    formDataRef.value.id = userData.id;
+    formDataRef.value.firstname = userData.firstname;
+    formDataRef.value.lastname = userData.lastname;
+    formDataRef.value.email = userData.email;
+    formDataRef.value.username = userData.username;
+    formDataRef.value.birth_date = userData.birth_date;
+    formDataRef.value.profile_picture = userData.profile_picture;
+    formDataRef.value.student_id = userData.student_id;
+    formDataRef.value.disabled = userData.disabled;
     performRequest({ token });
 };
 const goBack = () => {
@@ -51,7 +63,7 @@ const onDeleteProfile = () => {
             <div class="row py-4 px-3">
                 <div class="col-12">
                     <div class="mb-4">
-                        <h1 class="fs-3">Profile eee</h1>
+                        <h1 class="fs-3">Profile</h1>
                     </div>
                     <div>
                         <div class="profileviewcircle">
