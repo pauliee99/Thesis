@@ -44,6 +44,7 @@ const onSubmit = () => {
     formDataRef.value.student_id = userData.student_id;
     formDataRef.value.disabled = userData.disabled;
     performRequest({ token });
+    goBack;
 };
 const goBack = () => {
     window.history.back();

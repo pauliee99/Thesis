@@ -172,7 +172,7 @@ margin: 0 10px; /* Add some space between the buttons */
 cursor: pointer; /* Change cursor to pointer on hover */
 }
 
-#continue-button {
+#cancel-button {
 background-color: rgb(53, 92, 208); /* Red background color for continue button */
 border-color: rgb(20, 30, 159); /* Dark red border */
 }

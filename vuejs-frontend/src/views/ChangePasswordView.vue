@@ -80,19 +80,43 @@ const onFormSubmit = () => {
         });
 };
 
-onBeforeMount(() => {
-    if (isAuthenticated === true) {
-        router.push({ name: 'home' });
-    }
-});
+
 </script>
 
 <template>
     <div class="bg-body-tertiary">
-        <div class="container">
+        <div class="container-main">
+            <br>
             <div class="old-password">
-                <input type="text">
+                <p id="old-psswd-txt">Current Password:</p>
+                <input id="old-psswd-input" class="paswd-input" type="password">
             </div>
+            <br>
+            <span class="dot"></span>
+            <br>
+            <span class="dot"></span>
+            <br>
+            <span class="dot"></span>
+            <br>
+            <div class="new-password">
+                <p id="new-psswd-txt">New Password:</p>
+                <input id="new-psswd-input" class="paswd-input" type="password">
+            </div>
+            <br>
+            <span class="dot"></span>
+            <br>
+            <span class="dot"></span>
+            <br>
+            <span class="dot"></span>
+            <br>
+            <div class="repeat-password">
+                <p id="repeat-psswd-txt">Repeat Password:</p>
+                <input id="repeat-psswd-input" class="paswd-input" type="password">
+            </div>
+            <br>
+            <br>
+            <br>
         </div>
     </div>
 </template>
+<style src="../assets/newpassword.css"></style>

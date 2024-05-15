@@ -26,25 +26,17 @@ const router = createRouter({
             name: 'profile',
             component: () => import('../views/ProfileView.vue'),
             meta: { requiresAuth: true },
-            children: [
-                // {
-                //     path: 'edit',
-                //     name: 'editprofile',
-                //     component: () => import('../views/EditProfileView.vue'),
-                //     meta: { requiresAuth: true }
-                // },
-                {
-                    path: '/new-password',
-                    name: 'changepassword',
-                    component: () => import('../views/ChangePasswordView.vue'),
-                    meta: { requiresAuth: true }
-                }
-            ]
         },
         {
             path: '/profile/edit',
             name: 'editprofile',
             component: () => import('../views/EditProfileView.vue'),
+            meta: { requiresAuth: true }
+        },
+        {
+            path: '/profile/new-password',
+            name: 'changepassword',
+            component: () => import('../views/ChangePasswordView.vue'),
             meta: { requiresAuth: true }
         },
         {
