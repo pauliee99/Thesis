@@ -93,7 +93,7 @@ const onSubmit = () => {
         </div>
         <div class="">
             <button class="btn btn-primary" @click="onSubmit" type="button">
-                Create new student
+                Create new event
             </button>
         </div>
     </div>
