@@ -71,5 +71,6 @@ class UserUpdate(BaseModel):
     disabled: Optional[bool] = None
     
 class PasswordUpdate(BaseModel):
+    id: int
     current_password: str
     new_password: str

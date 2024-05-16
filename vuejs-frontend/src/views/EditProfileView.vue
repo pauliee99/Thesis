@@ -44,7 +44,7 @@ const onSubmit = () => {
     formDataRef.value.student_id = userData.student_id;
     formDataRef.value.disabled = userData.disabled;
     performRequest({ token });
-    goBack;
+    goBack();
 };
 const goBack = () => {
     window.history.back();
@@ -99,7 +99,7 @@ const onDeleteProfile = () => {
                         <div class="mb-parent">
                             <div class="mb-2">
                                 <label for="studentid">Student Id</label>
-                                <input class="form-control" id="student_id" v-model="userData.student_id" type="text" v-if="userData.role ==='Student'"/>
+                                <input class="form-control" id="student_id" v-model="userData.student_id" type="number" v-if="userData.role ==='Student'"/>
                             </div>
                             <div class="mb-2">
                                 <label for="birthday">Birthday</label>
