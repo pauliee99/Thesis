@@ -81,6 +81,18 @@
             }
         },
         {
+            "label": "Start Docker Desktop",
+            "type": "shell",
+            "command": "${env:ProgramFiles}\\Docker\\Docker\\Docker Desktop.exe",
+            "args": [],
+            "problemMatcher": [],
+            "detail": "start Docker Desktop",
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            }
+        },
+        {
             "label": "Open Websites",
             "type": "shell",
             "windows": {
@@ -187,9 +199,27 @@
                 "Stop Docker Compose",
                 "Stop Backend Server",
                 "Stop Frontend Server",
-                "Stop MinIO Server"
+                "Stop MinIO Server",
+                "Delay Task",
+                "close Docker Desktop"
             ],
             "problemMatcher": []
+        },
+        {
+            "label": "Close Docker Desktop",
+            "type": "shell",
+            "command": "taskkill",
+            "args": [
+              "/IM",
+              "Docker Desktop.exe",
+              "/F"
+            ],
+            "problemMatcher": [],
+            "detail": "close Docker Desktop",
+            "group": {
+                "kind": "none",
+                "isDefault": false
+            }
         }
     ]
 }
