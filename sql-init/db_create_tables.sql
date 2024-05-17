@@ -30,3 +30,10 @@ CREATE TABLE IF NOT EXISTS events.roles(
     id int NOT NULL PRIMARY KEY AUTO_INCREMENT,
     role varchar(50)
 );
+
+CREATE TABLE IF NOT EXISTS events.user_events(
+    id int NOT NULL PRIMARY KEY AUTO_INCREMENT,
+    user int,
+    event int,
+    timestamp timestamp
+);

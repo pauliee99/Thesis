@@ -24,7 +24,7 @@ onMounted(() => {
              <div class="row py-4 px-3">
                 <div class="col-12">
                     <div class="mb-4">
-                        <h1 class="fs-3" @click="showpopup=false">Events {{ showpopup }}</h1>
+                        <h1 class="fs-3" @click="showpopup=false">Events</h1>
                     </div>
                     <div class="container">
                         <div v-if="data">

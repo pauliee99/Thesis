@@ -59,6 +59,12 @@ class Event(BaseModel):
             }
         }
 
+class UserEvents(BaseModel):
+    id: int
+    user: int
+    event: int
+    timestamp: float
+
 class UserUpdate(BaseModel):
     id: int
     email: Optional[EmailStr] = None

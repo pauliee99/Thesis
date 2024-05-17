@@ -28,12 +28,13 @@ export function useRemoteData(urlRef, authRef, methodRef = ref('GET'), bodyRef =
             config.body = JSON.stringify(bodyRef.value);
             console.log(config.body);
         };
-
+        
         fetch(urlRef.value, config)
             .then((response) => {
                 if (response.ok) {
                     response.json().then((responseData) => {
-                        data.value = responseData;
+                        data?.value = responseData;
+                        console.log(data);
                     });
                 }
             })
