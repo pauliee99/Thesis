@@ -9,6 +9,7 @@ export function useRemoteData(urlRef, authRef, methodRef = ref('GET'), bodyRef =
     const loading = ref(false);
 
     const performRequest = (token = null) => {
+        loading.value = true;
         const headers = {
             'Content-Type': 'application/json',
             'Access-Control-Allow-Origin': '*'
@@ -26,16 +27,18 @@ export function useRemoteData(urlRef, authRef, methodRef = ref('GET'), bodyRef =
 
         if (bodyRef.value !== null) {
             config.body = JSON.stringify(bodyRef.value);
-            console.log(config.body);
+            console.log('Request body:', config.body);
         };
         
         fetch(urlRef.value, config)
             .then((response) => {
                 if (response.ok) {
                     response.json().then((responseData) => {
-                        data?.value = responseData;
-                        console.log(data);
+                        data.value = responseData;
+                        
                     });
+                } else {
+                    throw new Error('Network response was not ok');
                 }
             })
             .catch((err) => {

@@ -29,7 +29,7 @@ onMounted(() => {
                     <div class="container">
                         <div v-if="data">
                             <div class="gallery" v-for="event in data" :key="event.id">
-                                <router-link :to="{ name: 'event-details' }">
+                                <router-link :to="{ name: 'event-details', params: { id: event.id } }">
                                     <a id="event-img" :href="'/event/' + event.id" target="_blank">
                                         <!-- <img :src="event.imageSrc" :alt="event.displayname" width="600" height="400"> -->
                                         <img :src="event.imageSrc ? event.imageSrc : '../../public/default.png'"
