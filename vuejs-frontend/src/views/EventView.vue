@@ -23,7 +23,7 @@ onMounted(() => {
                         >
                         <h1 class="fs-3">Event #{{ eventIdRef }}</h1>
                     </div>
-                    <div class="mb-4">
+                    <!-- <div class="mb-4">
                         <ul class="nav border">
                             <li class="nav-item">
                                 <RouterLink
@@ -40,7 +40,7 @@ onMounted(() => {
                                 >
                             </li>
                         </ul>
-                    </div>
+                    </div> -->
                     <div>
                         <router-view></router-view>
                     </div>

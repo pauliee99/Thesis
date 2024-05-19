@@ -23,14 +23,71 @@ onMounted(() => {
 });
 </script>
 <template>
-    <div>
-        <table class="table">
-            <tbody v-if="data">
-                <tr>
-                    <th>Title</th>
-                    <td>{{ data }}</td>
-                </tr>
-            </tbody>
-        </table>
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <div class="bg-body-tertiary">
+        <div class="container">
+            <div class="row py-4 px-3">
+                <div class="col-12">
+                    <div class="mb-4">
+                        <h1 class="fs-3" @click="showpopup=false">Event Details</h1>
+                    </div>
+                    <div class="container">
+                        <div v-if="data">
+                            <table class="table">
+                                <tbody>
+                                    <tr>
+                                        <th>ID</th>
+                                        <td>{{ data.id }}</td>
+                                    </tr>
+                                    <tr>
+                                        <th>Location</th>
+                                        <td>{{ data.location }}</td>
+                                    </tr>
+                                    <tr>
+                                        <th>Price</th>
+                                        <td>{{ data.price }}</td>
+                                    </tr>
+                                    <tr>
+                                        <th>Description</th>
+                                        <td>{{ data.description }}</td>
+                                    </tr>
+                                    <tr>
+                                        <th>Created On</th>
+                                        <td>{{ data.createdon }}</td>
+                                    </tr>
+                                    <tr>
+                                        <th>Display Name</th>
+                                        <td>{{ data.displayname }}</td>
+                                    </tr>
+                                    <tr>
+                                        <th>End Time</th>
+                                        <td>{{ data.end_time }}</td>
+                                    </tr>
+                                    <tr>
+                                        <th>Start Time</th>
+                                        <td>{{ data.start_time }}</td>
+                                    </tr>
+                                    <tr>
+                                        <th>Picture</th>
+                                        <td>{{ data.picture }}</td>
+                                    </tr>
+                                    <tr>
+                                        <th>Created By</th>
+                                        <td>{{ data.createdby }}</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <div v-else>
+                            <p>No event data available at the moment</p>
+                        </div>
+                    </div>
+                    <div>
+                        <button>Enroll to this event</button>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
+
 </template>

@@ -17,7 +17,7 @@ async def read_items():
 @router.get("/{item_id}", dependencies=[Depends(JWTBearer())], tags=["events"])
 async def read_item(item_id: str):
     event = get_event_by_id(item_id)
-    if len(event) == 0:
+    if not event:
         raise HTTPException(status_code=404, detail="Item not found")
     return event
 
