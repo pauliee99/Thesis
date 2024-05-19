@@ -18,7 +18,9 @@ const onFormSubmit = () => {
     clearUserData();
     clearToken();
     // setTimeout(function () {}, 2000); // Simulate a remote request.
-    router.push({ name: 'login' });
+    router.push({ name: 'login' }).then(() => {
+        window.location.reload();
+    });
 };
 </script>
 

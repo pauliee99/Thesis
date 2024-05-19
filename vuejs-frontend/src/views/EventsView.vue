@@ -2,6 +2,7 @@
 import { onMounted, ref } from 'vue';
 import { useRemoteData } from '@/composables/useRemoteData.js';
 import { useApplicationStore } from '@/stores/application.js';
+const { userData } = useApplicationStore();
 
 const { getToken } = useApplicationStore();
 
@@ -56,7 +57,7 @@ onMounted(() => {
         </div>
     </div>
 
-<div class="floating-container" @click="showpopup = true">
+<div class="floating-container" v-if="userData?.role !== Student" @click="showpopup = true">
   <div class="floating-button">+</div>
   <div class="element-container">
   </div>

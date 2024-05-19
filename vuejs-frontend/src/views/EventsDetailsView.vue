@@ -23,7 +23,6 @@ onMounted(() => {
 });
 </script>
 <template>
-    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <div class="bg-body-tertiary">
         <div class="container">
             <div class="row py-4 px-3">
