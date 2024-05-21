@@ -40,6 +40,12 @@ class Roles(SQLModel, table=True):
     id: Optional[int] = Field(default=None, primary_key=True)
     role: str
 
+class UserEvents(SQLModel, table=True):
+    id: Optional[int] = Field(default=None, primary_key=True)
+    user: int
+    event: int
+    timestamp: float
+
 # Add dummy data
 # user_1 = Users(
 #     email="user1@mail.com",
@@ -261,3 +267,40 @@ def insert_role(rolename: str):
         ))
         session.commit()
 
+def get_all_userevents():
+    with Session(engine) as session:
+        events = session.query(UserEvents).all()
+    return events
+
+def get_current_userevents(userid):
+    with Session(engine) as session:
+        statement = select(UserEvents).where(UserEvents.user == userid)
+        users = session.exec(statement)
+        return users
+    
+
+def get_event_users(eventid):
+    with Session(engine) as session:
+        statement = select(UserEvents).where(UserEvents.event == eventid)
+        users = session.exec(statement)
+        return users
+    
+def insert_user_event(eventuser):
+        with Session(engine) as session:
+            event_instance = UserEvents(
+                user=eventuser.user,
+                event=eventuser.event,
+                timestamp=datetime.timestamp(datetime.now()),
+            )
+            session.add(event_instance)
+            session.commit()
+
+def delete_user_event(usereventid):
+    with Session(engine) as session:
+        event = session.query(UserEvents).get(usereventid)
+        if event:
+            session.delete(event)
+            session.commit()
+            return {"message": f"Event with ID {usereventid} deleted successfully"}
+        else:
+            return {"message": f"Event with ID {usereventid} not found"}

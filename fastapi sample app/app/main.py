@@ -10,7 +10,7 @@ from enum import Enum
 from contextlib import asynccontextmanager
 from models.models import User, Event
 import models.models
-from routers import event_routers, user_routers
+from routers import event_routers, user_routers, userevent_routers
 import database
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.middleware.httpsredirect import HTTPSRedirectMiddleware
@@ -51,6 +51,7 @@ app.add_middleware(
 
 app.include_router(user_routers.router)
 app.include_router(event_routers.router)
+app.include_router(userevent_routers.router)
 
 # def hash_password(password: str):
 #     return "fakehashed" + password
