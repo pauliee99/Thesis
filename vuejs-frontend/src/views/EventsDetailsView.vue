@@ -1,10 +1,12 @@
 <script setup>
-import { ref, computed, onMounted } from 'vue';
+import { ref, computed, onMounted, watch } from 'vue';
 import { useRouter, useRoute } from 'vue-router';
 import { useRemoteData } from '@/composables/useRemoteData.js';
 import { useApplicationStore } from '@/stores/application.js';
-
+const applicationStore = useApplicationStore();
+const { getUserData } = useApplicationStore();
 const { getToken } = useApplicationStore();
+
 const token = getToken()?.access_token.access_token;
 const router = useRouter();
 const route = useRoute();
@@ -13,14 +15,35 @@ const eventIdRef = ref(null);
 const urlRef = computed(() => {
     return 'http://localhost:8000/events/' + eventIdRef.value;
 });
-const authRef = ref(true);
-const { data, loading, performRequest } = useRemoteData(urlRef, authRef);
-onMounted(() => {
-    console.log(token);
-    eventIdRef.value = route.params.id;
-    console.log(eventIdRef.value);
-    performRequest({ token });
+const urlRefUsr = computed(() => {
+    return 'http://localhost:8000/userevents/' + eventIdRef.value;
 });
+const authRef = ref(true);
+const { data: eventData, loading, performRequest:fetchEventDetails } = useRemoteData(urlRef, authRef);
+const { data: userData, performRequest:fetchEventUsers } = useRemoteData(urlRefUsr, authRef);
+onMounted(() => {
+    eventIdRef.value = route.params.id;
+    fetchEventDetails({ token });
+    fetchEventUsers({ token });
+});
+
+const formDataRef = ref({
+    user: '',
+    event: ''
+});
+const urlRefAdd = ref('http://localhost:8000/userevents/');
+const methodRef = ref('POST');
+
+const { data: newEventData, performRequest:enrollToEvent } = useRemoteData(urlRefAdd, authRef, methodRef, formDataRef);
+watch(eventData, (newData) => {
+    if (newData) {
+        formDataRef.value.user = getUserData()?._value.id;
+        formDataRef.value.event = newData.id;
+    }
+});
+const onSubmit = () => {
+    enrollToEvent({ token });
+};
 </script>
 <template>
     <div class="bg-body-tertiary">
@@ -31,48 +54,48 @@ onMounted(() => {
                         <h1 class="fs-3" @click="showpopup=false">Event Details</h1>
                     </div>
                     <div class="container">
-                        <div v-if="data">
+                        <div v-if="eventData">
                             <table class="table">
                                 <tbody>
                                     <tr>
                                         <th>ID</th>
-                                        <td>{{ data.id }}</td>
+                                        <td>{{ eventData.id }}</td>
                                     </tr>
                                     <tr>
                                         <th>Location</th>
-                                        <td>{{ data.location }}</td>
+                                        <td>{{ eventData.location }}</td>
                                     </tr>
                                     <tr>
                                         <th>Price</th>
-                                        <td>{{ data.price }}</td>
+                                        <td>{{ eventData.price }}</td>
                                     </tr>
                                     <tr>
                                         <th>Description</th>
-                                        <td>{{ data.description }}</td>
+                                        <td>{{ eventData.description }}</td>
                                     </tr>
                                     <tr>
                                         <th>Created On</th>
-                                        <td>{{ data.createdon }}</td>
+                                        <td>{{ eventData.createdon }}</td>
                                     </tr>
                                     <tr>
                                         <th>Display Name</th>
-                                        <td>{{ data.displayname }}</td>
+                                        <td>{{ eventData.displayname }}</td>
                                     </tr>
                                     <tr>
                                         <th>End Time</th>
-                                        <td>{{ data.end_time }}</td>
+                                        <td>{{ eventData.end_time }}</td>
                                     </tr>
                                     <tr>
                                         <th>Start Time</th>
-                                        <td>{{ data.start_time }}</td>
+                                        <td>{{ eventData.start_time }}</td>
                                     </tr>
                                     <tr>
                                         <th>Picture</th>
-                                        <td>{{ data.picture }}</td>
+                                        <td>{{ eventData.picture }}</td>
                                     </tr>
                                     <tr>
                                         <th>Created By</th>
-                                        <td>{{ data.createdby }}</td>
+                                        <td>{{ eventData.createdby }}</td>
                                     </tr>
                                 </tbody>
                             </table>
@@ -82,7 +105,28 @@ onMounted(() => {
                         </div>
                     </div>
                     <div>
-                        <button>Enroll to this event</button>
+                        <button class="btn-add-user-event" @click="onSubmit" v-if="getUserData()?._value.role === 'Student' ||getUserData()?._value.role === 1">Enroll to this event</button>
+                        <div v-else-if="usersData && usersData.length > 0">
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th>User ID</th>
+                                        <th>Name</th>
+                                        <th>Email</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr v-for="user in usersData" :key="user.id">
+                                        <td>{{ user.id }}</td>
+                                        <td>{{ user.name }}</td>
+                                        <td>{{ user.email }}</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <div v-else>
+                            <p>No users attending this event.</p>
+                        </div>
                     </div>
                 </div>
             </div>

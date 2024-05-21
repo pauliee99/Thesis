@@ -44,7 +44,7 @@ class UserEvents(SQLModel, table=True):
     id: Optional[int] = Field(default=None, primary_key=True)
     user: int
     event: int
-    timestamp: float
+    timestamp: Optional[float] = Field(default=None)
 
 # Add dummy data
 # user_1 = Users(

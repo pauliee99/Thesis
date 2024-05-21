@@ -1,5 +1,5 @@
 from datetime import datetime, date
-from typing import Optional
+from typing import Optional, List
 from pydantic import BaseModel, Field, EmailStr
 
 class User(BaseModel):
@@ -60,10 +60,10 @@ class Event(BaseModel):
         }
 
 class UserEvents(BaseModel):
-    id: int
+    id: Optional[int] = None
     user: int
     event: int
-    timestamp: float
+    timestamp: Optional[float] = None
 
 class UserUpdate(BaseModel):
     id: int
@@ -80,3 +80,8 @@ class PasswordUpdate(BaseModel):
     id: int
     current_password: str
     new_password: str
+
+class EmailSchema(BaseModel):
+    email: List[EmailStr]
+    subject: str
+    body: str
