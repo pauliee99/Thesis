@@ -23,7 +23,7 @@ async def read_item(item_id: int):
         raise HTTPException(status_code=404, detail="Item not found")
     return event
 
-@router.get("/{item_id}", dependencies=[Depends(JWTBearer())], tags=["userevents"])
+@router.get("/event/{item_id}", dependencies=[Depends(JWTBearer())], tags=["userevents"])
 async def read_event_users(item_id: int):
     event = get_event_users(item_id)
     if not event:
@@ -35,9 +35,9 @@ async def create_userevent(userevent_data: UserEvents = Body(...)):
     insert_user_event(userevent_data)
     return {"message": "Event created successfully", "event": userevent_data}
 
-@router.delete("/{event_id}", dependencies=[Depends(JWTBearer())], tags=["userevents"])
-async def delete_event(event_id: int):
-    response = delete_user_event(event_id)
+@router.delete("/", dependencies=[Depends(JWTBearer())], tags=["userevents"])
+async def delete_event(userevent_data: UserEvents = Body(...)):
+    response = delete_user_event(userevent_data)
     return response
 
 @router.post("/send-email")

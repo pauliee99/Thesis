@@ -16,7 +16,7 @@ const urlRef = computed(() => {
     return 'http://localhost:8000/events/' + eventIdRef.value;
 });
 const urlRefUsr = computed(() => {
-    return 'http://localhost:8000/userevents/' + eventIdRef.value;
+    return 'http://localhost:8000/userevents/event/' + eventIdRef.value;
 });
 const authRef = ref(true);
 const { data: eventData, loading, performRequest:fetchEventDetails } = useRemoteData(urlRef, authRef);
@@ -25,6 +25,7 @@ onMounted(() => {
     eventIdRef.value = route.params.id;
     fetchEventDetails({ token });
     fetchEventUsers({ token });
+    console.log(userData);
 });
 
 const formDataRef = ref({
@@ -43,6 +44,12 @@ watch(eventData, (newData) => {
 });
 const onSubmit = () => {
     enrollToEvent({ token });
+};
+const urlRefDel = ref('http://localhost:8000/userevents/');
+const methodRefDel = ref('DELETE');
+const { data: deleteEventData, performRequest:unenrollToEvent } = useRemoteData(urlRefDel, authRef, methodRefDel, formDataRef);
+const onDelete = () => {
+    unenrollToEvent({ token });
 };
 </script>
 <template>
@@ -105,8 +112,11 @@ const onSubmit = () => {
                         </div>
                     </div>
                     <div>
-                        <button class="btn-add-user-event" @click="onSubmit" v-if="getUserData()?._value.role === 'Student' ||getUserData()?._value.role === 1">Enroll to this event</button>
-                        <div v-else-if="usersData && usersData.length > 0">
+                        <div v-if="getUserData()?._value.role === 'Student' ||getUserData()?._value.role === 1">
+                            <button class="btn-add-user-event" @click="onSubmit" >Enroll to this event</button>
+                            <button class="btn-add-user-event" @click="onDelete" >Unenroll to this event</button>
+                        </div>
+                        <div v-else-if="userData && userData.length > 0">
                             <table class="table">
                                 <thead>
                                     <tr>
@@ -116,7 +126,7 @@ const onSubmit = () => {
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <tr v-for="user in usersData" :key="user.id">
+                                    <tr v-for="user in userData" :key="user.id">
                                         <td>{{ user.id }}</td>
                                         <td>{{ user.name }}</td>
                                         <td>{{ user.email }}</td>

@@ -5,7 +5,7 @@ from sqlmodel import Field, SQLModel, create_engine, Session, select, update
 from typing import AsyncGenerator
 from sqlalchemy.ext.declarative import DeclarativeMeta, declarative_base
 from sqlalchemy.orm import sessionmaker, load_only
-from sqlalchemy import join
+from sqlalchemy import join, func
 import os
 
 engine = create_engine("mysql+mysqlconnector://user:password@localhost/events")
@@ -275,15 +275,37 @@ def get_all_userevents():
 def get_current_userevents(userid):
     with Session(engine) as session:
         statement = select(UserEvents).where(UserEvents.user == userid)
-        users = session.exec(statement)
+        users = session.exec(statement).fetchall()
         return users
     
 
+# def get_event_users(eventid):
+#     with Session(engine) as session:
+#         statement = select(Users.id, func.concat(Users.firstname, ' ', Users.lastname).label('full_name'), Users.email).join(Users, UserEvents.user == Users.id).where(UserEvents.event == eventid)
+#         users = session.exec(statement).fetchall()
+#         return users
+    
 def get_event_users(eventid):
     with Session(engine) as session:
-        statement = select(UserEvents).where(UserEvents.event == eventid)
-        users = session.exec(statement)
-        return users
+        statement = (
+            select(
+                Users.id,
+                func.concat(Users.firstname, ' ', Users.lastname).label('full_name'),
+                Users.email
+            )
+            .select_from(UserEvents)
+            .join(Users, UserEvents.user == Users.id)
+            .where(UserEvents.event == eventid)
+        )
+        users = session.exec(statement).fetchall()
+        users_list = []
+        for row in users:
+            users_list.append({
+                "id": row[0],
+                "name": row[1],
+                "email": row[2],
+            })
+        return users_list
     
 def insert_user_event(eventuser):
         with Session(engine) as session:
@@ -295,12 +317,12 @@ def insert_user_event(eventuser):
             session.add(event_instance)
             session.commit()
 
-def delete_user_event(usereventid):
+def delete_user_event(deleteuserevent):
     with Session(engine) as session:
-        event = session.query(UserEvents).get(usereventid)
+        event = session.query(UserEvents).filter_by(user=deleteuserevent.user, event=deleteuserevent.event).first()
         if event:
             session.delete(event)
             session.commit()
-            return {"message": f"Event with ID {usereventid} deleted successfully"}
+            return {"message": f"Event deleted successfully"}
         else:
-            return {"message": f"Event with ID {usereventid} not found"}
+            return {"message": f"Event not found"}
