@@ -113,8 +113,8 @@ const onDelete = () => {
                     </div>
                     <div>
                         <div v-if="getUserData()?._value.role === 'Student' ||getUserData()?._value.role === 1">
-                            <button class="btn-add-user-event" @click="onSubmit" >Enroll to this event</button>
-                            <button class="btn-add-user-event" @click="onDelete" >Unenroll to this event</button>
+                            <button class="btn-enroll-user-event" @click="onSubmit" >Enroll to this event</button>
+                            <button class="btn-unenroll-user-event" @click="onDelete" >Unenroll to this event</button>
                         </div>
                         <div v-else-if="userData && userData.length > 0">
                             <table class="table">
