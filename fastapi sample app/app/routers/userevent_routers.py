@@ -1,8 +1,8 @@
 from fastapi import APIRouter, Depends, HTTPException, status, Body, BackgroundTasks
-from database import get_all_userevents, get_current_userevents, insert_user_event, get_event_users, delete_user_event
+from database import get_all_userevents, get_current_userevents, insert_user_event, get_event_users, delete_user_event, get_user_by_id
 from internal.auth_bearer import JWTBearer, get_current_user_role
 from internal.auth_handler import decodeJWT
-from models.models import UserEvents, EmailSchema
+from models.models import UserEvents, EmailSchema, User
 from internal.mailer import send_mail
 
 router = APIRouter(
@@ -33,6 +33,13 @@ async def read_event_users(item_id: int):
 @router.post("/", dependencies=[Depends(JWTBearer())], tags=["userevents"])
 async def create_userevent(userevent_data: UserEvents = Body(...)):
     insert_user_event(userevent_data)
+    user = get_user_by_id(userevent_data.user)
+    email_data = {
+            "email": [user['email']], 
+            "subject": "New User Event Created",
+            "body": f"Dear {user['firstname']} {user['lastname']}, <br> You just joined in a new event"  # @TODO: add a better email template
+        }
+    send_mail(email_data)
     return {"message": "Event created successfully", "event": userevent_data}
 
 @router.delete("/", dependencies=[Depends(JWTBearer())], tags=["userevents"])

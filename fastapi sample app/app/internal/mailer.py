@@ -3,29 +3,28 @@ from email.mime.text import MIMEText
 from smtplib import SMTP
 from decouple import config
 from models.models import EmailSchema
+from fastapi import HTTPException
 
 HOST = config("MAIL_HOST")
 USERNAME = config("MAIL_USERNAME")
 PASSWORD = config("MAIL_PASSWORD")
 PORT = config("MAIL_PORT")
+TIMEOUT = 20
 
 def send_mail(data: dict | None = None):
-    msg = EmailSchema(**data)
-    message = MIMEText(msg.body, "html")
-    message["From"] = USERNAME
-    message["To"] = ",".join(msg.email)
-    message["Subject"] = msg.subject
+    print("here")
+    message = MIMEText(data['body'])
+    message['Subject'] = data['subject']
+    message['From'] = 'no-reply@example.com'
+    message['To'] = ', '.join(data['email'])
 
-    ctx = create_default_context()
+    # ctx = create_default_context()
 
     try:
-        with SMTP(HOST, PORT) as server:
-            server.ehlo()
-            server.starttls(context=ctx)
-            server.ehlo()
-            server.login(USERNAME, PASSWORD)
-            server.send_message(message)
-            server.quit()
-        return {"status": 200, "errors": None}
-    except Exception as e:
-        return {"status": 500, "errors": e}
+        server = SMTP(HOST, PORT, timeout=TIMEOUT)
+        server.sendmail(message["From"], message["To"] , message.as_string())
+        server.close()
+
+        print('Email sent!')
+    except Exception as exception:
+        print("Error: %s!\n\n" % exception)
