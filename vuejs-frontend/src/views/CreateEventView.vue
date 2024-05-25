@@ -36,7 +36,64 @@ const onSubmit = () => {
 //     }
 // }
 // $(".imgInp").change(readURL);
+Vue.component('setup-picture', {
+    data() {
+        return {
+        uploadedImageUrl: null,  // to store the URL of the uploaded picture
+        selectedFile: null       // to store the selected file
+        };
+    },
+    methods: {
+    previewPicture(event) {
+      const file = event.target.files[0];
+      if (file) {
+        this.selectedFile = file;
+        const reader = new FileReader();
+        reader.onload = (e) => {
+          this.uploadedImageUrl = e.target.result;
+        };
+        reader.readAsDataURL(file);
+      }
+    },
+    uploadPicture() {
+        if (this.selectedFile) {
+            const formData = new FormData();
+            formData.append('event_picture', this.selectedFile);
 
+            // Replace the URL below with your actual API endpoint
+            fetch('/your-api-endpoint', {
+            method: 'POST',
+            body: formData,
+            })
+            .then(response => response.json())
+            .then(data => {
+            console.log('Success:', data);
+            })
+            .catch((error) => {
+            console.error('Error:', error);
+            });
+        } else {
+            alert('Please select a picture first.');
+        }
+    }},
+    template: `
+        <div class="setup-picture">
+        <form @submit.prevent="uploadPicture">
+            <img :src="uploadedImageUrl" id="uploaded" alt="Uploaded picture" v-if="uploadedImageUrl">
+            <div class="picture">
+            <input type="file" name="event_picture" id="event_picture" @change="previewPicture">
+            <i class="fas fa-camera"></i>
+            <h3>Choose your picture</h3>
+            <div class='clearfix'></div>
+            </div>
+            <button class='btn btn-dark mt-15'>Upload Picture</button>
+        </form>
+        </div>
+    `
+});
+new Vue({
+  el: '#app'
+});
 </script>
 <style src="../assets/createevents.css"></style>
 <template>
@@ -48,6 +105,9 @@ const onSubmit = () => {
     </div>
     <div class="container mb-4">
         <div class="mb-2">
+            <div id="app">
+                <setup-picture></setup-picture>
+            </div>
             <div class="setup-picture">
             <!-- <h1 class='center light gray mt-15'>Start setting your account Picture</h1> -->
                 <form method="post" onsubmit="return false">
