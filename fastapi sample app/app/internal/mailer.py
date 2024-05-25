@@ -12,13 +12,10 @@ PORT = config("MAIL_PORT")
 TIMEOUT = 20
 
 def send_mail(data: dict | None = None):
-    print("here")
     message = MIMEText(data['body'])
     message['Subject'] = data['subject']
     message['From'] = 'no-reply@example.com'
     message['To'] = ', '.join(data['email'])
-
-    # ctx = create_default_context()
 
     try:
         server = SMTP(HOST, PORT, timeout=TIMEOUT)
