@@ -63,3 +63,33 @@
 #uploaded {
     display: none;
 }
+
+
+
+.setup-picture {
+  text-align: center;
+}
+
+#uploaded {
+  max-width: 100%;
+  height: auto;
+}
+
+.picture {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: 10px;
+}
+
+
+
+.picture .fa-camera {
+  font-size: 3rem;
+  cursor: pointer;
+}
+
+.btn {
+  padding: 10px 20px;
+  cursor: pointer;
+}

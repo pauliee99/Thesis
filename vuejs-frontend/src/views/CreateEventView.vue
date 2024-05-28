@@ -2,6 +2,7 @@
 import { ref } from 'vue';
 import { useRemoteData } from '@/composables/useRemoteData.js';
 import { useApplicationStore } from '@/stores/application.js';
+import S3 from 'aws-sdk/clients/s3'
 const applicationStore = useApplicationStore();
 const { getUserData } = useApplicationStore();
 const { getToken } = useApplicationStore();
@@ -18,85 +19,88 @@ const methodRef = ref('POST');
 const { data, performRequest } = useRemoteData(urlRef, authRef, methodRef, formDataRef);
 const token = getToken()?.access_token.access_token;
 
-const onSubmit = () => {
+const uploadedImage = ref('')
+const statusMessage = ref('No uploads')
+const imageUrl = ref('')
+
+function previewPicture(event) {
+    const fileInput = event.target
+    const file = fileInput.files?.[0]
+    if (file) {
+        const reader = new FileReader()
+        reader.onload = (e) => {
+            if (typeof e.target?.result === 'string') {
+                uploadedImage.value = e.target.result
+                console.log(uploadedImage.value)  // Print the base64 image data to the console
+            }
+        }
+        reader.readAsDataURL(file)
+    }
+}
+
+async function uploadPicture() {
+    const fileInput = document.getElementById('event_picture')
+    if (fileInput && fileInput.files?.length) {
+        const file = fileInput.files[0]
+        try {
+            const presignedUrlResponse = await fetch(`/presignedUrl?name=${file.name}`)
+            const presignedUrl = await presignedUrlResponse.text()
+
+            const s3 = new S3({
+                accessKeyId: 'VKYsbj4UVQrZVCmGgWVR',
+                secretAccessKey: '52JXYuhvZTKLoO69VULDvF7t6csfrMLEgTng6Jrd',
+                endpoint: 'http://localhost:9000',
+                s3ForcePathStyle: true,
+                signatureVersion: 'v4'
+            })
+
+            const params = {
+                Bucket: 'event-pictures',
+                Key: file.name,
+                Body: file,
+                ContentType: file.type
+            }
+
+            await s3.upload(params).promise()
+            const url = s3.getSignedUrl('getObject', {
+                Bucket: 'event-pictures',
+                Key: file.name,
+                Expires: 60 * 60 // URL expires in 1 hour
+            })
+            imageUrl.value = url
+            console.log(url)
+            statusMessage.value = `Uploaded ${file.name}.`
+        } catch (error) {
+            console.error('Error uploading file:', error)
+            statusMessage.value = `Error uploading ${file.name}.`
+        }
+    } else {
+        console.error('No file selected')
+    }
+}
+
+function triggerFileInput() {
+    const fileInput = document.getElementById('event_picture')
+    if (fileInput) {
+        fileInput.click()
+    } else {
+        console.error('File input element not found')
+    }
+}
+
+const onSubmit = async () => {
+    await uploadPicture();
     formDataRef.value.createdby = getUserData()?._value.username;
     formDataRef.value.createdon = "2024-02-22T00:00:00";
-    formDataRef.value.picture = null;
+    formDataRef.value.picture = imageUrl.value;
     performRequest({ token });
 };
-
-// function readURL() {
-// 	var $input = $(this);
-//     if (this.files && this.files[0]) {
-//         var reader = new FileReader();
-//         reader.onload = function(e) {
-//             $input.next('.blah').attr('src', e.target.result).show();
-//         }
-//         reader.readAsDataURL(this.files[0]);
-//     }
-// }
-// $(".imgInp").change(readURL);
-Vue.component('setup-picture', {
-    data() {
-        return {
-        uploadedImageUrl: null,  // to store the URL of the uploaded picture
-        selectedFile: null       // to store the selected file
-        };
-    },
-    methods: {
-    previewPicture(event) {
-      const file = event.target.files[0];
-      if (file) {
-        this.selectedFile = file;
-        const reader = new FileReader();
-        reader.onload = (e) => {
-          this.uploadedImageUrl = e.target.result;
-        };
-        reader.readAsDataURL(file);
-      }
-    },
-    uploadPicture() {
-        if (this.selectedFile) {
-            const formData = new FormData();
-            formData.append('event_picture', this.selectedFile);
-
-            // Replace the URL below with your actual API endpoint
-            fetch('/your-api-endpoint', {
-            method: 'POST',
-            body: formData,
-            })
-            .then(response => response.json())
-            .then(data => {
-            console.log('Success:', data);
-            })
-            .catch((error) => {
-            console.error('Error:', error);
-            });
-        } else {
-            alert('Please select a picture first.');
-        }
-    }},
-    template: `
-        <div class="setup-picture">
-        <form @submit.prevent="uploadPicture">
-            <img :src="uploadedImageUrl" id="uploaded" alt="Uploaded picture" v-if="uploadedImageUrl">
-            <div class="picture">
-            <input type="file" name="event_picture" id="event_picture" @change="previewPicture">
-            <i class="fas fa-camera"></i>
-            <h3>Choose your picture</h3>
-            <div class='clearfix'></div>
-            </div>
-            <button class='btn btn-dark mt-15'>Upload Picture</button>
-        </form>
-        </div>
-    `
-});
-new Vue({
-  el: '#app'
-});
 </script>
 <style src="../assets/createevents.css"></style>
 <template>
+    <RouterLink class="small" :to="{ name: 'events' }"
+                            >Back to Events</RouterLink
+                        >
     <div class="container mb-4">
         <h1>New Event</h1>
     </div>
@@ -105,20 +109,16 @@ new Vue({
     </div>
     <div class="container mb-4">
         <div class="mb-2">
-            <div id="app">
-                <setup-picture></setup-picture>
-            </div>
             <div class="setup-picture">
-            <!-- <h1 class='center light gray mt-15'>Start setting your account Picture</h1> -->
-                <form method="post" onsubmit="return false">
-                    <img src='#' id='uploaded'> <!-- Uploaded picture goes here -->
-                    <div class="picture">
-                    <input type="file"  name="event_picture" id="event_picture" @change="previewPicture">
-                    <font-awesome-icon icon="camera" />
+                <form @submit.prevent="uploadPicture">
+                <img v-if="uploadedImage" :src="uploadedImage" id="uploaded" alt="Uploaded picture" /> <!-- Uploaded picture goes here -->
+                <div class="picture">
+                    <input type="file" name="event_picture" id="event_picture" @change="previewPicture" />
+                    <i class="fas fa-camera" @click="triggerFileInput"></i>
                     <h3>Choose your picture</h3>
-                    <div class='clearfix'></div>
-                    </div>
-                    <button class='btn btn-dark mt-15'>Upload Picture</button>
+                    <div class="clearfix"></div>
+                </div>
+                <button class="btn btn-dark mt-15">Upload Picture</button>
                 </form>
             </div>
         </div>
