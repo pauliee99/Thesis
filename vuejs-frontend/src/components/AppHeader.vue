@@ -1,15 +1,24 @@
 <script setup>
+import { ref, computed, watch  } from 'vue';
 import { RouterLink } from 'vue-router';
 import { useApplicationStore } from '@/stores/application.js';
 const applicationStore = useApplicationStore();
 const { getUserData } = useApplicationStore();
-const { userData } = useApplicationStore();
+// const { userData } = useApplicationStore();
 // const { persistUserData, isAuthenticated, setToken, persistToken, setUserData } = useApplicationStore();
 const tmp = getUserData();
 // console.log("username blah: ", useApplicationStore.userData.username);
-const username = getUserData()?._value.username; //userData.
-const role = getUserData()?._value.role;
-console.log("role ", role);
+const username = ref('');
+const role = ref('');
+
+const userData = computed(() => applicationStore.getUserData());
+
+watch(userData, (newValue) => {
+  username.value = newValue?.username || '';
+  role.value = newValue?.role || '';
+});
+// const username = getUserData()?._value.username; //userData.
+// const role = getUserData()?._value.role;
 
 </script>
 
