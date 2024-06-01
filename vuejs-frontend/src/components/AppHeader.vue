@@ -11,6 +11,8 @@ const tmp = getUserData();
 const username = ref('');
 const role = ref('');
 
+console.log(getUserData()?._value);
+
 const userData = computed(() => applicationStore.getUserData());
 
 watch(userData, (newValue) => {
@@ -19,7 +21,8 @@ watch(userData, (newValue) => {
 });
 // const username = getUserData()?._value.username; //userData.
 // const role = getUserData()?._value.role;
-
+const url = getUserData()?._value.profile_picture;
+console.log(url);
 </script>
 
 <template>
@@ -36,25 +39,26 @@ watch(userData, (newValue) => {
                     <!-- @EXERCISE: Add different color to active link (improve UX/UX). -->
                     <!-- @EXERCISE: Add different color to active link with nested routes (improve UX/UX). -->
                     <!-- @EXERCISE: Hide links that users has no access to. -->
-                    <li class="nav-item" v-if="applicationStore.isAuthenticated === true">
+                    <li class="nav-item-h" v-if="applicationStore.isAuthenticated === true">
                         <router-link :to="{ name: 'home' }" class="nav-link text-white"
                             >Home</router-link
                         >
                     </li>
-                    <li class="nav-item" v-if="applicationStore.isAuthenticated === true && role === 'Admin'">
+                    <li class="nav-item-h" v-if="applicationStore.isAuthenticated === true && role === 'Admin'">
                         <router-link :to="{ name: 'students' }" class="nav-link text-white"
                             >Students</router-link
                         >
                     </li>
-                    <li class="nav-item" v-if="applicationStore.isAuthenticated === true">
+                    <li class="nav-item-h" v-if="applicationStore.isAuthenticated === true">
                         <router-link :to="{ name: 'events' }" class="nav-link text-white"
                             >Events</router-link
                         >
                     </li>
-                    <li class="nav-item" v-if="applicationStore.isAuthenticated === true">
-                        <div class="profile-wrapper">
-                            <div class="profile-circle">
-                                <img src="/profile-default.png" alt="Profile Picture" class="profile-img">
+                    <li class="nav-item-h" v-if="applicationStore.isAuthenticated === true">
+                        <div class="profile-wrapper-h">
+                            <div class="profile-circle-h">
+                                <!-- <img src="/profile-default.png" alt="Profile Picture" class="profile-img"> -->
+                                <img :src="url" class="profile-img-h">
                             </div>
                             <router-link :to="{ name: 'profile' }" class="nav-link text-white">
                                 Profile</router-link>
@@ -63,17 +67,17 @@ watch(userData, (newValue) => {
                                 </span>
                         </div>
                     </li>
-                    <li class="nav-item" v-if="applicationStore.isAuthenticated === false">
+                    <li class="nav-item-h" v-if="applicationStore.isAuthenticated === false">
                         <router-link :to="{ name: 'login' }" class="nav-link text-white"
                             >Login</router-link
                         >
                     </li>
-                    <li class="nav-item" v-if="applicationStore.isAuthenticated === false">
+                    <li class="nav-item-h" v-if="applicationStore.isAuthenticated === false">
                         <router-link :to="{ name: 'register' }" class="nav-link text-white"
                             >Register</router-link
                         >
                     </li>
-                    <li class="nav-item" v-if="applicationStore.isAuthenticated === true">
+                    <li class="nav-item-h" v-if="applicationStore.isAuthenticated === true">
                         <router-link :to="{ name: 'logout' }" class="nav-link text-white"
                             >Logout</router-link
                         >
