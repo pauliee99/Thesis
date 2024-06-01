@@ -73,8 +73,9 @@ async function uploadPicture() {
     if (fileInput && fileInput.files?.length) {
         const file = fileInput.files[0]
         console.log(file)
-        try {
-            //const filename = generateRandomString(20)
+        try { 
+            const filename = generateRandomString(20) + file.name.split('.').pop(); //@TODO: needs testing
+            console.log(filename)
             const presignedUrlResponse = await fetch(`/presignedUrl?name=${file.name}`)
             const presignedUrl = await presignedUrlResponse.text()
 
