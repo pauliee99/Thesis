@@ -51,7 +51,6 @@ const onSubmit = async () => {
         formDataRef.value.profile_picture = userData.profile_picture;
     }
     performRequest({ token });
-    uploadPicture();
     goBack();
 };
 const goBack = () => {
@@ -74,9 +73,9 @@ async function uploadPicture() {
         const file = fileInput.files[0]
         console.log(file)
         try { 
-            const filename = generateRandomString(20) + file.name.split('.').pop(); //@TODO: needs testing
+            const filename = generateRandomString(20) + '.' + file.name.split('.').pop(); //@TODO: needs testing
             console.log(filename)
-            const presignedUrlResponse = await fetch(`/presignedUrl?name=${file.name}`)
+            const presignedUrlResponse = await fetch(`/presignedUrl?name=${filename}`)
             const presignedUrl = await presignedUrlResponse.text()
 
             const s3 = new S3({
@@ -89,7 +88,7 @@ async function uploadPicture() {
 
             const params = {
                 Bucket: 'event-pictures',
-                Key: file.name,
+                Key: filename,
                 Body: file,
                 ContentType: file.type
             }
@@ -97,12 +96,12 @@ async function uploadPicture() {
             await s3.upload(params).promise()
             const url = s3.getSignedUrl('getObject', {
                 Bucket: 'event-pictures',
-                Key: file.name,
+                Key: filename,
                 Expires: 60 * 60 // URL expires in 1 hour
             })
             imageUrl.value = url
             console.log(url)
-            statusMessage.value = `Uploaded ${file.name}.`
+            statusMessage.value = `Uploaded ${filename}.`
         } catch (error) {
             console.error('Error uploading file:', error)
             statusMessage.value = `Error uploading ${file.name}.`
@@ -155,6 +154,7 @@ const generateRandomString = (n) => {
 
     generatedStrings.add(result);
     randomString.value = result;
+    return randomString.value
 };
 
 </script>
