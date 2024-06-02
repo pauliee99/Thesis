@@ -46,7 +46,7 @@ const onSubmit = async () => {
     formDataRef.value.student_id = userData.student_id;
     formDataRef.value.disabled = userData.disabled;
     if (uploadedImage.value) {
-        formDataRef.value.profile_picture = imageUrl.value;
+        formDataRef.value.profile_picture = imageName.value;
     } else {
         formDataRef.value.profile_picture = userData.profile_picture;
     }
@@ -66,6 +66,7 @@ const fileInputRef = ref(null);
 const uploadedImage = ref('')
 const statusMessage = ref('No uploads')
 const imageUrl = ref('')
+const imageName = ref('')
 // const profilePictureUrl = ref('');
 async function uploadPicture() {
     const fileInput = document.getElementById('event_picture_ep')
@@ -79,15 +80,15 @@ async function uploadPicture() {
             const presignedUrl = await presignedUrlResponse.text()
 
             const s3 = new S3({
-                accessKeyId: 'VKYsbj4UVQrZVCmGgWVR',
-                secretAccessKey: '52JXYuhvZTKLoO69VULDvF7t6csfrMLEgTng6Jrd',
-                endpoint: 'http://localhost:9000',
-                s3ForcePathStyle: true,
-                signatureVersion: 'v4'
+                accessKeyId: import.meta.env.VITE_ACCESS_KEY,
+                secretAccessKey: import.meta.env.VITE_SECRET_ACCESS_KEY,
+                endpoint: import.meta.env.VITE_ENDPOINT,
+                s3ForcePathStyle: import.meta.env.VITE_FORCE_PATH_STYLE,
+                signatureVersion: import.meta.env.VITE_SIGNATURE_VERSION
             })
 
             const params = {
-                Bucket: 'event-pictures',
+                Bucket: 'profile-pictures',
                 Key: filename,
                 Body: file,
                 ContentType: file.type
@@ -95,12 +96,14 @@ async function uploadPicture() {
 
             await s3.upload(params).promise()
             const url = s3.getSignedUrl('getObject', {
-                Bucket: 'event-pictures',
+                Bucket: 'profile-pictures',
                 Key: filename,
                 Expires: 60 * 60 // URL expires in 1 hour
             })
             imageUrl.value = url
             console.log(url)
+            console.log(filename)
+            imageName.value = filename
             statusMessage.value = `Uploaded ${filename}.`
         } catch (error) {
             console.error('Error uploading file:', error)

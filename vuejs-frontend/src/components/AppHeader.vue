@@ -6,6 +6,7 @@ const applicationStore = useApplicationStore();
 const { getUserData } = useApplicationStore();
 // const { userData } = useApplicationStore();
 // const { persistUserData, isAuthenticated, setToken, persistToken, setUserData } = useApplicationStore();
+const URL_DEFAULT = "http://127.0.0.1:9001/api/v1/buckets/profile-pictures/objects/download?preview=true&prefix=cHJvZmlsZS1kZWZhdWx0LnBuZw==&version_id=null"
 const tmp = getUserData();
 // console.log("username blah: ", useApplicationStore.userData.username);
 const username = ref('');
@@ -58,8 +59,9 @@ console.log(url);
                         <div class="profile-wrapper-h">
                             <div class="profile-circle-h">
                                 <!-- <img src="/profile-default.png" alt="Profile Picture" class="profile-img"> -->
-                                <img :src="url" class="profile-img-h">
-                            </div>
+                                <img v-if="url" :src="url" class="profile-img-h">
+                                <img v-else :src="URL_DEFAULT" class="profile-img-h">
+                            </div> 
                             <router-link :to="{ name: 'profile' }" class="nav-link text-white">
                                 Profile</router-link>
                                 <span style="font-size: 10px">

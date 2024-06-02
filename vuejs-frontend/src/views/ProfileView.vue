@@ -8,16 +8,16 @@ const { userData } = useApplicationStore();
 
 const { getToken } = useApplicationStore();
 const token = getToken()?.access_token.access_token;
-// const router = useRouter();
-// const route = useRoute();
 
-// const eventIdRef = ref(null);
-// const urlRef = 'http://localhost:8000/users/me';
+// console.log(userData);
+// const urlRef = 'http://localhost:8000/users/me'
 // const authRef = ref(true);
 // const { data, loading, performRequest } = useRemoteData(urlRef, authRef);
 // onMounted(() => {
 //     performRequest({ token });
+//     console.log(userData);
 // });
+
 // @TODO: this doesnt work i get error on the useremotedata.js 
 </script>
 
