@@ -22,3 +22,16 @@
     position: relative;
     align-self: center;
 }
+
+/* @TODO:stuff t odo here */
+.nav-link text-white{
+    display: flex;
+}
+
+.bg-body-tertiary{
+    min-height: 91vh
+}
+
+.text-bg-dark{
+    height:9vh;
+} 

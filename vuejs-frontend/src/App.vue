@@ -13,7 +13,7 @@ onBeforeMount(() => {
 });
 </script>
 
-<template>
+<template style="height:100vh;">
     <AppHeader />
     <RouterView />
     <AppFooter />
