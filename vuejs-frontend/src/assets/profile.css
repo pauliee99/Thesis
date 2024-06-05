@@ -28,13 +28,13 @@
   height: 80%; /* Maintain aspect ratio by using same percentage */
   /* transform: translate(-50%, -50%);  */
 }
-.profile-img:hover, .profile-img-n:hover  {
-    -webkit-filter: brightness(50%);
+.profile-img:hover, .profile-img-n:hover ~ .profile-img  {
+  -webkit-filter: brightness(50%);
 	-moz-filter: brightness(50%);
 	-o-filter: brightness(50%);
 	-ms-filter: brightness(50%);
 	filter: brightness(50%);
-    /* opacity: 1.5; */
+  opacity: 1.5;
 }
 #edit-profilepicture {
     position: absolute;
@@ -45,7 +45,26 @@
 .profileviewcircle:hover #edit-profilepicture {
     display: block;
 }
-
+/**************/
+.figure {
+  position: relative;
+  width: 360px; /* can be omitted for a regular non-lazy image */
+  max-width: 100%;
+}
+.figure img.Sirv.image-hover {
+  position: absolute;
+  top: 0;
+  right: 0;
+  left: 0;
+  bottom: 0;
+  object-fit: contain;
+  opacity: 0;
+  transition: opacity .2s;
+}
+.figure:hover img.Sirv.image-hover {
+  opacity: 1;
+}
+/*******************/
 .mb-parent {
     display: grid;
     grid-template-columns: 1fr 1fr; /* Two columns with equal width */
