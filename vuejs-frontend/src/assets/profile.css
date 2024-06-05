@@ -26,10 +26,6 @@
   z-index: 2; /* Higher z-index to ensure it is on top */
   width: 80%; /* Make it smaller */
   height: 80%; /* Maintain aspect ratio by using same percentage */
-  top: 70%;
-  left: 70%; 
-  bottom: 50%;
-  right: 50%;
   /* transform: translate(-50%, -50%);  */
 }
 .profile-img:hover, .profile-img-n:hover  {
@@ -42,8 +38,8 @@
 }
 #edit-profilepicture {
     position: absolute;
-    top: 0;
-    left: 0;
+    top: 1rem;
+    left: 0.8rem;
     display: none;
 }
 .profileviewcircle:hover #edit-profilepicture {
