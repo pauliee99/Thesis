@@ -27,8 +27,8 @@ onMounted(() => {
                     <div class="mb-4">
                         <h1 class="fs-3" @click="showpopup=false">Events</h1>
                     </div>
-                    <div class="container">
-                        <div v-if="data">
+                    <div>
+                        <div v-if="data" class="container-ev-l">
                             <div class="gallery" v-for="event in data" :key="event.id">
                                 <router-link :to="{ name: 'event-details', params: { id: event.id } }">
                                     <a id="event-img" :href="'/event/' + event.id" target="_blank">

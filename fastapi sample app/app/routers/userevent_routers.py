@@ -1,5 +1,5 @@
 from fastapi import APIRouter, Depends, HTTPException, status, Body, BackgroundTasks
-from database import get_all_userevents, get_current_userevents, insert_user_event, get_event_users, delete_user_event, get_user_by_id
+from database import get_all_userevents, get_current_userevents, insert_user_event, get_event_users, delete_user_event, get_user_by_id, get_user_event_record
 from internal.auth_bearer import JWTBearer, get_current_user_role
 from internal.auth_handler import decodeJWT
 from models.models import UserEvents, EmailSchema, User
@@ -29,6 +29,13 @@ async def read_event_users(item_id: int):
     if not event:
         raise HTTPException(status_code=404, detail="Item not found")
     return event
+
+@router.get("/{user_id}/{event_id}", dependencies=[Depends(JWTBearer())], tags=["userevents"])
+async def read_user_event(user_id: int, event_id: int):
+    record = get_user_event_record(user_id, event_id)
+    if not record:
+        raise HTTPException(status_code=404, detail="Record not found")
+    return record
 
 @router.post("/", dependencies=[Depends(JWTBearer())], tags=["userevents"])
 async def create_userevent(userevent_data: UserEvents = Body(...)):

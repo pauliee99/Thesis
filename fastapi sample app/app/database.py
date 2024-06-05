@@ -326,3 +326,15 @@ def delete_user_event(deleteuserevent):
             return {"message": f"Event deleted successfully"}
         else:
             return {"message": f"Event not found"}
+        
+def get_user_event_record(user_id, event_id):
+    with Session(engine) as session:
+        statement = (
+            select(
+                UserEvents
+            )
+            .select_from(UserEvents)
+            .where(UserEvents.event == event_id and UserEvents.user == user_id)
+        )
+        record = session.exec(statement).fetchall()
+        return record

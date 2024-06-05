@@ -12,21 +12,21 @@ const router = useRouter();
 const route = useRoute();
 
 const eventIdRef = ref(null);
+const userIdRef = ref(null);
 const urlRef = computed(() => {
     return 'http://localhost:8000/events/' + eventIdRef.value;
 });
 const urlRefUsr = computed(() => {
     return 'http://localhost:8000/userevents/event/' + eventIdRef.value;
 });
+const urlRefUsrEv = computed(() => {
+    return 'http://localhost:8000/userevents/' + userIdRef.value + '/' + eventIdRef.value;
+});
 const authRef = ref(true);
 const { data: eventData, loading, performRequest:fetchEventDetails } = useRemoteData(urlRef, authRef);
 const { data: userData, performRequest:fetchEventUsers } = useRemoteData(urlRefUsr, authRef);
-onMounted(() => {
-    eventIdRef.value = route.params.id;
-    fetchEventDetails({ token });
-    fetchEventUsers({ token });
-    console.log(userData);
-});
+const { data: userEventData, performRequest:fetchUserEvents } = useRemoteData(urlRefUsrEv, authRef);
+
 
 const formDataRef = ref({
     user: '',
@@ -42,6 +42,10 @@ watch(eventData, (newData) => {
         formDataRef.value.event = newData.id;
     }
 });
+const isUserEnrolled = computed(() => {
+    return true;
+});
+console.log(isUserEnrolled)
 const onSubmit = () => {
     enrollToEvent({ token });
 };
@@ -51,6 +55,19 @@ const { data: deleteEventData, performRequest:unenrollToEvent } = useRemoteData(
 const onDelete = () => {
     unenrollToEvent({ token });
 };
+onMounted(() => {
+    eventIdRef.value = route.params.id;
+    userIdRef.value = getUserData()?._value.id;
+    fetchEventDetails({ token });
+    fetchEventUsers({ token });
+    fetchUserEvents({ token }).catch((error) => {
+        console.log(error);
+        if (error.response && error.response.status === 404) {
+            isUserEnrolled.value = false;
+        }
+    });
+    console.log(userData);
+});
 </script>
 <template>
     <div class="bg-body-tertiary">
@@ -113,7 +130,7 @@ const onDelete = () => {
                     </div>
                     <div>
                         <div v-if="getUserData()?._value.role === 'Student' ||getUserData()?._value.role === 1">
-                            <button class="btn-enroll-user-event" @click="onSubmit" >Enroll to this event</button>
+                            <button class="btn-enroll-user-event" @click="onSubmit" v-if="isUserEnrolled = false">Enroll to this event</button>
                             <button class="btn-unenroll-user-event" @click="onDelete" >Unenroll to this event</button>
                         </div>
                         <div v-else-if="userData && userData.length > 0">
