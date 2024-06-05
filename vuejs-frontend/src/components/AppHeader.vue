@@ -55,18 +55,16 @@ console.log(url);
                             >Events</router-link
                         >
                     </li>
-                    <li class="nav-item-h" v-if="applicationStore.isAuthenticated === true">
+                    <li class="nav-item-h" v-if="applicationStore.isAuthenticated === true" id="profile-stuff">
                         <div class="profile-wrapper-h">
-                            <div class="profile-circle-h">
-                                <!-- <img src="/profile-default.png" alt="Profile Picture" class="profile-img"> -->
-                                <img v-if="url" :src="url" class="profile-img-h">
-                                <img v-else :src="URL_DEFAULT" class="profile-img-h">
-                            </div> 
+   
                             <router-link :to="{ name: 'profile' }" class="nav-link text-white">
-                                Profile</router-link>
-                                <span style="font-size: 10px">
-                                    ({{ username }})
-                                </span>
+                                <div class="profile-circle-h">
+                                    <!-- <img src="/profile-default.png" alt="Profile Picture" class="profile-img"> -->
+                                    <img v-if="url" :src="url" class="profile-img-h">
+                                    <img v-else :src="URL_DEFAULT" class="profile-img-h">
+                                </div> 
+                                Profile ({{ username }})</router-link>
                         </div>
                     </li>
                     <li class="nav-item-h" v-if="applicationStore.isAuthenticated === false">
