@@ -3,6 +3,7 @@ import { ref, computed, watch  } from 'vue';
 import { RouterLink } from 'vue-router';
 import { useApplicationStore } from '@/stores/application.js';
 const applicationStore = useApplicationStore();
+console.log(applicationStore);
 const { getUserData } = useApplicationStore();
 // const { userData } = useApplicationStore();
 // const { persistUserData, isAuthenticated, setToken, persistToken, setUserData } = useApplicationStore();
@@ -14,7 +15,7 @@ const role = ref('');
 
 console.log(getUserData()?._value);
 
-const userData = computed(() => applicationStore.getUserData());
+const userData = computed(() => applicationStore.userData);
 
 watch(userData, (newValue) => {
   username.value = newValue?.username || '';
