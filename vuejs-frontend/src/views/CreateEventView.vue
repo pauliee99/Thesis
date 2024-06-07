@@ -65,7 +65,7 @@ async function uploadPicture() {
             const url = s3.getSignedUrl('getObject', {
                 Bucket: 'event-pictures',
                 Key: file.name,
-                Expires: 60 * 60 // URL expires in 1 hour
+                Expires: 60 * 60 * 60 
             })
             imageUrl.value = url
             console.log(url)
@@ -93,7 +93,15 @@ const onSubmit = async () => {
     formDataRef.value.createdby = getUserData()?._value.username;
     formDataRef.value.createdon = "2024-02-22T00:00:00";
     formDataRef.value.picture = imageUrl.value;
-    performRequest({ token });
+    const response = performRequest({ token });
+    if (response.status === 403) {
+        console.warn('Access forbidden. Redirecting to login.');
+        router.push({ name: 'login' });
+    } else if (response.success) {
+        console.log('Event created successfully.');
+    } else {
+        console.log('Failed to create event:', response.message);
+    }
 };
 </script>
 <style src="../assets/createevents.css"></style>
@@ -107,54 +115,56 @@ const onSubmit = async () => {
     <div>
         <pre>{{ data }}</pre>
     </div>
-    <div class="container mb-4">
-        <div class="mb-2">
-            <div class="setup-picture">
-                <form @submit.prevent="uploadPicture">
-                <img v-if="uploadedImage" :src="uploadedImage" id="uploaded" alt="Uploaded picture" /> <!-- Uploaded picture goes here -->
-                <div class="picture">
-                    <input type="file" name="event_picture" id="event_picture" @change="previewPicture" />
-                    <i class="fas fa-camera" @click="triggerFileInput"></i>
-                    <h3>Choose your picture</h3>
-                    <div class="clearfix"></div>
+    <div class="container mb-4" >
+        <div id="container-add-event-form-field">
+            <div class="mb-2">
+                <div class="setup-picture">
+                    <form @submit.prevent="uploadPicture">
+                    <img v-if="uploadedImage" :src="uploadedImage" id="uploaded" alt="Uploaded picture" /> <!-- Uploaded picture goes here -->
+                    <div class="picture">
+                        <input type="file" name="event_picture" id="event_picture" @change="previewPicture" />
+                        <i class="fas fa-camera" @click="triggerFileInput"></i>
+                        <h3>Choose your picture</h3>
+                        <div class="clearfix"></div>
+                    </div>
+                    <button class="btn btn-dark mt-15">Upload Picture</button>
+                    </form>
                 </div>
-                <button class="btn btn-dark mt-15">Upload Picture</button>
-                </form>
             </div>
-        </div>
-        <div class="mb-2">
-            <label for="eventName">Event Name</label>
-            <input
-                class="form-control"
-                id="eventtName"
-                v-model="formDataRef.displayname"
-                type="text"
-            />
-        </div>
-        <div class="mb-2">
-            <label for="location">Location</label>
-            <input class="form-control" id="location" v-model="formDataRef.location" type="text" />
-        </div>
-        <div class="mb-2">
-            <label for="description">Description</label>
-            <textarea class="form-control" id="description" v-model="formDataRef.description" type="text" ></textarea>
-        </div>
-        <div class="mb-2">
-            <label for="price">Price</label>
-            <input class="form-control" id="price" v-model="formDataRef.price" type="number" min="0" />
-        </div>
-        <div class="mb-2">
-            <label for="start_time">Start Time</label>
-            <input class="form-control" id="start_time" v-model="formDataRef.start_time" type="datetime-local" />
-        </div>
-        <div class="mb-2">
-            <label for="end_time">End Time</label>
-            <input class="form-control" id="end_time" v-model="formDataRef.end_time" type="datetime-local" />
-        </div>
-        <div class="">
-            <button class="btn btn-primary" @click="onSubmit" type="button">
-                Create new event
-            </button>
+            <div class="mb-2">
+                <label for="eventName">Event Name</label>
+                <input
+                    class="form-control"
+                    id="eventtName"
+                    v-model="formDataRef.displayname"
+                    type="text"
+                />
+            </div>
+            <div class="mb-2">
+                <label for="location">Location</label>
+                <input class="form-control" id="location" v-model="formDataRef.location" type="text" />
+            </div>
+            <div class="mb-2">
+                <label for="description">Description</label>
+                <textarea class="form-control" id="description" v-model="formDataRef.description" type="text" ></textarea>
+            </div>
+            <div class="mb-2">
+                <label for="price">Price</label>
+                <input class="form-control" id="price" v-model="formDataRef.price" type="number" min="0" />
+            </div>
+            <div class="mb-2">
+                <label for="start_time">Start Time</label>
+                <input class="form-control" id="start_time" v-model="formDataRef.start_time" type="datetime-local" />
+            </div>
+            <div class="mb-2">
+                <label for="end_time">End Time</label>
+                <input class="form-control" id="end_time" v-model="formDataRef.end_time" type="datetime-local" />
+            </div>
+            <div class="">
+                <button class="btn btn-primary" @click="onSubmit" type="button">
+                    Create new event
+                </button>
+            </div>
         </div>
     </div>
 </template>

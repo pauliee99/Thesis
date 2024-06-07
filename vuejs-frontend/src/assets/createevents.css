@@ -64,8 +64,6 @@
     display: none;
 }
 
-
-
 .setup-picture {
   text-align: center;
 }
@@ -92,4 +90,11 @@
 .btn {
   padding: 10px 20px;
   cursor: pointer;
+}
+
+#container-add-event-form-field {
+  max-height: 400px;
+  overflow-y: auto;
+  padding-bottom: 20hv;
+  scrollbar-width: none;
 }
