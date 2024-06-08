@@ -4,21 +4,43 @@ import { ref, computed, onMounted } from 'vue';
 import { useApplicationStore } from '@/stores/application.js';
 import { useRemoteData } from '@/composables/useRemoteData.js';
 import { useRouter, useRoute } from 'vue-router';
-const { userData } = useApplicationStore();
+const { persistUserData, setUserData } = useApplicationStore();
+
+// const { userData } = useApplicationStore();
 
 const { getToken } = useApplicationStore();
 const token = getToken()?.access_token.access_token;
 
-// console.log(userData);
-// const urlRef = 'http://localhost:8000/users/me'
-// const authRef = ref(true);
-// const { data, loading, performRequest } = useRemoteData(urlRef, authRef);
-// onMounted(() => {
-//     performRequest({ token });
-//     console.log(userData);
-// });
+const userData = ref({});
+const urlRef = ref('http://localhost:8000/users/me');
+const authRef = ref(true);
+const methodRef = ref('GET');
+const formDataRef = ref(null);
 
-// @TODO: this doesnt work i get error on the useremotedata.js 
+const { data, performRequest } = useRemoteData(urlRef, authRef, methodRef, formDataRef);
+
+const fetchUserData = async () => {
+    try {
+        const response = await fetch('http://localhost:8000/users/me', {
+            method: 'GET',
+            headers: {
+                'Authorization': `Bearer ${token}`,
+                'Content-Type': 'application/json'
+            },
+        });
+        if (response.ok) {
+            // setUserData(response.data);
+            // persistUserData();
+            userData.value = await response.json();
+        } else {
+            console.error('Failed to fetch user data:', response);
+        }
+    } catch (error) {
+        console.error('Error fetching user data:', error);
+    }
+};
+
+onMounted(fetchUserData);
 </script>
 
 <template>
@@ -31,7 +53,7 @@ const token = getToken()?.access_token.access_token;
                     </div>
                     <div>
                         <div class="profileviewcircle">
-                            <img v-if="userData.picture === undefined" src="http://127.0.0.1:9001/api/v1/buckets/profile-pictures/objects/download?preview=true&prefix=cHJvZmlsZS1kZWZhdWx0LnBuZw==&version_id=null" alt="Profile Picture" class="profile-img">
+                            <img v-if="userData.profile_picture === undefined" src="http://127.0.0.1:9001/api/v1/buckets/profile-pictures/objects/download?preview=true&prefix=cHJvZmlsZS1kZWZhdWx0LnBuZw==&version_id=null" alt="Profile Picture" class="profile-img">
                             <img v-else :src="userData.profile_picture" alt="Profile Picture" class="profile-img">
                             <!-- <img id="edit-profilepicture" class="profile-img" src="http://127.0.0.1:9001/api/v1/buckets/icons/objects/download?preview=true&prefix=ZWRpdC1wcm9maWxlLXBpY3R1cmUuc3Zn&version_id=null"></img> -->
                         </div>

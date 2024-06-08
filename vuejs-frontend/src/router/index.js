@@ -129,9 +129,10 @@ const router = createRouter({
 });
 
 router.beforeEach((to, from, next) => {
-    const { isAuthenticated, getUserData } = useApplicationStore();
+    const { isAuthenticated, getUserData, clearUserData } = useApplicationStore();
+    // clearUserData() // if everything breaks again enable this once 
     const requiresAuth = to.matched.some((record) => record.meta.requiresAuth);
-    // console.log(requiresAuth && !isAuthenticated)
+    console.log(requiresAuth)
     if (requiresAuth && !isAuthenticated) {
         console.log('user not authenticated. redirecting to /login');
         next('/login');

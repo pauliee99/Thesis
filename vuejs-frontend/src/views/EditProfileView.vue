@@ -2,7 +2,8 @@
 import { useApplicationStore } from '@/stores/application.js';
 import { ref, computed } from 'vue';
 import { useRemoteData } from '@/composables/useRemoteData.js';
-import S3 from 'aws-sdk/clients/s3'
+import S3 from 'aws-sdk/clients/s3';
+
 const { userData } = useApplicationStore();
 const { getToken } = useApplicationStore();
 
@@ -32,7 +33,7 @@ const { data, performRequest } = useRemoteData(urlRef, authRef, methodRef, formD
 
 const onSubmit = async () => {
     // formDataRef.value.createdon = "2024-02-22T00:00:00";
-    // formDataRef.value.picture = null;   
+    // formDataRef.value.picture = null;
     await uploadPicture(); 
     userIdRef.value = userData.id;
     console.log(formDataRef);
@@ -42,13 +43,13 @@ const onSubmit = async () => {
     formDataRef.value.email = userData.email;
     formDataRef.value.username = userData.username;
     formDataRef.value.birth_date = userData.birth_date;
-    formDataRef.value.profile_picture = userData.profile_picture;
+    // formDataRef.value.profile_picture = userData.profile_picture;
     formDataRef.value.student_id = userData.student_id;
     formDataRef.value.disabled = userData.disabled;
     if (uploadedImage.value) {
         formDataRef.value.profile_picture = imageName.value;
     } else {
-        formDataRef.value.profile_picture = userData.profile_picture;
+        formDataRef.value.profile_picture = userData.profile_picture.split('/').pop().split('?')[0];
     }
     performRequest({ token });
     goBack();
