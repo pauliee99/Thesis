@@ -28,6 +28,7 @@ def check_user(data: UserLoginSchema):
             return True
     return False
 
+## GET URL FROM IMG NAME 
 @router.get("/", tags=["users"])
 async def read_users():
     users = get_all_users()

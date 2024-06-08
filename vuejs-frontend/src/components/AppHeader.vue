@@ -12,6 +12,7 @@ const tmp = getUserData();
 // console.log("username blah: ", useApplicationStore.userData.username);
 const username = ref('');
 const role = ref('');
+const url = ref('');
 
 console.log(getUserData()?._value);
 
@@ -20,11 +21,12 @@ const userData = computed(() => applicationStore.userData);
 watch(userData, (newValue) => {
   username.value = newValue?.username || '';
   role.value = newValue?.role || '';
+  url.value = newValue?.profile_picture || '';
 });
 // const username = getUserData()?._value.username; //userData.
 // const role = getUserData()?._value.role;
-const url = getUserData()?._value.profile_picture;
-console.log(url);
+// const url = getUserData()?._value.profile_picture;
+// console.log(url);
 </script>
 
 <template>
