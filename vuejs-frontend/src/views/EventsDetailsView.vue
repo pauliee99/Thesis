@@ -156,8 +156,8 @@ onMounted(async () => {
                     </div>
                     <div>
                         <div v-if="getUserData()?._value.role === 'Student' ||getUserData()?._value.role === 1">
-                            <button class="btn-enroll-user-event" @click="onSubmit" v-if="!isEnrolled">join</button>
-                            <button class="btn-unenroll-user-event" @click="onDelete" v-else>snob</button>
+                            <button class="btn-enroll-user-event" @click="onSubmit" v-if="!isEnrolled">Join</button>
+                            <button class="btn-unenroll-user-event" @click="onDelete" v-else>Snob</button>
                         </div>
                         <div v-else-if="userData && userData.length > 0">
                             <table class="table">
@@ -187,3 +187,46 @@ onMounted(async () => {
     </div>
 
 </template>
+<style scoped>
+.btn-enroll-user-event {
+  width: 150px;
+  background: #27ae60;
+  font-weight: bold;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  padding: 12px 20px;
+  margin: 10px 5px;
+  font-size: 16px;
+  transition: all 0.3s ease;
+}
+
+.btn-enroll-user-event:hover, 
+.btn-enroll-user-event:focus {
+  background: #1e8449;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+  outline: none;
+}
+
+.btn-unenroll-user-event {
+  width: 150px;
+  background: #ae2727;
+  font-weight: bold;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  padding: 12px 20px;
+  margin: 10px 5px;
+  font-size: 16px;
+  transition: all 0.3s ease;
+}
+
+.btn-unenroll-user-event:hover, 
+.btn-unenroll-user-event:focus {
+  background: #841e1e;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+  outline: none;
+}
+</style>
