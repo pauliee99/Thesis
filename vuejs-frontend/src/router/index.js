@@ -92,12 +92,6 @@ const router = createRouter({
             ]
         },
         {
-            path: '/courses',
-            name: 'courses',
-            component: () => import('../views/CoursesView.vue'),
-            meta: { requiresAuth: true }
-        },
-        {
             path: '/event/new',
             name: 'event-new',
             component: () => import('../views/CreateEventView.vue'),

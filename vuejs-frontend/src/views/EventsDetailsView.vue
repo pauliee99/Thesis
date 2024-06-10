@@ -25,7 +25,31 @@ const urlRefUsrEv = computed(() => {
 const authRef = ref(true);
 const { data: eventData, loading, performRequest:fetchEventDetails } = useRemoteData(urlRef, authRef);
 const { data: userData, performRequest:fetchEventUsers } = useRemoteData(urlRefUsr, authRef);
-const { data: userEventData, performRequest:fetchUserEvents } = useRemoteData(urlRefUsrEv, authRef);
+// const { data: userEventData, performRequest:fetchUserEvents } = useRemoteData(urlRefUsrEv, authRef);
+const isEnrolled = ref('')
+const fetchUserEvents = async () => {
+    try {
+        console.log('http://localhost:8000/userevents/' + userIdRef.value + '/' + eventIdRef.value)
+        const response = await fetch('http://localhost:8000/userevents/' + userIdRef.value + '/' + eventIdRef.value, {
+            method: 'GET',
+            headers: {
+                'Authorization': `Bearer ${token}`,
+                'Content-Type': 'application/json'
+            },
+        });
+        if (response.ok) {
+            // setUserData(response.data);
+            // persistUserData();
+            const data = await response.json();
+            if (data.length) isEnrolled.value = true
+            else isEnrolled.value = false
+        } else {
+            console.error('Failed to fetch user data:', response);
+        }
+    } catch (error) {
+        console.error('Error fetching user data:', error);
+    }
+};
 
 
 const formDataRef = ref({
@@ -48,25 +72,27 @@ const isUserEnrolled = computed(() => {
 console.log(isUserEnrolled)
 const onSubmit = () => {
     enrollToEvent({ token });
+    isEnrolled.value = true
 };
 const urlRefDel = ref('http://localhost:8000/userevents/');
 const methodRefDel = ref('DELETE');
 const { data: deleteEventData, performRequest:unenrollToEvent } = useRemoteData(urlRefDel, authRef, methodRefDel, formDataRef);
 const onDelete = () => {
     unenrollToEvent({ token });
+    isEnrolled.value = false
 };
-onMounted(() => {
+onMounted(async () => {
     eventIdRef.value = route.params.id;
     userIdRef.value = getUserData()?._value.id;
+    // fetchUserEvents({ token });
+    await fetchUserEvents();
     fetchEventDetails({ token });
     fetchEventUsers({ token });
-    fetchUserEvents({ token }).catch((error) => {
-        console.log(error);
-        if (error.response && error.response.status === 404) {
-            isUserEnrolled.value = false;
-        }
-    });
-    console.log(userData);
+    // await fetchUserEvents();
+    fetchUserEvents({ token });
+    // setTimeout(function(){
+    //     console.log(userEventData.value);
+    // }, 2000);
 });
 </script>
 <template>
@@ -130,8 +156,8 @@ onMounted(() => {
                     </div>
                     <div>
                         <div v-if="getUserData()?._value.role === 'Student' ||getUserData()?._value.role === 1">
-                            <button class="btn-enroll-user-event" @click="onSubmit" v-if="isUserEnrolled = false">Enroll to this event</button>
-                            <button class="btn-unenroll-user-event" @click="onDelete" >Unenroll to this event</button>
+                            <button class="btn-enroll-user-event" @click="onSubmit" v-if="!isEnrolled">join</button>
+                            <button class="btn-unenroll-user-event" @click="onDelete" v-else>snob</button>
                         </div>
                         <div v-else-if="userData && userData.length > 0">
                             <table class="table">
