@@ -71,7 +71,7 @@ async function uploadPicture() {
             const url = s3.getSignedUrl('getObject', {
                 Bucket: 'event-pictures',
                 Key: file.name,
-                Expires: 60 * 60 // URL expires in 1 hour
+                Expires: 60 * 60 * 60
             })
             imageUrl.value = url
             console.log(url)

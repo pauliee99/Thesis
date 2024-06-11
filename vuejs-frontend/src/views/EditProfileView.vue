@@ -99,7 +99,7 @@ async function uploadPicture() {
             const url = s3.getSignedUrl('getObject', {
                 Bucket: 'profile-pictures',
                 Key: filename,
-                Expires: 60 * 60 // URL expires in 1 hour
+                Expires: 60 * 60 * 60
             })
             imageUrl.value = url
             console.log(url)
