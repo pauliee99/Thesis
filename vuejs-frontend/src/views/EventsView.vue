@@ -13,6 +13,13 @@ console.log(data);
 const token = getToken()?.access_token.access_token;
 const showpopup = ref(false);
 
+// const role = ref('');
+// const applicationStore = useApplicationStore();
+// const userData = computed(() => applicationStore.userData);
+// watch(userData, (newValue) => {
+//   role.value = newValue?.role || '';
+// });
+
 onMounted(() => {
     performRequest({ token });
 });
@@ -57,7 +64,7 @@ onMounted(() => {
         </div>
     </div>
 
-<div class="floating-container" v-if="userData?.role !== Student" @click="showpopup = true">
+<div class="floating-container" v-if="userData?.role !== 'Student'" @click="showpopup = true">
   <div class="floating-button">+</div>
   <div class="element-container">
   </div>
