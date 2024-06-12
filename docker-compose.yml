@@ -24,5 +24,39 @@ services:
       - "1025:1025"
       - "8025:8025"
 
+  minio1:
+    image: quay.io/minio/minio
+    container_name: minio1
+    entrypoint: /usr/bin/docker-entrypoint.sh
+    command: server /data --console-address ":9001"
+    environment:
+      - MINIO_ROOT_USER=ROOTUSER
+      - MINIO_ROOT_PASSWORD=CHANGEME123
+    ports:
+      - "9000:9000"
+      - "9001:9001"
+    volumes:
+      - "C:\\minio\\data:/data"
+    networks:
+      - default
+
+  fastapi:
+    build:
+      context: ./fastapi sample app
+      dockerfile: Dockerfile
+    container_name: fastapi_service
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./fastapi_service:/app
+    environment:
+      - ENV=development
+    networks:
+      - default
+
+networks:
+  default:
+    driver: bridge
+
 volumes:
   mysqldbvol:
