@@ -31,6 +31,7 @@ def check_user(data: UserLoginSchema):
 ## GET URL FROM IMG NAME 
 @router.get("/", tags=["users"])
 async def read_users():
+    print("Get all users")
     users = get_all_users()
     for user in users:
         if user.profile_picture:
@@ -46,9 +47,17 @@ async def read_users():
                 user.profile_picture = get_minio_object_url(bucket_name, "profile-default.png")
     return users
 
+@router.get("/user-by-id/{userid}")
+async def user_by_id(userid):
+    print("Get user by id")
+    user = get_user_by_id(userid)
+    print (user)
+    return user
+
 # @router.get("/me", dependencies=[Depends(JWTBearer())], tags=["users"])
 @router.get("/me", dependencies=[Depends(JWTBearer())], tags=["users"])
 async def read_user_me(token: str = Depends(JWTBearer())):
+    print("Get current logged in user")
     user_data = decodeJWT(token)
     if not user_data:
         raise HTTPException(
@@ -72,6 +81,7 @@ async def read_user_me(token: str = Depends(JWTBearer())):
 
 @router.get("/{username}", tags=["users"])
 async def read_user(username: str):
+    print("Get User by username")
     user = get_user_by_username(username)
     if user['profile_picture']:
         bucket_name = 'profile-pictures'
@@ -88,6 +98,7 @@ async def read_user(username: str):
 
 @router.put("/{user_id}", response_model=UserUpdate, dependencies=[Depends(JWTBearer())], tags=["users"], responses={403: {"description": "Operation forbidden"}})
 async def change_user(user: UserUpdate = Body(...)):
+    print("Updating User")
     existing_user = get_user_by_id(user.id)
     if not existing_user:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f"User with ID {user.id} not found")
@@ -96,18 +107,24 @@ async def change_user(user: UserUpdate = Body(...)):
     update_user(user)
     return user
 
-@router.put("/change-password", response_model=PasswordUpdate, dependencies=[Depends(JWTBearer())], tags=["users"], responses={403: {"description": "Operation forbidden"}})
+@router.put("/change-password", response_model=User, dependencies=[Depends(JWTBearer())], tags=["users"], responses={403: {"description": "Operation forbidden"}})
 async def change_password(user: PasswordUpdate = Body(...)):
+    print("Change password")
     existing_user = get_credentials(user.id)
+    print (existing_user)
     if not existing_user:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f"User with ID {user.id} not found")
     if existing_user.password != user.current_password:
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=f"Passwords don't match")
-    update_password(user)
+    print ("here")
+    # update_password(user)
     return user
+
+
 
 @router.post("/signup", tags=["user"])
 def create_user(user: User = Body(...)):
+    print("Sign Up")
     print(user)
     hashed_password = bcrypt.hashpw(user.password.encode('utf-8'), bcrypt.gensalt())
     user.password = hashed_password.decode('utf-8')
@@ -124,6 +141,7 @@ def create_user(user: User = Body(...)):
 
 @router.post("/login", tags=["user"])
 def user_login(user: UserLoginSchema = Body(...)):
+    print("Login")
     try:
         if check_user(user):
             token = signJWT(user.email)
@@ -170,4 +188,3 @@ def get_minio_object_url(bucket_name, object_name):
         print(f'Error occurred: {e}')
         return None
     
-

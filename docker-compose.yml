@@ -2,10 +2,10 @@ version: '3.8'
 
 services:
   mysqldb:
-    # image: mysql/mysql-server:latest
-    build:
-      context: .
-      dockerfile: Dockerfile
+    image: mysql/mysql-server:latest
+    # build:
+    #   context: .
+    #   dockerfile: Dockerfile
     container_name: mysqldb
     ports:
       - "3306:3306"
@@ -40,23 +40,23 @@ services:
     networks:
       - default
 
-  fastapi:
-    build:
-      context: ./fastapi sample app
-      dockerfile: Dockerfile
-    container_name: fastapi_service
-    ports:
-      - "8000:8000"
-    volumes:
-      - ./fastapi_service:/app
-    environment:
-      - ENV=development
-    networks:
-      - default
+#   fastapi:
+#     build:
+#       context: ./fastapi sample app
+#       dockerfile: Dockerfile
+#     container_name: fastapi_service
+#     ports:
+#       - "8000:8000"
+#     volumes:
+#       - ./fastapi_service:/app
+#     environment:
+#       - ENV=development
+#     networks:
+#       - default
 
-networks:
-  default:
-    driver: bridge
+# networks:
+#   default:
+#     driver: bridge
 
 volumes:
   mysqldbvol:

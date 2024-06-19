@@ -1,7 +1,7 @@
 INSERT INTO 
     events.users
 VALUES
-    (null, "admin@mail.com", "admin", "fakehashedpassword", "name", "surname", "path to file", CURDATE(), false),
+    (null, "admin@mail.com", "admin", "fakehashedpassword", "name", "surname", CURDATE(),111,"path to file", CURDATE(), null, false);,
     (null, "manager@mail.com", "manager", "fakehashedpassword", "name", "surname", "path to file", CURDATE(), false),
     (null, "student1@mail.com", "student1", "fakehashedpassword", "name", "surname", "path to file", CURDATE(), false);
 

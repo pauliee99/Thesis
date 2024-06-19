@@ -161,7 +161,7 @@
                 "Start Backend Server",
                 "Start Frontend Server",
                 "Open Websites",
-                "Start Docker Mailhog"
+                // "Start Docker Mailhog"
             ],
             "problemMatcher": []
         },
