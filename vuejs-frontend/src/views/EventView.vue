@@ -19,7 +19,7 @@ onMounted(() => {
                 <div class="col-12">
                     <div class="mb-4">
                         <RouterLink class="small" :to="{ name: 'events' }"
-                            >Back to Courses</RouterLink
+                            >Back to Events</RouterLink
                         >
                         <h1 class="fs-3">Event #{{ eventIdRef }}</h1>
                     </div>
