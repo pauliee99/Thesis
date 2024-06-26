@@ -18,6 +18,7 @@ const formDataRef = ref({
     student_id: userData.student_id,
     disabled: userData.disabled,
 });
+console.log(formDataRef.value);
 
 const token = getToken()?.access_token.access_token;
 
@@ -36,7 +37,6 @@ const onSubmit = async () => {
     // formDataRef.value.picture = null;
     await uploadPicture(); 
     userIdRef.value = userData.id;
-    console.log(formDataRef);
     formDataRef.value.id = userData.id;
     formDataRef.value.firstname = userData.firstname;
     formDataRef.value.lastname = userData.lastname;
@@ -45,7 +45,7 @@ const onSubmit = async () => {
     formDataRef.value.birth_date = userData.birth_date;
     // formDataRef.value.profile_picture = userData.profile_picture;
     formDataRef.value.student_id = userData.student_id;
-    formDataRef.value.disabled = userData.disabled;
+    formDataRef.value.disabled = false;//userData.disabled;
     if (uploadedImage.value) {
         formDataRef.value.profile_picture = imageName.value;
     } else {
@@ -94,8 +94,9 @@ async function uploadPicture() {
                 Body: file,
                 ContentType: file.type
             }
-
+            console.log("here");
             await s3.upload(params).promise()
+            console.log("here");
             const url = s3.getSignedUrl('getObject', {
                 Bucket: 'profile-pictures',
                 Key: filename,
@@ -173,7 +174,7 @@ const generateRandomString = (n) => {
                     </div>
                     <div>
                         <div class="profileviewcircle" @click="triggerFileInput">
-                            <img id="edit-profilepicture" class="profile-img-n" src="http://127.0.0.1:9001/api/v1/buckets/icons/objects/download?preview=true&prefix=ZWRpdC1wcm9maWxlLXBpY3R1cmUuc3Zn&version_id=null">
+                            <img id="edit-profilepicture" class="profile-img-n" src="http://127.0.0.1:9001/api/v1/buckets/icons/objects/download?preview=true&prefix=edit-profile-picture.svg&version_id=null">
                             <img :src="defaultProfilePictureUrl" alt="Profile Picture" class="profile-img">
                             <!-- <img v-if="userData.picture === undefined" src="http://127.0.0.1:9001/api/v1/buckets/profile-pictures/objects/download?preview=true&prefix=cHJvZmlsZS1kZWZhdWx0LnBuZw==&version_id=null" class="profile-img">
                             <img v-else :src="userData.profile_picture" alt="Profile Picture" class="profile-img"> -->
@@ -229,11 +230,11 @@ const generateRandomString = (n) => {
                         </div>
                         <br>
                         <div class="" style="display: flex; justify-content: space-between;">
-                            <router-link :to="{ name: 'changepassword' }">
+                            <!-- <router-link :to="{ name: 'changepassword' }">
                                 <button class="btn btn-primary" @click="changePassword" type="button">
                                     Change Password
                                 </button>
-                            </router-link>
+                            </router-link> -->
                             <button class="btn btn-primary" @click="showpopup = true" type="button" id="delete-button">
                                 Delete Profile
                             </button>

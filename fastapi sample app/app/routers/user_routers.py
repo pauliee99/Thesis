@@ -102,8 +102,6 @@ async def change_user(user: UserUpdate = Body(...)):
     existing_user = get_user_by_id(user.id)
     if not existing_user:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f"User with ID {user.id} not found")
-    
-    print(user.profile_picture)
     update_user(user)
     return user
 

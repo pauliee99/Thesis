@@ -1,7 +1,8 @@
-from fastapi import APIRouter, Depends, HTTPException, status
-from database import get_all_events, insert_event, get_event_by_id, delete_event_by_id
+from fastapi import APIRouter, Depends, HTTPException, status, Body
+from database import get_all_events, insert_event, get_event_by_id, delete_event_by_id, update_event
 from internal.auth_bearer import JWTBearer, get_current_user_role
 from internal.auth_handler import decodeJWT
+from models.models import Event
 
 router = APIRouter(
     prefix="/events",
@@ -27,12 +28,13 @@ async def read_item(item_id: str):
     tags=["events"],
     responses={403: {"description": "Operation forbidden"}},
 )
-async def update_item(item_id: str):
-    if item_id != "plumbus":
+async def update_item(event: Event = Body(...)):
+    if 1 != 1:
         raise HTTPException(
             status_code=403, detail="You can only update the item: plumbus"
         )
-    return {"item_id": item_id, "name": "The great Plumbus"}
+    update_event(event)
+    return {"item_id": 1, "name": "The great Plumbus"}
 
 @router.post("/", dependencies=[Depends(JWTBearer())], tags=["events"])
 async def create_item(event_data: dict, current_user_role: str = Depends(get_current_user_role)):

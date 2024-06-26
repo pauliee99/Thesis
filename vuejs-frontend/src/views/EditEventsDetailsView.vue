@@ -29,7 +29,7 @@ const { data: userData, performRequest:fetchEventUsers } = useRemoteData(urlRefU
 const isEnrolled = ref('')
 const fetchUserEvents = async () => {
     try {
-        console.log('http://localhost:8000/userevents/' + userIdRef.value + '/' + eventIdRef.value)
+        // console.log('http://localhost:8000/userevents/' + userIdRef.val ue + '/' + eventIdRef.value)
         const response = await fetch('http://localhost:8000/userevents/' + userIdRef.value + '/' + eventIdRef.value, {
             method: 'GET',
             headers: {
@@ -41,6 +41,7 @@ const fetchUserEvents = async () => {
             // setUserData(response.data);
             // persistUserData();
             const data = await response.json();
+            console.log(data)
             if (data.length) isEnrolled.value = true
             else isEnrolled.value = false
         } else {
@@ -88,6 +89,7 @@ onMounted(async () => {
     await fetchUserEvents();
     fetchEventDetails({ token });
     fetchEventUsers({ token });
+    console.log(userData);
     // await fetchUserEvents();
     fetchUserEvents({ token });
     // setTimeout(function(){
@@ -109,39 +111,35 @@ onMounted(async () => {
                                 <tbody>
                                     <tr>
                                         <th>Display Name</th>
-                                        <td>{{ eventData.displayname }}</td>
+                                        <td><input class="form-control" id="id" v-model="eventData.displayname" type="text" /></td>
                                     </tr>
                                     <tr>
                                         <th>Location</th>
-                                        <td>{{ eventData.location }}</td>
+                                        <td><input class="form-control" id="id" v-model="eventData.location" type="text" /></td>
                                     </tr>
                                     <tr>
                                         <th>Price</th>
-                                        <td>{{ eventData.price }}</td>
+                                        <td><input class="form-control" id="id" v-model="eventData.price" type="text" /></td>
                                     </tr>
                                     <tr>
                                         <th>Description</th>
-                                        <td>{{ eventData.description }}</td>
-                                    </tr>
-                                    <tr>
-                                        <th>Created On</th>
-                                        <td>{{ eventData.createdon }}</td>
+                                        <td><input class="form-control" id="id" v-model="eventData.description" type="text" /></td>
                                     </tr>
                                     <tr>
                                         <th>End Time</th>
-                                        <td>{{ eventData.end_time }}</td>
+                                        <td><input class="form-control" id="id" v-model="eventData.end_time" type="text" /></td>
                                     </tr>
                                     <tr>
                                         <th>Start Time</th>
-                                        <td>{{ eventData.start_time }}</td>
+                                        <td><input class="form-control" id="id" v-model="eventData.start_time" type="text" /></td>
                                     </tr>
                                     <tr>
                                         <th>Picture</th>
-                                        <td>{{ eventData.picture }}</td>
+                                        <td><input class="form-control" id="id" v-model="eventData.picture" type="text" /></td>
                                     </tr>
                                     <tr>
                                         <th>Created By</th>
-                                        <td>{{ eventData.createdby }}</td>
+                                        <td><input class="form-control" id="id" v-model="eventData.createdby" type="text" /></td>
                                     </tr>
                                 </tbody>
                             </table>
@@ -162,6 +160,7 @@ onMounted(async () => {
                                         <th>User ID</th>
                                         <th>Name</th>
                                         <th>Email</th>
+                                        <th>Remove</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -169,6 +168,7 @@ onMounted(async () => {
                                         <td>{{ user.id }}</td>
                                         <td>{{ user.name }}</td>
                                         <td>{{ user.email }}</td>
+                                        <td><span class="close">&times;</span></td>
                                     </tr>
                                 </tbody>
                             </table>
@@ -177,9 +177,9 @@ onMounted(async () => {
                             <p>No users attending this event.</p>
                         </div>
                     </div>
-                    <RouterLink :to="{ name: 'edit-event-details' }">
+                    <RouterLink :to="{ name: 'event-details' }">
                                 <button class="btn btn-primary" type="button">
-                                    Edit Event
+                                    Cancel
                                 </button>
                             </RouterLink>
                 </div>

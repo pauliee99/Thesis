@@ -102,6 +102,27 @@ def delete_event_by_id(event_id):
             return {"message": f"Event with ID {event_id} deleted successfully"}
         else:
             return {"message": f"Event with ID {event_id} not found"}
+
+def update_event(event):
+    with Session(engine) as session:
+        statement = (
+            update(Events)
+            .where(Events.id == event.id)
+            .values(
+                end_time=event.end_time,
+                start_time=event.start_time,
+                picture=event.picture,
+                createdon=event.createdon,
+                displayname=event.displayname,
+                location=event.location,
+                price=event.price,
+                description=event.description,
+                createdby=event.createdby
+            )
+        )
+        session.exec(statement)
+        session.commit()
+        return {"message": f"User with ID {event.id} updated successfully"}
     
 def db_info():
     with Session(engine) as session:
@@ -277,14 +298,13 @@ def get_current_userevents(userid):
         statement = select(UserEvents).where(UserEvents.user == userid)
         users = session.exec(statement).fetchall()
         return users
-    
 
 # def get_event_users(eventid):
 #     with Session(engine) as session:
 #         statement = select(Users.id, func.concat(Users.firstname, ' ', Users.lastname).label('full_name'), Users.email).join(Users, UserEvents.user == Users.id).where(UserEvents.event == eventid)
 #         users = session.exec(statement).fetchall()
 #         return users
-    
+
 def get_event_users(eventid):
     with Session(engine) as session:
         statement = (
