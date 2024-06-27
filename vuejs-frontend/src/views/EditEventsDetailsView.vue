@@ -54,26 +54,25 @@ const fetchUserEvents = async () => {
 
 
 const formDataRef = ref({
-    user: '',
-    event: ''
+    id: eventData.id,
+    displayname: eventData.displayname,
+    picture: eventData.picture,
+    location: eventData.location,
+    start_time: eventData.start_time,
+    end_time: eventData.end_time,
+    price: eventData.price,
+    description: eventData.description,
+    createdon: eventData.createdon,
+    createdby: eventData.createdby
 });
-const urlRefAdd = ref('http://localhost:8000/userevents/');
-const methodRef = ref('POST');
-
-const { data: newEventData, performRequest:enrollToEvent } = useRemoteData(urlRefAdd, authRef, methodRef, formDataRef);
-watch(eventData, (newData) => {
-    if (newData) {
-        formDataRef.value.user = getUserData()?._value.id;
-        formDataRef.value.event = newData.id;
-    }
+const urlRefEv = computed(() => {
+    return 'http://localhost:8000/events/' + eventIdRef.value;
 });
-const isUserEnrolled = computed(() => {
-    return true;
-});
-console.log(isUserEnrolled)
+const methodRef = ref('PUT');
+const { data: newEventData, performRequest:PutEvent } = useRemoteData(urlRefEv, authRef, methodRef, formDataRef);
 const onSubmit = () => {
-    enrollToEvent({ token });
-    isEnrolled.value = true
+    console.log(formDataRef.value)
+    PutEvent({ token });
 };
 const urlRefDel = ref('http://localhost:8000/userevents/');
 const methodRefDel = ref('DELETE');
@@ -85,16 +84,11 @@ const onDelete = () => {
 onMounted(async () => {
     eventIdRef.value = route.params.id;
     userIdRef.value = getUserData()?._value.id;
-    // fetchUserEvents({ token });
     await fetchUserEvents();
     fetchEventDetails({ token });
     fetchEventUsers({ token });
     console.log(userData);
-    // await fetchUserEvents();
     fetchUserEvents({ token });
-    // setTimeout(function(){
-    //     console.log(userEventData.value);
-    // }, 2000);
 });
 </script>
 <template>
@@ -137,10 +131,6 @@ onMounted(async () => {
                                         <th>Picture</th>
                                         <td><input class="form-control" id="id" v-model="eventData.picture" type="text" /></td>
                                     </tr>
-                                    <tr>
-                                        <th>Created By</th>
-                                        <td><input class="form-control" id="id" v-model="eventData.createdby" type="text" /></td>
-                                    </tr>
                                 </tbody>
                             </table>
                         </div>
@@ -180,6 +170,11 @@ onMounted(async () => {
                     <RouterLink :to="{ name: 'event-details' }">
                                 <button class="btn btn-primary" type="button">
                                     Cancel
+                                </button>
+                            </RouterLink>
+                    <RouterLink :to="{ name: 'event-details' }">
+                                <button class="btn btn-primary" @click="onSubmit" type="button">
+                                    Save
                                 </button>
                             </RouterLink>
                 </div>

@@ -8,9 +8,15 @@ const { getUserData } = useApplicationStore();
 const { getToken } = useApplicationStore();
 
 const formDataRef = ref({
-    firstName: '',
-    lastName: '',
-    email: ''
+    displayname: '',
+    picture: '',
+    location: '',
+    start_time: '',
+    end_time: '',
+    price: '',
+    description: '',
+    createdon: '',
+    createdby: ''
 });
 const urlRef = ref('http://localhost:8000/events');
 const authRef = ref(true);
@@ -65,7 +71,7 @@ async function uploadPicture() {
             const url = s3.getSignedUrl('getObject', {
                 Bucket: 'event-pictures',
                 Key: file.name,
-                Expires: 60 * 60 * 60 * 60
+                Expires: 60 * 60 * 60
             })
             imageUrl.value = url
             console.log(url)
