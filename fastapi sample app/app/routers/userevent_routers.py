@@ -1,5 +1,5 @@
 from fastapi import APIRouter, Depends, HTTPException, status, Body, BackgroundTasks
-from database import get_all_userevents, get_current_userevents, insert_user_event, get_event_users, delete_user_event, get_user_by_id, get_user_event_record
+from database import get_all_userevents, get_current_userevents, insert_user_event, get_event_users, delete_user_event, get_user_by_id, get_user_event_record, delete_user_event_by_id
 from internal.auth_bearer import JWTBearer, get_current_user_role
 from internal.auth_handler import decodeJWT
 from models.models import UserEvents, EmailSchema, User
@@ -52,6 +52,11 @@ async def create_userevent(userevent_data: UserEvents = Body(...)):
 @router.delete("/", dependencies=[Depends(JWTBearer())], tags=["userevents"])
 async def delete_event(userevent_data: UserEvents = Body(...)):
     response = delete_user_event(userevent_data)
+    return response
+
+@router.delete("/{event_id}/{user_id}", dependencies=[Depends(JWTBearer())], tags=["userevents"])
+async def delete_event(event_id: int, user_id: int):
+    response = delete_user_event_by_id(event_id, user_id)
     return response
 
 @router.post("/send-email")

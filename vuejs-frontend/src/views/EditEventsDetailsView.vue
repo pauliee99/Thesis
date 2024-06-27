@@ -25,7 +25,7 @@ const urlRefUsrEv = computed(() => {
 const authRef = ref(true);
 const { data: eventData, loading, performRequest:fetchEventDetails } = useRemoteData(urlRef, authRef);
 const { data: userData, performRequest:fetchEventUsers } = useRemoteData(urlRefUsr, authRef);
-// const { data: userEventData, performRequest:fetchUserEvents } = useRemoteData(urlRefUsrEv, authRef);
+// const { data: currUserEventData, performRequest:fetchCurrUserEvent } = useRemoteData(urlRefUsrEv, authRef);
 const isEnrolled = ref('')
 const fetchUserEvents = async () => {
     try {
@@ -54,16 +54,16 @@ const fetchUserEvents = async () => {
 
 
 const formDataRef = ref({
-    id: eventData.id,
-    displayname: eventData.displayname,
-    picture: eventData.picture,
-    location: eventData.location,
-    start_time: eventData.start_time,
-    end_time: eventData.end_time,
-    price: eventData.price,
-    description: eventData.description,
-    createdon: eventData.createdon,
-    createdby: eventData.createdby
+    id: '',
+    displayname: '',
+    picture: '',
+    location: '',
+    start_time: '',
+    end_time: '',
+    price: '',
+    description: '',
+    createdon: '',
+    createdby: ''
 });
 const urlRefEv = computed(() => {
     return 'http://localhost:8000/events/' + eventIdRef.value;
@@ -71,15 +71,20 @@ const urlRefEv = computed(() => {
 const methodRef = ref('PUT');
 const { data: newEventData, performRequest:PutEvent } = useRemoteData(urlRefEv, authRef, methodRef, formDataRef);
 const onSubmit = () => {
+    formDataRef.value = eventData.value
     console.log(formDataRef.value)
     PutEvent({ token });
 };
-const urlRefDel = ref('http://localhost:8000/userevents/');
+const urlRefDel = computed(() => {
+    return 'http://localhost:8000/userevents/' + eventIdRef.value + '/' + userIdRef.value;
+});
 const methodRefDel = ref('DELETE');
 const { data: deleteEventData, performRequest:unenrollToEvent } = useRemoteData(urlRefDel, authRef, methodRefDel, formDataRef);
-const onDelete = () => {
+const onDelete = (userId) => {
+    userIdRef.value = userId
     unenrollToEvent({ token });
-    isEnrolled.value = false
+    fetchEventUsers({ token });
+    userData.value = userData.value.filter(user => user.id !== userId);
 };
 onMounted(async () => {
     eventIdRef.value = route.params.id;
@@ -158,7 +163,7 @@ onMounted(async () => {
                                         <td>{{ user.id }}</td>
                                         <td>{{ user.name }}</td>
                                         <td>{{ user.email }}</td>
-                                        <td><span class="close">&times;</span></td>
+                                        <td><span class="close" @click="onDelete(user.id)">&times;</span></td>
                                     </tr>
                                 </tbody>
                             </table>
@@ -172,7 +177,7 @@ onMounted(async () => {
                                     Cancel
                                 </button>
                             </RouterLink>
-                    <RouterLink :to="{ name: 'event-details' }">
+                    <RouterLink :to="{ name: 'event-details' }" style="margin-left: 10%;">
                                 <button class="btn btn-primary" @click="onSubmit" type="button">
                                     Save
                                 </button>
