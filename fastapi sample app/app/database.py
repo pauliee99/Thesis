@@ -1,3 +1,11 @@
+from fastapi import Depends
+from fastapi_users.db import SQLAlchemyBaseUserTableUUID, SQLAlchemyUserDatabase
+from fastapi_users_db_sqlalchemy.access_token import (
+    SQLAlchemyAccessTokenDatabase,
+    SQLAlchemyBaseAccessTokenTableUUID,
+)
+from sqlalchemy.ext.asyncio import AsyncSession, async_sessionmaker, create_async_engine
+from sqlalchemy.orm import DeclarativeBase
 from datetime import datetime
 from typing import Optional
 from sqlalchemy.ext.asyncio import AsyncSession, create_async_engine
@@ -46,8 +54,18 @@ class UserEvents(SQLModel, table=True):
     event: int
     timestamp: Optional[float] = Field(default=None)
 
+class Base(DeclarativeBase):
+    pass
+class User(SQLAlchemyBaseUserTableUUID, Base):
+    pass
+class AccessToken(SQLAlchemyBaseAccessTokenTableUUID, Base):  
+    pass
+
+engine2 = create_async_engine("mysql+asyncmy://user:password@localhost/events")
+async_session_maker = async_sessionmaker(engine2, expire_on_commit=False)
+
 async def create_db_and_tables():
-    async with engine.begin() as conn:
+    async with engine2.begin() as conn:
         await conn.run_sync(Base.metadata.create_all)
 
 
