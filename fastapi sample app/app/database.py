@@ -1,10 +1,7 @@
 from datetime import datetime
 from typing import Optional
-from sqlalchemy.ext.asyncio import AsyncSession, create_async_engine
 from sqlmodel import Field, SQLModel, create_engine, Session, select, update
 from typing import AsyncGenerator
-from sqlalchemy.ext.declarative import DeclarativeMeta, declarative_base
-from sqlalchemy.orm import sessionmaker, load_only
 from sqlalchemy import join, func
 import os
 
@@ -45,19 +42,6 @@ class UserEvents(SQLModel, table=True):
     user: int
     event: int
     timestamp: Optional[float] = Field(default=None)
-
-async def create_db_and_tables():
-    async with engine.begin() as conn:
-        await conn.run_sync(Base.metadata.create_all)
-
-
-async def get_async_session() -> AsyncGenerator[AsyncSession, None]:
-    async with async_session_maker() as session:
-        yield session
-
-
-async def get_user_db(session: AsyncSession = Depends(get_async_session)):
-    yield SQLAlchemyUserDatabase(session, User)
 
 # Add dummy data
 # user_1 = Users(
