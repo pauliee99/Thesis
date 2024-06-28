@@ -6,6 +6,7 @@ import { useApplicationStore } from '@/stores/application.js';
 const applicationStore = useApplicationStore();
 const { getUserData } = useApplicationStore();
 const { getToken } = useApplicationStore();
+const { userData } = useApplicationStore();
 
 const token = getToken()?.access_token.access_token;
 const router = useRouter();
@@ -24,7 +25,7 @@ const urlRefUsrEv = computed(() => {
 });
 const authRef = ref(true);
 const { data: eventData, loading, performRequest:fetchEventDetails } = useRemoteData(urlRef, authRef);
-const { data: userData, performRequest:fetchEventUsers } = useRemoteData(urlRefUsr, authRef);
+const { data: userDataEV, performRequest:fetchEventUsers } = useRemoteData(urlRefUsr, authRef);
 // const { data: userEventData, performRequest:fetchUserEvents } = useRemoteData(urlRefUsrEv, authRef);
 const isEnrolled = ref('')
 const fetchUserEvents = async () => {
@@ -108,6 +109,11 @@ onMounted(async () => {
                             <table class="table">
                                 <tbody>
                                     <tr>
+                                        <!-- <td> -->
+                                            <img src="http://127.0.0.1:9000/event-pictures/default-image-300x169.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=JVY5T2YDD8JAUJGRMP21%2F20240628%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20240628T111124Z&X-Amz-Expires=43200&X-Amz-Security-Token=eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJhY2Nlc3NLZXkiOiJKVlk1VDJZREQ4SkFVSkdSTVAyMSIsImV4cCI6MTcxOTYwNzc2NCwicGFyZW50IjoibWluaW9hZG1pbiJ9.KELAaSGBPmogxC1V98Jm-DQmr1NXQfYOu4PzSc75AgigskaukOViCVBVe3XYorZddipaZrj4fYx5EkhFOuFAfw&X-Amz-SignedHeaders=host&versionId=null&X-Amz-Signature=224b786b2731d53c286233763a98f887931a526242503bf3d3adeac4bd02631b">
+                                        <!-- </td> -->
+                                    </tr>
+                                    <tr>
                                         <th>Display Name</th>
                                         <td>{{ eventData.displayname }}</td>
                                     </tr>
@@ -155,7 +161,7 @@ onMounted(async () => {
                             <button class="btn-enroll-user-event" @click="onSubmit" v-if="!isEnrolled">Join</button>
                             <button class="btn-unenroll-user-event" @click="onDelete" v-else>Snob</button>
                         </div>
-                        <div v-else-if="userData && userData.length > 0">
+                        <div v-else-if="userDataEV && userDataEV.length > 0">
                             <table class="table">
                                 <thead>
                                     <tr>
@@ -165,7 +171,7 @@ onMounted(async () => {
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <tr v-for="user in userData" :key="user.id">
+                                    <tr v-for="user in userDataEV" :key="user.id">
                                         <td>{{ user.id }}</td>
                                         <td>{{ user.name }}</td>
                                         <td>{{ user.email }}</td>
@@ -177,11 +183,14 @@ onMounted(async () => {
                             <p>No users attending this event.</p>
                         </div>
                     </div>
-                    <RouterLink :to="{ name: 'edit-event-details' }">
+                    <div  v-if="userData?.role !== 'Student'">
+                        <RouterLink :to="{ name: 'edit-event-details' }" >
                                 <button class="btn btn-primary" type="button">
                                     Edit Event
                                 </button>
                             </RouterLink>
+                    </div>
+                    
                 </div>
             </div>
         </div>
