@@ -52,7 +52,7 @@ app.add_middleware(
 app.include_router(user_routers.router)
 app.include_router(event_routers.router)
 app.include_router(userevent_routers.router)
-app.include_router(users_auth_routers.router)
+# app.include_router(users_auth_routers.router)
 
 # def hash_password(password: str):
 #     return "fakehashed" + password
