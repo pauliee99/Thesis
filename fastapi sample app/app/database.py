@@ -46,6 +46,19 @@ class UserEvents(SQLModel, table=True):
     event: int
     timestamp: Optional[float] = Field(default=None)
 
+async def create_db_and_tables():
+    async with engine.begin() as conn:
+        await conn.run_sync(Base.metadata.create_all)
+
+
+async def get_async_session() -> AsyncGenerator[AsyncSession, None]:
+    async with async_session_maker() as session:
+        yield session
+
+
+async def get_user_db(session: AsyncSession = Depends(get_async_session)):
+    yield SQLAlchemyUserDatabase(session, User)
+
 # Add dummy data
 # user_1 = Users(
 #     email="user1@mail.com",
