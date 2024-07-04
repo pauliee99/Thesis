@@ -211,7 +211,7 @@ const generateRandomString = (n) => {
                             </div>
                             <div class="mb-2">
                                 <label for="birthday">Birthday</label>
-                                <input class="form-control" id="birth_date" :value="userData.birth_date" type="date"/>
+                                <input class="form-control" id="birth_date" :value="userData.birth_date.split('T')[0]" type="date"/>
                             </div>
                             <!-- <div class="mb-2">
                                 <label for="role">Select Role:</label>

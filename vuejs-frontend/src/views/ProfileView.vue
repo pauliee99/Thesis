@@ -40,7 +40,8 @@ const fetchUserData = async () => {
     }
 };
 
-onMounted(fetchUserData);
+onMounted(
+    fetchUserData);
 </script>
 
 <template>
@@ -88,7 +89,7 @@ onMounted(fetchUserData);
                             </div>
                             <div class="mb-2" v-if="userData.birth_date">
                                 <label for="birthday">Birthday</label>
-                                <input class="form-control" id="birth_date" :value="userData.birth_date" type="date" :disabled="true"/>
+                                <input class="form-control" id="birth_date" :value="userData.birth_date.split('T')[0]" type="date" :disabled="true"/>
                             </div>
                             <div class="mb-2">
                                 <label for="role">Select Role:</label>
