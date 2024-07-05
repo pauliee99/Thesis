@@ -37,6 +37,10 @@ onMounted(() => {
             </tbody>
             <tbody v-if="data">
                 <tr>
+                    <th>ID</th>
+                    <td>{{ data.id }}</td>
+                </tr>
+                <tr>
                     <th>First Name</th>
                     <td>{{ data.firstname }}</td>
                 </tr>
@@ -47,6 +51,18 @@ onMounted(() => {
                 <tr>
                     <th>Email</th>
                     <td>{{ data.email }}</td>
+                </tr>
+                <tr>
+                    <th>Birth Date</th>
+                    <td>{{ data.birth_date }}</td>
+                </tr>
+                <tr v-if="data.role === 'Student'">
+                    <th>Student ID</th>
+                    <td>{{ data.student_id }}</td>
+                </tr>
+                <tr>
+                    <th>Role</th>
+                    <td>{{ data.role }}</td>
                 </tr>
             </tbody>
         </table>

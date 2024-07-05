@@ -7,7 +7,7 @@ const route = useRoute();
 const studentIdRef = ref(null);
 
 onMounted(() => {
-    studentIdRef.value = route.params.id;
+    studentIdRef.value = route.params.username;
 });
 </script>
 
@@ -20,7 +20,7 @@ onMounted(() => {
                         <RouterLink class="small" :to="{ name: 'students' }"
                             >Back to Students</RouterLink
                         >
-                        <h1 class="fs-3">Student #{{ studentIdRef }}</h1>
+                        <h1 class="fs-3">User: {{ studentIdRef }}</h1>
                     </div>
                     <div class="mb-4">
                         <ul class="nav border">
@@ -34,8 +34,15 @@ onMounted(() => {
                             <li class="nav-item">
                                 <RouterLink
                                     class="nav-link"
-                                    :to="{ name: 'student-courses', params: { id: studentIdRef } }"
-                                    >Courses</RouterLink
+                                    :to="{ name: 'student-edit-details', params: { id: studentIdRef } }"
+                                    >Edit</RouterLink
+                                >
+                            </li>
+                            <li class="nav-item">
+                                <RouterLink
+                                    class="nav-link"
+                                    :to="{ name: 'student-delete-details', params: { id: studentIdRef } }"
+                                    >Delete</RouterLink
                                 >
                             </li>
                         </ul>
