@@ -19,11 +19,12 @@ const urlRef = computed(() => {
     return 'http://localhost:8000/users/' + userIdRef.value;
 });
 const authRef2 = ref(true);
-const methodRef = ref('PUT');
+const methodRef = ref('DELETE');
 const showpopup = ref(false);
 
 const { performRequest } = useRemoteData(urlRef, authRef, methodRef);
 const onSubmit = () => {
+    userIdRef.value = studentIdRef.value
     performRequest({ token })
 };
 </script>
@@ -35,13 +36,13 @@ const onSubmit = () => {
         </p>
         <RouterLink
             class="nav-link"
-            :to="{ name: 'student-details', params: { id: studentIdRef } }"
-            ><button class="btn btn-primary" @click="onSubmit" type="button">Update Record</button></RouterLink
+            :to="{ name: 'students', params: { id: studentIdRef } }"
+            ><button class="btn btn-primary" @click="onSubmit" type="button" style="background-color: red; border-color:maroon;">Delete User</button></RouterLink
         >
         <RouterLink
             class="nav-link"
             :to="{ name: 'student-details', params: { id: studentIdRef } }"
-            ><button class="btn btn-primary" @click="onSubmit" type="button">Update Record</button></RouterLink
+            ><button class="btn btn-primary" type="button">Cancel</button></RouterLink
         >
     </div>
 </template>

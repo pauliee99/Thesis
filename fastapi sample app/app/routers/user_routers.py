@@ -1,5 +1,5 @@
 from fastapi import APIRouter, Body, Depends, FastAPI, HTTPException, status
-from database import get_all_users, insert_user, get_role, get_user_by_email, get_user_by_username, update_user, get_user_by_id, get_credentials, update_password
+from database import get_all_users, insert_user, get_role, get_user_by_email, get_user_by_username, update_user, get_user_by_id, get_credentials, update_password, delete_user_by_id
 from models.models import UserLoginSchema, User, UserUpdate, PasswordUpdate
 from internal.auth_bearer import JWTBearer
 from internal.auth_handler import signJWT, decodeJWT
@@ -187,3 +187,8 @@ def get_minio_object_url(bucket_name, object_name):
         print(f'Error occurred: {e}')
         return None
     
+@router.delete("/{user_id}", dependencies=[Depends(JWTBearer())], tags=["events"])
+async def delete_event(user_id: str):
+    response = delete_user_by_id(user_id)
+    print(response)
+    return response

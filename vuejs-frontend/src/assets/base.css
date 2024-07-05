@@ -2,3 +2,6 @@ body {
     font-family: monospace;
     /*font-size: 20px;*/
 }
+.container {
+    max-height: 20rem;
+}

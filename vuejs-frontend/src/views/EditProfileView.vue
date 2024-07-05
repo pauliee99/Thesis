@@ -248,7 +248,7 @@ const generateRandomString = (n) => {
         <!-- Content inside the overlay -->
         <div class="content">
         <a href="#" class="close-button" @click="showpopup = false">&#10006;</a>
-        <h2 style="text-align: center;">Delete Profile?</h2>
+        <h2 style="text-align: center; border-color: maroon;">Delete Profile?</h2>
         <h3 style="text-align: center;">This Change cannot be undone. Do you really want to delete your profile?</h3>
         <div class="response-container">
             <button id="cancel-button" @click="showpopup = false">Cacnel</button>

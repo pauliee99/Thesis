@@ -366,3 +366,13 @@ def get_user_event_record(user_id, event_id):
         record = session.query(UserEvents).filter_by(event = event_id, user = user_id).first()
         # record = session.exec(statement).fetchall()
         return record
+    
+def delete_user_by_id(userid):
+    with Session(engine) as session:
+        event = session.query(UserEvents).filter_by(user = userid).first()
+        if event:
+            session.delete(event)
+            session.commit()
+            return {"message": f"Event deleted successfully"}
+        else:
+            return {"message": f"Event not found"}

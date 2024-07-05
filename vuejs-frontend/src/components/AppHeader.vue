@@ -61,7 +61,7 @@ watch(userData, (newValue) => {
                     <li class="nav-item-h" v-if="applicationStore.isAuthenticated === true" id="profile-stuff">
                         <div class="profile-wrapper-h">
    
-                            <router-link :to="{ name: 'profile' }" class="nav-link text-white">
+                            <router-link :to="{ name: 'profile' }" class="nav-link text-white" style="display:flex; align-items: center;">
                                 <div class="profile-circle-h">
                                     <!-- <img src="/profile-default.png" alt="Profile Picture" class="profile-img"> -->
                                     <img v-if="url" :src="url" class="profile-img-h">

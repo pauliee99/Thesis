@@ -13,7 +13,7 @@ onMounted(() => {
 
 <template>
     <div class="bg-body-tertiary">
-        <div class="container">
+        <div class="container" style="max-height: 10rem">
             <div class="row py-4 px-3">
                 <div class="col-12">
                     <div class="mb-4">
