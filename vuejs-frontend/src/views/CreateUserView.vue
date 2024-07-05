@@ -1,6 +1,104 @@
 <script setup>
-import { ref } from 'vue';
+import { ref, computed } from 'vue';
 import { useRemoteData } from '@/composables/useRemoteData.js';
+import S3 from 'aws-sdk/clients/s3';
+
+const fileInputRef = ref(null);
+const uploadedImage = ref('')
+const statusMessage = ref('No uploads')
+const imageUrl = ref('')
+const imageName = ref('')
+async function uploadPicture() {
+    const fileInput = document.getElementById('event_picture_ep')
+    if (fileInput && fileInput.files?.length) {
+        const file = fileInput.files[0]
+        console.log(file)
+        try { 
+            const filename = generateRandomString(20) + '.' + file.name.split('.').pop(); //@TODO: needs testing
+            console.log(filename)
+            const presignedUrlResponse = await fetch(`/presignedUrl?name=${filename}`)
+            const presignedUrl = await presignedUrlResponse.text()
+
+            const s3 = new S3({
+                accessKeyId: import.meta.env.VITE_ACCESS_KEY,
+                secretAccessKey: import.meta.env.VITE_SECRET_ACCESS_KEY,
+                endpoint: import.meta.env.VITE_ENDPOINT,
+                s3ForcePathStyle: import.meta.env.VITE_FORCE_PATH_STYLE,
+                signatureVersion: import.meta.env.VITE_SIGNATURE_VERSION
+            })
+
+            const params = {
+                Bucket: 'profile-pictures',
+                Key: filename,
+                Body: file,
+                ContentType: file.type
+            }
+            console.log("here");
+            await s3.upload(params).promise()
+            console.log("here");
+            const url = s3.getSignedUrl('getObject', {
+                Bucket: 'profile-pictures',
+                Key: filename,
+                Expires: 60 * 60 * 60
+            })
+            imageUrl.value = url
+            console.log(url)
+            console.log(filename)
+            imageName.value = filename
+            statusMessage.value = `Uploaded ${filename}.`
+        } catch (error) {
+            console.error('Error uploading file:', error)
+            statusMessage.value = `Error uploading ${file.name}.`
+        }
+    } else {
+        console.error('No file selected')
+    }
+}
+async function previewPicture(event) {
+    const fileInput = event.target
+    const file = fileInput.files?.[0]
+    if (file) {
+        const reader = new FileReader()
+        reader.onload = (e) => {
+            if (typeof e.target?.result === 'string') {
+                uploadedImage.value = e.target.result
+                // console.log(uploadedImage.value)  // Print the base64 image data to the console
+            }
+        }
+        reader.readAsDataURL(file)
+    }
+}
+const triggerFileInput = () => {
+  fileInputRef.value.click();
+};
+const randomString = ref('');
+const generatedStrings = new Set();
+const generateRandomString = (n) => {
+    const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+    let result;
+
+    do {
+    result = '';
+    for (let i = 0; i < n; i++) {
+        result += characters.charAt(Math.floor(Math.random() * characters.length));
+    }
+    } while (generatedStrings.has(result));
+
+    generatedStrings.add(result);
+    randomString.value = result;
+    return randomString.value
+};
+const defaultProfilePictureUrl = computed(() => {
+    if (uploadedImage.value) {
+        return uploadedImage.value
+    } else {
+        if (userData.profile_picture) {
+            return userData.profile_picture;
+        } else {
+            return 'http://127.0.0.1:9001/api/v1/buckets/profile-pictures/objects/download?preview=true&prefix=cHJvZmlsZS1kZWZhdWx0LnBuZw==&version_id=null';
+        }
+    }
+});
 
 const formDataRef = ref({
     id: 0,
@@ -10,7 +108,7 @@ const formDataRef = ref({
     username: '',
     password: '',
     birth_date: '',
-    profile_picture: 'http://127.0.0.1:9001/api/v1/buckets/profile-pictures/objects/download?preview=true&prefix=cHJvZmlsZS1kZWZhdWx0LnBuZw==&version_id=null',
+    profile_picture: 'default.png',
     student_id: null,
     role: null,
     createdon: '2024-05-04T15:58:19.765Z',
@@ -22,13 +120,16 @@ const methodRef = ref('POST');
 
 const { data, performRequest } = useRemoteData(urlRef, authRef, methodRef, formDataRef);
 
-const onSubmit = () => {
-    console.log(formDataRef?._rawValue);
+const onSubmit = async () => {
+    await uploadPicture(); 
+    formDataRef.value.profile_picture = imageName.value;
+    console.log(imageName.value);
     performRequest(formDataRef?._rawValue);
 };
 </script>
 
 <template>
+    <div class="bg-body-tertiary">
     <div class="container mb-4">
         <h1>New User</h1>
     </div>
@@ -105,11 +206,16 @@ const onSubmit = () => {
             </div>
         </div>
         <div class="">
-            <button class="btn btn-primary" @click="onSubmit" type="button">
+            
+            <RouterLink
+            class="nav-link"
+            :to="{ name: 'students' }"
+            ><button class="btn btn-primary" @click="onSubmit" type="button">
                 Create new user
-            </button>
+            </button></RouterLink>
         </div>
     </div>
+</div>
 </template>
 
 <style src="/src/assets/newstudent.css"></style>

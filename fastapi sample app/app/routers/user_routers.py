@@ -119,6 +119,11 @@ async def change_password(user: PasswordUpdate = Body(...)):
     # update_password(user)
     return user
 
+@router.delete("/{user_id}", dependencies=[Depends(JWTBearer())], tags=["events"])
+async def delete_event(user_id: str):
+    response = delete_user_by_id(user_id)
+    return response
+
 
 
 @router.post("/signup", tags=["user"])
@@ -178,7 +183,6 @@ def get_minio_object_url(bucket_name, object_name):
         secret_key='52JXYuhvZTKLoO69VULDvF7t6csfrMLEgTng6Jrd',
         secure=False # Set to True if using HTTPS
     )
-    print ("here1")
     try:
         minio_client.stat_object(bucket_name, object_name)
         url = minio_client.presigned_get_object(bucket_name, object_name)
@@ -186,9 +190,3 @@ def get_minio_object_url(bucket_name, object_name):
     except S3Error as e:
         print(f'Error occurred: {e}')
         return None
-    
-@router.delete("/{user_id}", dependencies=[Depends(JWTBearer())], tags=["events"])
-async def delete_event(user_id: str):
-    response = delete_user_by_id(user_id)
-    print(response)
-    return response

@@ -104,7 +104,7 @@ onMounted(async () => {
                     <div class="mb-4">
                         <h1 class="fs-3" @click="showpopup=false">Event Details</h1>
                     </div>
-                    <div class="container">
+                    <div class="container-tmp">
                         <div v-if="eventData">
                             <table class="table">
                                 <tbody>

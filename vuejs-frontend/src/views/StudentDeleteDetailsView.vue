@@ -24,8 +24,10 @@ const showpopup = ref(false);
 
 const { performRequest } = useRemoteData(urlRef, authRef, methodRef);
 const onSubmit = () => {
-    userIdRef.value = studentIdRef.value
-    performRequest({ token })
+    userIdRef.value = studentIdRef.value;
+    console.log(userIdRef.value);
+    console.log(urlRef.value);
+    performRequest({ token });
 };
 </script>
 
