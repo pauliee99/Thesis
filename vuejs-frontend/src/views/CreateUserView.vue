@@ -88,17 +88,17 @@ const generateRandomString = (n) => {
     randomString.value = result;
     return randomString.value
 };
-const defaultProfilePictureUrl = computed(() => {
-    if (uploadedImage.value) {
-        return uploadedImage.value
-    } else {
-        if (userData.profile_picture) {
-            return userData.profile_picture;
-        } else {
-            return 'http://127.0.0.1:9001/api/v1/buckets/profile-pictures/objects/download?preview=true&prefix=cHJvZmlsZS1kZWZhdWx0LnBuZw==&version_id=null';
-        }
-    }
-});
+// const defaultProfilePictureUrl = computed(() => {
+//     if (uploadedImage.value) {
+//         return uploadedImage.value
+//     } else {
+//         if (userData.profile_picture) {
+//             return userData.profile_picture;
+//         } else {
+//             return 'http://127.0.0.1:9001/api/v1/buckets/profile-pictures/objects/download?preview=true&prefix=cHJvZmlsZS1kZWZhdWx0LnBuZw==&version_id=null';
+//         }
+//     }
+// });
 
 const formDataRef = ref({
     id: 0,
@@ -141,17 +141,11 @@ const onSubmit = async () => {
             <div class="mb-2">
                 <label for="picture">Profile Picture</label>
                 <div class="setup-picture">
-                <!-- <h1 class='center light gray mt-15'>Start setting your account Picture</h1> -->
-                    <form method="post" onsubmit="return false">
-                        <img src='#' id='uploaded'> <!-- Uploaded picture goes here -->
-                        <div class="picture">
-                        <input type="file"  name="event_picture" id="event_picture" @change="previewPicture">
-                        <font-awesome-icon icon="camera" />
-                        <h3>Choose your picture</h3>
-                        <div class='clearfix'></div>
+                    <div class="profileviewcircle" @click="triggerFileInput">
+                            <img id="edit-profilepicture" class="profile-img-n" src="http://127.0.0.1:9001/api/v1/buckets/icons/objects/download?preview=true&prefix=edit-profile-picture.svg&version_id=null">
+                            <img :src="defaultProfilePictureUrl" alt="Profile Picture" class="profile-img">
                         </div>
-                        <button class='btn btn-dark mt-15'>Upload Picture</button>
-                    </form>
+                        <input id="event_picture_ep" type="file" ref="fileInputRef" @change="previewPicture" style="display: none;" />
                 </div>
             </div>
             <div class="mb-2">
