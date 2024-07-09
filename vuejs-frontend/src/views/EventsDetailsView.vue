@@ -110,7 +110,8 @@ onMounted(async () => {
                                 <tbody>
                                     <tr>
                                         <!-- <td> -->
-                                            <img src="http://127.0.0.1:9000/event-pictures/default-image-300x169.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=JVY5T2YDD8JAUJGRMP21%2F20240628%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20240628T111124Z&X-Amz-Expires=43200&X-Amz-Security-Token=eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJhY2Nlc3NLZXkiOiJKVlk1VDJZREQ4SkFVSkdSTVAyMSIsImV4cCI6MTcxOTYwNzc2NCwicGFyZW50IjoibWluaW9hZG1pbiJ9.KELAaSGBPmogxC1V98Jm-DQmr1NXQfYOu4PzSc75AgigskaukOViCVBVe3XYorZddipaZrj4fYx5EkhFOuFAfw&X-Amz-SignedHeaders=host&versionId=null&X-Amz-Signature=224b786b2731d53c286233763a98f887931a526242503bf3d3adeac4bd02631b">
+                                            <img v-if="eventData.picture" :src="eventData.picture" style="height:200px">
+                                            <img v-else :src="'../../public/default.png'" style="height:200px">
                                         <!-- </td> -->
                                     </tr>
                                     <tr>
@@ -140,10 +141,6 @@ onMounted(async () => {
                                     <tr>
                                         <th>Start Time</th>
                                         <td>{{ eventData.start_time }}</td>
-                                    </tr>
-                                    <tr>
-                                        <th>Picture</th>
-                                        <td>{{ eventData.picture }}</td>
                                     </tr>
                                     <tr>
                                         <th>Created By</th>
@@ -198,6 +195,9 @@ onMounted(async () => {
 
 </template>
 <style scoped>
+.bg-body-tertiary {
+    overflow-y:auto;
+}
 .btn-enroll-user-event {
   width: 150px;
   background: #27ae60;

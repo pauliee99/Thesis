@@ -29,6 +29,7 @@
 
 .bg-body-tertiary{
     min-height: 76.9vh;/*91vh*/
+    overflow-y:auto;
 }
 
 .text-bg-dark{

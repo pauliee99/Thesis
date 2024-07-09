@@ -3,5 +3,8 @@ body {
     /*font-size: 20px;*/
 }
 .container {
-    max-height: 20rem;
+    min-height: 20rem;
+}
+.container-footer {
+    display:flex;width: 49%;justify-content: center;align-items: center;
 }

@@ -1,6 +1,6 @@
-body {
+/* body {
     overflow: hidden;
-}
+} */
 .newuser {
     width: 100px;
     height: 25px;
@@ -14,6 +14,6 @@ body {
     font-weight: 900;
     color: rgb(255, 255, 255);
 }
-.bg-body-tertiary {
+/* .bg-body-tertiary {
     overflow-y:auto;
-}
+} */

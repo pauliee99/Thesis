@@ -25,57 +25,49 @@ const methodRef = ref('POST');
 const { data, performRequest } = useRemoteData(urlRef, authRef, methodRef, formDataRef);
 const token = getToken()?.access_token.access_token;
 
+const fileInputRef = ref(null);
 const uploadedImage = ref('')
 const statusMessage = ref('No uploads')
 const imageUrl = ref('')
-
-function previewPicture(event) {
-    const fileInput = event.target
-    const file = fileInput.files?.[0]
-    if (file) {
-        const reader = new FileReader()
-        reader.onload = (e) => {
-            if (typeof e.target?.result === 'string') {
-                uploadedImage.value = e.target.result
-                console.log(uploadedImage.value)  // Print the base64 image data to the console
-            }
-        }
-        reader.readAsDataURL(file)
-    }
-}
-
+const imageName = ref('')
 async function uploadPicture() {
-    const fileInput = document.getElementById('event_picture')
+    const fileInput = document.getElementById('event_picture_ep')
     if (fileInput && fileInput.files?.length) {
         const file = fileInput.files[0]
-        try {
-            const presignedUrlResponse = await fetch(`/presignedUrl?name=${file.name}`)
+        console.log(file)
+        try { 
+            const filename = generateRandomString(20) + '.' + file.name.split('.').pop(); //@TODO: needs testing
+            console.log(filename)
+            const presignedUrlResponse = await fetch(`/presignedUrl?name=${filename}`)
             const presignedUrl = await presignedUrlResponse.text()
 
             const s3 = new S3({
-                accessKeyId: 'VKYsbj4UVQrZVCmGgWVR',
-                secretAccessKey: '52JXYuhvZTKLoO69VULDvF7t6csfrMLEgTng6Jrd',
-                endpoint: 'http://localhost:9000',
-                s3ForcePathStyle: true,
-                signatureVersion: 'v4'
+                accessKeyId: import.meta.env.VITE_ACCESS_KEY,
+                secretAccessKey: import.meta.env.VITE_SECRET_ACCESS_KEY,
+                endpoint: import.meta.env.VITE_ENDPOINT,
+                s3ForcePathStyle: import.meta.env.VITE_FORCE_PATH_STYLE,
+                signatureVersion: import.meta.env.VITE_SIGNATURE_VERSION
             })
 
             const params = {
-                Bucket: 'event-pictures',
-                Key: file.name,
+                Bucket: 'profile-pictures',
+                Key: filename,
                 Body: file,
                 ContentType: file.type
             }
-
+            console.log("here");
             await s3.upload(params).promise()
+            console.log("here");
             const url = s3.getSignedUrl('getObject', {
-                Bucket: 'event-pictures',
-                Key: file.name,
+                Bucket: 'profile-pictures',
+                Key: filename,
                 Expires: 60 * 60 * 60
             })
             imageUrl.value = url
             console.log(url)
-            statusMessage.value = `Uploaded ${file.name}.`
+            console.log(filename)
+            imageName.value = filename
+            statusMessage.value = `Uploaded ${filename}.`
         } catch (error) {
             console.error('Error uploading file:', error)
             statusMessage.value = `Error uploading ${file.name}.`
@@ -84,15 +76,40 @@ async function uploadPicture() {
         console.error('No file selected')
     }
 }
-
-function triggerFileInput() {
-    const fileInput = document.getElementById('event_picture')
-    if (fileInput) {
-        fileInput.click()
-    } else {
-        console.error('File input element not found')
+async function previewPicture(event) {
+    const fileInput = event.target
+    const file = fileInput.files?.[0]
+    if (file) {
+        const reader = new FileReader()
+        reader.onload = (e) => {
+            if (typeof e.target?.result === 'string') {
+                uploadedImage.value = e.target.result
+                // console.log(uploadedImage.value)  // Print the base64 image data to the console
+            }
+        }
+        reader.readAsDataURL(file)
     }
 }
+const triggerFileInput = () => {
+  fileInputRef.value.click();
+};
+const randomString = ref('');
+const generatedStrings = new Set();
+const generateRandomString = (n) => {
+    const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+    let result;
+
+    do {
+    result = '';
+    for (let i = 0; i < n; i++) {
+        result += characters.charAt(Math.floor(Math.random() * characters.length));
+    }
+    } while (generatedStrings.has(result));
+
+    generatedStrings.add(result);
+    randomString.value = result;
+    return randomString.value
+};
 
 const onSubmit = async () => {
     await uploadPicture();
@@ -112,29 +129,26 @@ const onSubmit = async () => {
 </script>
 <style src="../assets/createevents.css"></style>
 <template>
-    <RouterLink class="small" :to="{ name: 'events' }"
+    
+    <!-- <div class="container mb-4">
+        
+    </div> -->
+    <!-- <div>
+        <pre>{{ data }}</pre>
+    </div> -->
+    <div class="container mb-4" >
+        <RouterLink class="small" :to="{ name: 'events' }"
                             >Back to Events</RouterLink
                         >
-    <div class="container mb-4">
         <h1>New Event</h1>
-    </div>
-    <div>
-        <pre>{{ data }}</pre>
-    </div>
-    <div class="container mb-4" >
         <div id="container-add-event-form-field">
             <div class="mb-2">
                 <div class="setup-picture">
-                    <form @submit.prevent="uploadPicture">
-                    <img v-if="uploadedImage" :src="uploadedImage" id="uploaded" alt="Uploaded picture" /> <!-- Uploaded picture goes here -->
-                    <div class="picture">
-                        <input type="file" name="event_picture" id="event_picture" @change="previewPicture" />
-                        <i class="fas fa-camera" @click="triggerFileInput"></i>
-                        <h3>Choose your picture</h3>
-                        <div class="clearfix"></div>
-                    </div>
-                    <button class="btn btn-dark mt-15">Upload Picture</button>
-                    </form>
+                    <div class="profileviewcircle" @click="triggerFileInput">
+                            <img id="edit-profilepicture" class="profile-img-n" src="http://127.0.0.1:9001/api/v1/buckets/icons/objects/download?preview=true&prefix=edit-profile-picture.svg&version_id=null">
+                            <img :src="defaultProfilePictureUrl" alt="Profile Picture" class="profile-img">
+                        </div>
+                        <input id="event_picture_ep" type="file" ref="fileInputRef" @change="previewPicture" style="display: none;" />
                 </div>
             </div>
             <div class="mb-2">

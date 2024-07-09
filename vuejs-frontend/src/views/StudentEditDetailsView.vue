@@ -104,7 +104,8 @@ const onSubmit = () => {
                 </tr>
                 <tr>
                     <th>Role</th>
-                    <td><input class="form-control" id="usereditrole" v-model="data.role" type="text"/></td>
+                    <td>{{ data.role }}</td>
+                    <!-- <td><input class="form-control" id="usereditrole" v-model="data.role" type="text"/></td> -->
                 </tr>
                 <tr v-if="false">
                     <th>Profile Picture</th>

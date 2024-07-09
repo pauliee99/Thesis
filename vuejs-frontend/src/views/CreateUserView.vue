@@ -131,6 +131,9 @@ const onSubmit = async () => {
 <template>
     <div class="bg-body-tertiary">
     <div class="container mb-4">
+        <RouterLink class="small" :to="{ name: 'students' }"
+                            >Back to Users</RouterLink
+                        >
         <h1>New User</h1>
     </div>
     <div>

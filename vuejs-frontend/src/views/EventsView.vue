@@ -40,7 +40,7 @@ onMounted(() => {
                                 <router-link :to="{ name: 'event-details', params: { id: event.id } }">
                                     <a id="event-img" :href="'/event/' + event.id" target="_blank">
                                         <!-- <img :src="event.imageSrc" :alt="event.displayname" width="600" height="400"> -->
-                                        <img :src="event.imageSrc ? event.imageSrc : '../../public/default.png'"
+                                        <img :src="event.picture ? event.picture : '../../public/default.png'"
                                                     :alt="event.displayname"
                                                     width="600" height="400"
                                                     :style="{ width: '100%', height: 'auto', marginBottom: '10px' }">
