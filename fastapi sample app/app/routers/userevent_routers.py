@@ -44,7 +44,7 @@ async def create_userevent(userevent_data: UserEvents = Body(...)):
     email_data = {
             "email": [user['email']], 
             "subject": "New User Event Created",
-            "body": f"Dear {user['firstname']} {user['lastname']}, <br> You just joined in a new event"  # @TODO: add a better email template
+            "body": f"Dear {user['firstname']} {user['lastname']}, \nYou just joined in a new event"  # @TODO: add a better email template
         }
     send_mail(email_data)
     return {"message": "Event created successfully", "event": userevent_data}

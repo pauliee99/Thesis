@@ -117,14 +117,14 @@ const onSubmit = async () => {
     formDataRef.value.createdon = "2024-02-22T00:00:00";
     formDataRef.value.picture = imageUrl.value;
     const response = performRequest({ token });
-    if (response.status === 403) {
-        console.warn('Access forbidden. Redirecting to login.');
-        router.push({ name: 'login' });
-    } else if (response.success) {
-        console.log('Event created successfully.');
-    } else {
-        console.log('Failed to create event:', response.message);
-    }
+    // if (response.status === 403) {
+    //     console.warn('Access forbidden. Redirecting to login.');
+    //     router.push({ name: 'login' });
+    // } else if (response.success) {
+    //     console.log('Event created successfully.');
+    // } else {
+    //     console.log('Failed to create event:', response.message);
+    // }
 };
 </script>
 <style src="../assets/createevents.css"></style>
@@ -146,7 +146,7 @@ const onSubmit = async () => {
                 <div class="setup-picture">
                     <div class="profileviewcircle" @click="triggerFileInput">
                             <img id="edit-profilepicture" class="profile-img-n" src="http://127.0.0.1:9001/api/v1/buckets/icons/objects/download?preview=true&prefix=edit-profile-picture.svg&version_id=null">
-                            <img :src="defaultProfilePictureUrl" alt="Profile Picture" class="profile-img">
+                            <img :src="defaultProfilePictureUrl" class="profile-img">
                         </div>
                         <input id="event_picture_ep" type="file" ref="fileInputRef" @change="previewPicture" style="display: none;" />
                 </div>
